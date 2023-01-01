@@ -1,0 +1,32 @@
+@import 'styles';
+
+$login-contents-height: 760px;
+
+:host {
+  @extend %center-list;
+  @extend %scroll-area;
+  width: 100%;
+  height: fit-content;
+
+  .form {
+    margin: $unit-5 0 $unit-10 0;
+    @extend %center-list;
+
+    ::ng-deep app-alert-text {
+      margin-bottom: $unit-5;
+    }
+
+    ::ng-deep app-button {
+      margin: $unit-5 0 $unit-5 0;
+    }
+  }
+
+  ::ng-deep app-button {
+    margin: $unit-4;
+  }
+
+  .other-buttons {
+    @extend %center-list;
+    margin-top: $unit-18;
+  }
+}

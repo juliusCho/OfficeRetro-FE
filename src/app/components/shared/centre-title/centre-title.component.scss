@@ -1,0 +1,6 @@
+@import 'styles';
+
+.container {
+  @extend %font-bold;
+  @extend %font-9;
+}

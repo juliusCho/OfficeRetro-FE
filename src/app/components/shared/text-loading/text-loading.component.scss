@@ -1,0 +1,33 @@
+@import 'styles';
+
+.container {
+  border-radius: 5px;
+  width: $loading-text-width;
+  height: $unit-8;
+  background: linear-gradient(
+    -45deg,
+    rgb(171, 167, 218),
+    rgb(213, 211, 238),
+    rgb(182, 179, 224),
+    rgb(211, 209, 238)
+  );
+  animation: gradient 5s ease infinite;
+  background-size: 400% 400%;
+
+  &.title {
+    width: $loading-title-width;
+    height: $unit-16;
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

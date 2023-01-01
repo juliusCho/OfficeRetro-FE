@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+@import './app/styles/sizes';
+@import './app/styles/colors';
+@import './app/styles/fonts';
+@import './app/styles/variables';
+@import './app/styles/layouts';
+@import './app/styles/extensions';
+
+body {
+  width: calc(100vw - $unit-4);
+  height: calc(100vh - $unit-4);
+  overflow: hidden;
+  background-color: $main-background-color;
+  color: $font-color;
+
+  * {
+    &::-webkit-scrollbar {
+      width: $unit-4;
+      height: $unit-4;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 9999px;
+      background-color: $scrollbar-color;
+      background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: $scrollbar-hover-color;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+  }
+}

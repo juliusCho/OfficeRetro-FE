@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@200;400;700&display=swap");
+
+$font: "Noto Sans";
+$font-color: rgb(51, 54, 109);
+$font-inactive-color: rgb(163, 163, 179);
+$font-hover-color: rgb(87, 90, 150);
+$font-error-color: rgb(170, 0, 0);
+
+%font-light {
+  font-family: $font;
+  font-weight: 200;
+}
+
+%font-medium {
+  font-family: $font;
+  font-weight: 400;
+}
+
+%font-bold {
+  font-family: $font;
+  font-weight: 700;
+}
+
+%font-10 {
+  font-size: $unit-17;
+}
+
+%font-9 {
+  font-size: $unit-15;
+}
+
+%font-8 {
+  font-size: $unit-13;
+}
+
+%font-7 {
+  font-size: $unit-9;
+}
+
+%font-6 {
+  font-size: $unit-7;
+}
+
+%font-5 {
+  font-size: $unit-5;
+}
+
+%font-4 {
+  font-size: $unit-4;
+}
+
+%font-3 {
+  font-size: $unit-3;
+}
+
+%font-2 {
+  font-size: $unit-2;
+}
+
+%font-1 {
+  font-size: $unit-1;
+}

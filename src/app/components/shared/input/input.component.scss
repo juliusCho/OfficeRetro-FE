@@ -1,0 +1,38 @@
+@import 'styles';
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .label {
+    width: $unit-18;
+    @extend %font-medium;
+    @extend %font-5;
+  }
+
+  .input-div {
+    @extend %input-display;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    &.disabled {
+      background-color: $input-disabled-color;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: $input-disabled-color;
+      }
+    }
+
+    .input {
+      @extend %input;
+      width: 100%;
+
+      &.password {
+        width: 80%;
+      }
+    }
+  }
+}

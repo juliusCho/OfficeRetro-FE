@@ -1,0 +1,25 @@
+<app-centre-title>Office Retro</app-centre-title>
+<form class="form" (submit)="onSubmit()">
+  <app-input
+    label="Email"
+    type="email"
+    [value]="input.email"
+    (valueChange)="onChange('email', $event)"
+    (enter)="onSubmit()"
+  ></app-input>
+  <app-alert-text text="erherysera"></app-alert-text>
+  <app-password-input
+    [value]="input.password"
+    (valueChange)="onChange('password', $event)"
+    (enter)="onSubmit()"
+  ></app-password-input>
+  <app-alert-text></app-alert-text>
+  <app-button type="submit">Login</app-button>
+</form>
+<app-button>Register</app-button>
+<div class="other-buttons">
+  <app-button [isPale]="true">Inquiry Page</app-button>
+  <app-button [isPale]="true">About Office Retro</app-button>
+</div>
+
+<app-loading [loading]="!isPageLoaded || isLoading"></app-loading>

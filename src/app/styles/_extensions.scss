@@ -1,0 +1,60 @@
+%button {
+  box-sizing: border-box;
+  background: $main-background-color;
+  border: $button-border;
+  box-shadow: $button-box-shadow;
+  border-radius: 35px;
+  height: $unit-11;
+  padding: $unit-3 $unit-5;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $button-hover-color;
+  }
+
+  &:active {
+    box-shadow: unset;
+  }
+}
+
+%button-disabled {
+  @extend %button;
+  box-shadow: unset;
+  cursor: not-allowed;
+  color: $font-inactive-color;
+  background-color: $button-hover-color;
+}
+
+%input-display {
+  box-sizing: border-box;
+  background: $input-color;
+  border: $input-border;
+  box-shadow: $input-box-shadow;
+  border-radius: 35px;
+  width: $input-width;
+  height: $unit-13;
+
+  &:hover {
+    background-color: $main-background-color;
+  }
+}
+
+%input {
+  height: 100%;
+  border-radius: 35px;
+  padding: $unit-1 $unit-4;
+  border: none;
+  background-color: transparent;
+  @extend %font-medium;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: $input-box-shadow !important;
+  }
+}

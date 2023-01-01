@@ -1,0 +1,11 @@
+@import 'styles';
+
+.container {
+  @extend %font-5;
+  @extend %font-medium;
+  white-space: pre-wrap;
+  word-break: normal;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}

@@ -1,0 +1,17 @@
+<label *ngIf="label" for="input" class="label">{{ label }}</label>
+<div class="input-div" [ngClass]="{ disabled: isDisabled }">
+  <input
+    id="input"
+    [type]="type === 'email' ? 'text' : type"
+    class="input"
+    [ngModel]="value"
+    (ngModelChange)="onChange($event)"
+    [style]="'width:' + width"
+    [maxLength]="maxLength"
+    (keyup.enter)="onEnter()"
+    [ngClass]="{ password: type === 'password' }"
+    [disabled]="isDisabled"
+  />
+  <app-password-reset-button *ngIf="type === 'password' && !isDisabled">
+  </app-password-reset-button>
+</div>

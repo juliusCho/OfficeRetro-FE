@@ -1,0 +1,10 @@
+<button
+  [type]="type"
+  class="container"
+  [disabled]="isDisabled"
+  (click)="onClick()"
+  [style]="'width:' + (width || 'fit-content') + ';' + style"
+  [ngClass]="getExtraCssClass()"
+>
+  <ng-content></ng-content>
+</button>
