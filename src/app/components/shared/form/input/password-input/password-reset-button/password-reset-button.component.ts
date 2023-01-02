@@ -1,13 +1,16 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-password-reset-button',
   templateUrl: './password-reset-button.component.html',
   styleUrls: ['./password-reset-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordResetButtonComponent {
   constructor(private readonly _router: Router) {}
 
-  readonly onClick = () => {}
+  readonly onClick = () => {
+    console.log('onClick')
+  }
 }

@@ -1,0 +1,16 @@
+@import 'styles';
+
+:host {
+  width: 100%;
+  line-height: $unit-1;
+  padding-top: $unit-3;
+  padding-right: $unit-5;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .container {
+    @extend %font-medium;
+    @extend %font-3;
+  }
+}

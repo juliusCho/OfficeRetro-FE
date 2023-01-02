@@ -1,25 +1,62 @@
 <app-centre-title>Office Retro</app-centre-title>
-<form class="form" (submit)="onSubmit()">
+<form class="form" [formGroup]="form" [ngClass]="{ loaded: isPageLoaded }">
   <app-input
     label="Email"
     type="email"
-    [value]="input.email"
-    (valueChange)="onChange('email', $event)"
+    name="email"
     (enter)="onSubmit()"
+    [form]="form"
+    [validator]="emailValidator"
+    infoTextType="alert"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectString('email')"
+    placeholder="example@domain.com"
+    [minLength]="5"
+    [required]="true"
   ></app-input>
-  <app-alert-text text="erherysera"></app-alert-text>
   <app-password-input
-    [value]="input.password"
-    (valueChange)="onChange('password', $event)"
     (enter)="onSubmit()"
+    [form]="form"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectString('password')"
+    [showPasswordResetIcon]="true"
+    [minLength]="8"
+    [required]="true"
   ></app-password-input>
-  <app-alert-text></app-alert-text>
-  <app-button type="submit">Login</app-button>
+  <app-area-input
+    label="Area"
+    name="area"
+    [form]="form"
+    infoTextType="all"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectString('area')"
+    placeholder="Area"
+    [maxLength]="5000"
+  ></app-area-input>
+  <app-dropdown-input
+    label="Drop"
+    name="drop"
+    [form]="form"
+    infoTextType="all"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectString('drop')"
+    placeholder="Select"
+    [options]="[
+      { hey: '1' },
+      { hello: '2' },
+      { hhhh: '3' },
+      { hola: '4' },
+      { halo: '5' }
+    ]"
+    [maxLength]="5000"
+    [required]="true"
+  ></app-dropdown-input>
+  <app-button (click)="onSubmit()">Login</app-button>
 </form>
 <app-button>Register</app-button>
 <div class="other-buttons">
-  <app-button [isPale]="true">Inquiry Page</app-button>
-  <app-button [isPale]="true">About Office Retro</app-button>
+  <app-button [isPale]="true" width="200px">Inquiry Page</app-button>
+  <app-button [isPale]="true" width="200px">About Office Retro</app-button>
 </div>
 
 <app-loading [loading]="!isPageLoaded || isLoading"></app-loading>

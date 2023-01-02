@@ -1,0 +1,112 @@
+@import 'styles';
+
+:host {
+  @extend %center-list;
+  width: 100%;
+
+  .container {
+    @extend %flex-center;
+    width: 100%;
+
+    .input {
+      visibility: hidden;
+      height: 0;
+      width: 0;
+    }
+
+    .label {
+      width: $unit-18;
+      @extend %font-bold;
+      @extend %font-5;
+    }
+
+    .input-div {
+      @extend %dropdown-display;
+
+      &.disabled {
+        background-color: $input-disabled-color;
+        cursor: not-allowed !important;
+
+        &:hover {
+          background-color: $input-disabled-color;
+        }
+      }
+
+      .select-section {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+
+        .select-button {
+          @extend %dropdown;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 100%;
+          height: $unit-10;
+          padding-right: 0;
+
+          .select {
+            width: 80%;
+          }
+
+          .icon {
+            width: 20%;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            @extend %font-5;
+            @include call-onetime-ani(ani-opacity);
+
+            &:hover {
+              color: $font-hover-color;
+            }
+          }
+        }
+
+        .options {
+          margin-top: $unit-2;
+          padding: 0 $unit-3;
+          max-height: $unit-22;
+          overflow-y: auto;
+          visibility: hidden;
+          opacity: 0;
+          border-radius: 15px;
+          box-shadow: $float-box-shadow;
+          background-color: $input-color;
+          transition: opacity 0.5s;
+          @include call-onetime-ani(ani-rollup, 0.2s);
+
+          &.visible {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.5s;
+            @include call-onetime-ani(ani-dropdown, 0.2s);
+          }
+
+          .option {
+            @extend %flex-center;
+            background-color: transparent;
+            border: none;
+            border-radius: 35px;
+            height: $unit-10;
+            width: 100%;
+            padding: $unit-1 $unit-4;
+
+            &:hover {
+              background-color: $main-background-color;
+            }
+
+            &.selected {
+              background-color: $dropdown-selected-option-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ::ng-deep app-alert-text {
+    margin-bottom: $unit-5;
+  }
+}

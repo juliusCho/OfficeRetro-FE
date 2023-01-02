@@ -1,0 +1,20 @@
+<div class="container" [formGroup]="form">
+  <label *ngIf="label" [for]="name" class="label">{{ label }}</label>
+  <div class="input-div" [ngClass]="{ disabled: isDisabled }">
+    <textarea
+      [id]="name"
+      class="input"
+      [style]="'width:' + width"
+      [maxLength]="maxLength"
+      [formControlName]="name"
+      (blur)="onFocusOut()"
+      [placeholder]="isDisabled ? '' : placeholder"
+    ></textarea>
+  </div>
+</div>
+<app-length-text
+  *ngIf="displayLength"
+  [length]="form.value[name]?.length ?? 0"
+  [maxLength]="maxLength"
+></app-length-text>
+<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>

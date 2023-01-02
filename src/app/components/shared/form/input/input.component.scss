@@ -1,0 +1,46 @@
+@import 'styles';
+
+:host {
+  @extend %center-list;
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .label {
+      width: $unit-18;
+      @extend %font-bold;
+      @extend %font-5;
+    }
+
+    .input-div {
+      @extend %input-box-display;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      &.disabled {
+        background-color: $input-disabled-color;
+        cursor: not-allowed !important;
+
+        &:hover {
+          background-color: $input-disabled-color;
+        }
+      }
+
+      .input {
+        @extend %input-box;
+        width: 100%;
+
+        &.password {
+          width: 80%;
+        }
+      }
+    }
+  }
+
+  ::ng-deep app-alert-text {
+    margin-bottom: $unit-5;
+  }
+}

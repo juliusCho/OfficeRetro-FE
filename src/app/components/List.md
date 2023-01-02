@@ -4,13 +4,17 @@
 - Button
 - CentreTitle
 - Text
-- AlertText
-- Input
-- PasswordInput
-- PasswordResetButton
+  - AlertText
 - Loading
-- TextLoading
+  - TextLoading
 - Form
+
+  - Input
+    - PasswordInput
+      - PasswordResetButton
+    - DropdownInput
+    - LengthText
+  - AreaInput
 
 - ModalLoading
 - GridLoading
@@ -30,7 +34,6 @@
 # Inquiry
 
 - InfoSection
-- AreaInput
 
 ---
 
@@ -53,7 +56,6 @@
 - MenuEditFolder
 - MenuEditItem
 - ProfileButton
-- DropdownInput
 - WorkspaceItem
 - RadioInput
 - CheckboxInput

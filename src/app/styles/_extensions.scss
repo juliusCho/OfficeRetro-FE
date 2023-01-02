@@ -1,11 +1,18 @@
-%button {
-  box-sizing: border-box;
-  background: $main-background-color;
-  border: $button-border;
-  box-shadow: $button-box-shadow;
+%swollen {
   border-radius: 35px;
+  @include call-onetime-ani(ani-swollen);
+}
+
+%engraved {
+  box-sizing: border-box;
+  border-radius: 35px;
+  @include call-onetime-ani(ani-engraved);
+}
+
+%button {
+  @extend %swollen;
   height: $unit-11;
-  padding: $unit-3 $unit-5;
+  padding: $unit-2 $unit-5;
   cursor: pointer;
 
   &:hover {
@@ -13,26 +20,46 @@
   }
 
   &:active {
-    box-shadow: unset;
+    box-shadow: unset !important;
   }
 }
 
 %button-disabled {
-  @extend %button;
+  border-radius: 35px;
+  height: $unit-11;
+  padding: $unit-2 $unit-5;
   box-shadow: unset;
   cursor: not-allowed;
   color: $font-inactive-color;
-  background-color: $button-hover-color;
+  background-color: $button-disabled-color;
 }
 
 %input-display {
-  box-sizing: border-box;
+  @extend %engraved;
   background: $input-color;
-  border: $input-border;
-  box-shadow: $input-box-shadow;
-  border-radius: 35px;
   width: $input-width;
+
+  &:hover {
+    background-color: $main-background-color;
+  }
+}
+
+%input-box-display {
+  @extend %input-display;
   height: $unit-13;
+}
+
+%textarea-display {
+  @extend %input-display;
+  height: $input-width;
+  border-radius: 15px;
+}
+
+%dropdown-display {
+  @extend %swollen;
+  background: $input-color;
+  width: $input-width;
+  height: $unit-10;
 
   &:hover {
     background-color: $main-background-color;
@@ -40,12 +67,19 @@
 }
 
 %input {
-  height: 100%;
-  border-radius: 35px;
-  padding: $unit-1 $unit-4;
   border: none;
   background-color: transparent;
   @extend %font-medium;
+
+  &::-moz-selection {
+    color: rgb(209, 120, 61);
+    background: $input-color;
+  }
+
+  &::selection {
+    color: rgb(209, 120, 61);
+    background: $input-color;
+  }
 
   &:focus {
     outline: none;
@@ -57,4 +91,38 @@
   &:-webkit-autofill:active {
     -webkit-box-shadow: $input-box-shadow !important;
   }
+
+  &::placeholder {
+    color: $input-placeholder-color;
+  }
+
+  &::-ms-input-placeholder {
+    color: $input-placeholder-color;
+  }
+}
+
+%input-box {
+  @extend %input;
+  height: 100%;
+  padding: $unit-1 $unit-4;
+  border-radius: 35px;
+}
+
+%textarea {
+  @extend %input;
+  height: -webkit-fill-available;
+  padding: $unit-3 $unit-4;
+  border-radius: 15px;
+  resize: none;
+}
+
+%dropdown {
+  @extend %input;
+  height: 100%;
+  padding: $unit-1 $unit-4;
+  border-radius: 35px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
 }

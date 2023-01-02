@@ -1,12 +1,18 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core'
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-  @Input() type: 'button' | 'submit' = 'button'
   @Input() isDisabled = false
   @Input() isPale = false
   @Input() isLargeFont = false
@@ -18,12 +24,9 @@ export class ButtonComponent {
   readonly getExtraCssClass = (): Record<string, boolean> => {
     return {
       'pale-color': this.isPale,
+      enabled: !this.isDisabled,
       disabled: this.isDisabled,
       'large-font': this.isLargeFont,
     }
-  }
-
-  readonly onClick = () => {
-    this.click.emit()
   }
 }

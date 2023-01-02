@@ -3,4 +3,5 @@
 .container {
   @extend %font-bold;
   @extend %font-9;
+  text-shadow: $font-shadow;
 }

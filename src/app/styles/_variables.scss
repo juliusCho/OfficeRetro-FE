@@ -4,5 +4,7 @@ $button-box-shadow: -6px -2px 13px 2px $button-light-border-color,
 
 $input-border: 1px solid $input-border-color;
 $input-box-shadow: -2px -2px 1px $input-shadow-border-color,
-  inset -3px -3px 2px $input-light-border-inner-color,
-  inset 3px 3px 3px $input-light-border-color;
+  inset -5px -5px 6px $input-light-border-inner-color,
+  inset 5px 5px 6px $input-light-border-color;
+
+$float-box-shadow: 5px 5px 5px 1px rgba(176, 182, 226, 0.7);

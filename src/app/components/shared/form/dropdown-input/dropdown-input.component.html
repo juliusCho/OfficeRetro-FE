@@ -1,0 +1,63 @@
+<div class="container" [formGroup]="form">
+  <select
+    [name]="name"
+    [formControlName]="name"
+    [style]="'width:' + width"
+    [ngClass]="{ disabled: isDisabled }"
+    class="input"
+  >
+    <ng-container *ngIf="optionValues$ | async as optionValues">
+      <option
+        *ngFor="let option of optionValues"
+        [value]="option.value"
+        [selected]="option.value === form.value[name]"
+      >
+        {{ option.label }}
+      </option>
+    </ng-container>
+  </select>
+  <label *ngIf="label" class="label" (click)="toggleDropdown()">{{
+    label
+  }}</label>
+  <div class="input-div">
+    <div class="select-section">
+      <button
+        type="button"
+        class="select-button"
+        (click)="toggleDropdown()"
+        [disabled]="isDisabled"
+      >
+        <div class="select">
+          {{ form.value[name] }}
+        </div>
+        <i class="fa-solid fa-caret-down icon"></i>
+      </button>
+      <div
+        #dropdownSection
+        class="options"
+        [ngClass]="{ visible: isDropdownOpened }"
+      >
+        <ng-container
+          *ngIf="optionValues$ | async as optionValues; else loading"
+        >
+          <button
+            *ngFor="let option of optionValues"
+            type="button"
+            class="option"
+            [ngClass]="{
+              selected: !!option.value && option.value === form.value[name]
+            }"
+            (click)="selectOption(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>
+
+<ng-template #loading>
+  <app-text-loading></app-text-loading>
+</ng-template>

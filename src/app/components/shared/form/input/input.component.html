@@ -1,0 +1,27 @@
+<div class="container" [formGroup]="form">
+  <label *ngIf="label" [for]="name" class="label">{{ label }}</label>
+  <div class="input-div" [ngClass]="{ disabled: isDisabled }">
+    <input
+      [id]="name"
+      [type]="type === 'email' ? 'text' : type"
+      class="input"
+      [style]="'width:' + width"
+      [maxLength]="maxLength"
+      (keyup.enter)="onEnter()"
+      [ngClass]="{ password: type === 'password' }"
+      [name]="name"
+      [formControlName]="name"
+      [email]="type === 'email'"
+      (blur)="onFocusOut()"
+      [placeholder]="isDisabled ? '' : placeholder"
+    />
+    <app-password-reset-button *ngIf="showPasswordResetIcon && !isDisabled">
+    </app-password-reset-button>
+  </div>
+</div>
+<app-length-text
+  *ngIf="displayLength"
+  [length]="form.value[name]?.length ?? 0"
+  [maxLength]="maxLength"
+></app-length-text>
+<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>

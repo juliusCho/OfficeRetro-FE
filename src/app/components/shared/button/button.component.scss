@@ -1,12 +1,15 @@
-@import "styles";
+@import 'styles';
 
 .container {
-  @extend %button;
-  @extend %font-medium;
+  @extend %font-bold;
   @extend %font-5;
 
   &.pale-color {
     color: $font-inactive-color;
+  }
+
+  &.enabled {
+    @extend %button;
   }
 
   &.disabled {

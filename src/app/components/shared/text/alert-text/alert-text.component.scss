@@ -1,0 +1,30 @@
+@import 'styles';
+
+:host {
+  width: 100%;
+  padding-left: $unit-20;
+  padding-bottom: $unit-3;
+
+  .container {
+    height: $unit-3;
+    margin: 0;
+    padding: 0;
+
+    li {
+      color: $font-error-color;
+      @extend %font-4;
+      @extend %font-light;
+
+      ::ng-deep app-text {
+        div {
+          color: $font-error-color;
+          @extend %font-4;
+          line-height: $unit-4;
+        }
+
+        width: calc($unit-18 + $input-width);
+        justify-content: center;
+      }
+    }
+  }
+}

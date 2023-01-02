@@ -11,23 +11,11 @@
     rgb(182, 179, 224),
     rgb(211, 209, 238)
   );
-  animation: gradient 5s ease infinite;
+  animation: ani-gradient 5s ease infinite;
   background-size: 400% 400%;
 
   &.title {
     width: $loading-title-width;
     height: $unit-16;
-  }
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
   }
 }

@@ -1,0 +1,42 @@
+@import 'styles';
+
+:host {
+  @extend %center-list;
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .label {
+      width: $unit-18;
+      @extend %font-bold;
+      @extend %font-5;
+    }
+
+    .input-div {
+      @extend %textarea-display;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      &.disabled {
+        background-color: $input-disabled-color;
+        cursor: not-allowed !important;
+
+        &:hover {
+          background-color: $input-disabled-color;
+        }
+      }
+
+      .input {
+        @extend %textarea;
+        width: 100%;
+      }
+    }
+  }
+
+  ::ng-deep app-alert-text {
+    margin-bottom: $unit-5;
+  }
+}
