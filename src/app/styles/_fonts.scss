@@ -1,26 +1,32 @@
 $font: 'Poppins';
-$font-color: rgb(61, 64, 126);
-$font-inactive-color: rgb(163, 163, 179);
-$font-hover-color: rgb(87, 90, 150);
-$font-error-color: rgb(170, 0, 0);
-$font-shadow: 1px 1px 1px rgb(128, 126, 255), 0 0 1px rgb(190, 190, 255),
-  0 0 0.2em rgb(225, 225, 255);
 
-%font-light {
+%font-light-no-ani {
   font-family: $font;
   font-weight: 200;
+}
+
+%font-medium-no-ani {
+  font-family: $font;
+  font-weight: 400;
+}
+
+%font-bold-no-ani {
+  font-family: $font;
+  font-weight: 700;
+}
+
+%font-light {
+  @extend %font-light-no-ani;
   @include call-onetime-ani(ani-opacity);
 }
 
 %font-medium {
-  font-family: $font;
-  font-weight: 400;
+  @extend %font-medium-no-ani;
   @include call-onetime-ani(ani-opacity);
 }
 
 %font-bold {
-  font-family: $font;
-  font-weight: 700;
+  @extend %font-bold-no-ani;
   @include call-onetime-ani(ani-opacity);
 }
 

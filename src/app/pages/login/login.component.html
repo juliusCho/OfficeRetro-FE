@@ -1,5 +1,5 @@
 <app-centre-title>Office Retro</app-centre-title>
-<form class="form" [formGroup]="form" [ngClass]="{ loaded: isPageLoaded }">
+<form class="form" [formGroup]="formGroup" [ngClass]="{ loaded: isPageLoaded }">
   <app-input
     label="Email"
     type="email"
@@ -12,15 +12,20 @@
     [formChange$]="getBehaviorSubjectString('email')"
     placeholder="example@domain.com"
     [minLength]="5"
+    [maxLength]="50"
     [required]="true"
   ></app-input>
   <app-password-input
+    label="Password"
+    name="password"
+    infoTextType="alert"
     (enter)="onSubmit()"
     [form]="form"
     [showValidationMessage]="showValidationMessage"
     [formChange$]="getBehaviorSubjectString('password')"
     [showPasswordResetIcon]="true"
     [minLength]="8"
+    [maxLength]="50"
     [required]="true"
   ></app-password-input>
   <app-area-input
@@ -31,7 +36,7 @@
     [showValidationMessage]="showValidationMessage"
     [formChange$]="getBehaviorSubjectString('area')"
     placeholder="Area"
-    [maxLength]="5000"
+    [maxLength]="50"
   ></app-area-input>
   <app-dropdown-input
     label="Drop"
@@ -42,15 +47,52 @@
     [formChange$]="getBehaviorSubjectString('drop')"
     placeholder="Select"
     [options]="[
-      { hey: '1' },
-      { hello: '2' },
-      { hhhh: '3' },
-      { hola: '4' },
-      { halo: '5' }
+      { '1': 'hey' },
+      { '2': 'hello' },
+      { '3': 'hhhh' },
+      { '4': 'hola' },
+      { '5': 'halo' }
     ]"
-    [maxLength]="5000"
     [required]="true"
+    [isDisabled]="true"
   ></app-dropdown-input>
+  <app-radio-input
+    label="Radio"
+    name="radio"
+    [form]="form"
+    infoTextType="all"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectString('radio')"
+    placeholder="Select"
+    [options]="[
+      { '1': 'hey' },
+      { '2': 'hello' },
+      { '3': 'hhhh' },
+      { '4': 'hola' }
+    ]"
+    [required]="true"
+    [columnCount]="2"
+    [isDisabled]="true"
+  ></app-radio-input>
+  <app-checkbox-input
+    label="Checkbox"
+    name="check"
+    [form]="form"
+    infoTextType="all"
+    [showValidationMessage]="showValidationMessage"
+    [formChange$]="getBehaviorSubjectArray('check')"
+    [options]="[
+      { '1': 'hey' },
+      { '2': 'hello' },
+      { '3': 'hhhh' },
+      { '4': 'hola' },
+      { '5': 'halo' }
+    ]"
+    [required]="true"
+    [columnCount]="2"
+    [maxLength]="2"
+    [isDisabled]="true"
+  ></app-checkbox-input>
   <app-button (click)="onSubmit()">Login</app-button>
 </form>
 <app-button>Register</app-button>

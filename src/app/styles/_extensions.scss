@@ -3,6 +3,23 @@
   @include call-onetime-ani(ani-swollen);
 }
 
+%swollen-no-ani {
+  border-radius: 35px;
+  border: $button-border;
+  box-shadow: $button-box-shadow;
+}
+
+%swollen-highlight {
+  border-radius: 35px;
+  @include call-onetime-ani(ani-swollen-highlight);
+}
+
+%swollen-highlight-no-ani {
+  border-radius: 35px;
+  border: $button-highlight-border;
+  box-shadow: $button-highlight-box-shadow;
+}
+
 %engraved {
   box-sizing: border-box;
   border-radius: 35px;
@@ -58,7 +75,7 @@
 %dropdown-display {
   @extend %swollen;
   background: $input-color;
-  width: $input-width;
+  width: calc($input-width - $unit-5);
   height: $unit-10;
 
   &:hover {

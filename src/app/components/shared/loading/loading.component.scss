@@ -11,13 +11,38 @@
   top: 0;
   z-index: 10;
   background-color: $loading-background-color;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+
+  &.isHidden {
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  &.isLoading {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
 
   i {
     color: $loading-spinner-color;
-    animation-name: ani-spin;
-    animation-duration: 500ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    animation: ani-spin 0.5s infinite linear;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
     @extend %font-10;
+    background-color: transparent;
+
+    &.isHidden {
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    &.isLoading {
+      opacity: 1;
+      transition: opacity 0.5s;
+    }
   }
 }

@@ -20,8 +20,10 @@ export class InputComponent extends BaseInputComponent {
   @Output() enter = new EventEmitter<void>()
 
   readonly onEnter = () => {
-    this._showValidationMessage = true
+    this.showValidationMessage = true
+
     this._changeDetectorRef.detectChanges()
+
     this.enter.emit()
   }
 }

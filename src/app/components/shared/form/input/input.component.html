@@ -1,4 +1,4 @@
-<div class="container" [formGroup]="form">
+<div class="container" [formGroup]="formGroup">
   <label *ngIf="label" [for]="name" class="label">{{ label }}</label>
   <div class="input-div" [ngClass]="{ disabled: isDisabled }">
     <input
@@ -9,7 +9,6 @@
       [maxLength]="maxLength"
       (keyup.enter)="onEnter()"
       [ngClass]="{ password: type === 'password' }"
-      [name]="name"
       [formControlName]="name"
       [email]="type === 'email'"
       (blur)="onFocusOut()"
@@ -21,7 +20,7 @@
 </div>
 <app-length-text
   *ngIf="displayLength"
-  [length]="form.value[name]?.length ?? 0"
+  [length]="form?.value[name]?.length ?? 0"
   [maxLength]="maxLength"
 ></app-length-text>
 <app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>

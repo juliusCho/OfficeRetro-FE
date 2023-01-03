@@ -30,6 +30,17 @@
   }
 }
 
+@keyframes ani-swollen-highlight {
+  0% {
+    border: 1px solid transparent;
+    box-shadow: unset;
+  }
+  100% {
+    border: $button-highlight-border;
+    box-shadow: $button-highlight-box-shadow;
+  }
+}
+
 @keyframes ani-engraved {
   0% {
     border: 1px solid transparent;
@@ -47,6 +58,15 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes ani-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 

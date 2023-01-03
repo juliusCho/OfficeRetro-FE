@@ -1,98 +1,86 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
 } from '@angular/core'
-import { FormGroup } from '@angular/forms'
-import { BehaviorSubject, tap } from 'rxjs'
+import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { SuperInputComponent } from '../super-input.component'
 
 @AutoUnsubscribe()
 @Component({
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseInputComponent implements OnInit {
-  @Input() label?: string
-  @Input() name = ''
-  @Input() width = ''
-  @Input() minLength = 0
-  @Input() maxLength = 50
-  @Input() isDisabled = false
-  @Input() required = false
-  @Input() infoTextType: 'none' | 'all' | 'alert' | 'length' = 'none'
-  @Input() form: FormGroup = new FormGroup({})
-  @Input() formChange$ = new BehaviorSubject<string>('')
-  @Input() validator?: (value?: string) => string
-  @Input() placeholder = ''
+export class BaseInputComponent
+  extends SuperInputComponent
+  implements OnInit, AfterViewInit
+{
+  @Input() formChange$?: BehaviorSubject<string> // form.valueChange observable
+  @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
 
-  @Input() set showValidationMessage(value: boolean) {
-    this._showValidationMessage = value
-  }
-
-  protected _showValidationMessage = false
-
-  validationMessage = ''
-
-  get displayLength() {
-    return this.infoTextType === 'all' || this.infoTextType === 'length'
-  }
-
-  get displayAlert() {
-    return this.infoTextType === 'all' || this.infoTextType === 'alert'
-  }
-
-  get alertMessage() {
-    return this._showValidationMessage ? this.validationMessage : ''
-  }
-
-  constructor(protected readonly _changeDetectorRef: ChangeDetectorRef) {}
+  protected _formChangeSubscription$?: Subscription
+  protected _formChangeObservable$?: Observable<string>
 
   ngOnInit(): void {
     if (this.isDisabled) {
-      this.form.get(this.name)?.disable()
+      this.form?.get(this.name)?.disable()
       return
     }
 
-    this.form.get(this.name)?.enable()
+    this.form?.get(this.name)?.enable()
 
-    this.formChange$
-      .pipe(
-        tap((v) => {
-          this._showValidationMessage = false
-          this.validationMessage = this.validate(v)
-          this._changeDetectorRef.markForCheck()
-        }),
-      )
-      .subscribe()
+    this._formChangeObservable$ = this.formChange$?.pipe(
+      tap((v) => {
+        this.showValidationMessage = false
+        this.validationMessage = this.validate(v)
+        this._changeDetectorRef.markForCheck()
+      }),
+    )
   }
 
-  readonly onFocusOut = () => {
-    this._showValidationMessage = true
-    this._changeDetectorRef.detectChanges()
+  ngAfterViewInit(): void {
+    this._formChangeSubscription$ = this._formChangeObservable$?.subscribe()
   }
 
   private readonly validate = (value?: string) => {
-    const result = this.validator ? this.validator(value) : ''
+    if (this.isDisabled) return ''
 
+    const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result
 
     if (!value) {
       if (this.required) {
-        return `${this.label} must be filled in`
+        return `${this.label} is a required field`
       }
 
       if (this.minLength > 0) {
-        return `${this.label} must contain at least ${this.minLength} of characters`
+        return `${this.label} must contain at least\n${this.minLength} character(s)`
       }
 
       return ''
     }
 
-    if (this.minLength > value.length || value.length > this.maxLength) {
-      return `${this.label} should contain ${this.minLength}-${this.maxLength} of characters`
+    if (this.maxLength === -1) {
+      if (this.minLength > 0 && this.minLength > value.length) {
+        return `${this.label} should contain\n less than ${this.minLength} character(s)`
+      }
+
+      return ''
+    }
+
+    if (this.minLength > 0) {
+      if (this.minLength > value.length || value.length > this.maxLength) {
+        return `${this.label} should contain\n${this.minLength}-${this.maxLength} characters`
+      }
+
+      return ''
+    }
+
+    if (value.length > this.maxLength) {
+      return `${this.label} should not contain\n more than ${this.maxLength} character(s)`
     }
 
     return ''

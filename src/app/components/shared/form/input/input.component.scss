@@ -42,5 +42,6 @@
 
   ::ng-deep app-alert-text {
     margin-bottom: $unit-5;
+    z-index: -1;
   }
 }

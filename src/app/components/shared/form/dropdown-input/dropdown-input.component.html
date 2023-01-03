@@ -1,16 +1,10 @@
-<div class="container" [formGroup]="form">
-  <select
-    [name]="name"
-    [formControlName]="name"
-    [style]="'width:' + width"
-    [ngClass]="{ disabled: isDisabled }"
-    class="input"
-  >
+<div class="container" [formGroup]="formGroup">
+  <select [formControlName]="name" [style]="'width:' + width" class="input">
     <ng-container *ngIf="optionValues$ | async as optionValues">
       <option
         *ngFor="let option of optionValues"
         [value]="option.value"
-        [selected]="option.value === form.value[name]"
+        [selected]="option.value === form?.value[name]"
       >
         {{ option.label }}
       </option>
@@ -19,7 +13,7 @@
   <label *ngIf="label" class="label" (click)="toggleDropdown()">{{
     label
   }}</label>
-  <div class="input-div">
+  <div class="input-div" [ngClass]="{ disabled: isDisabled }">
     <div class="select-section">
       <button
         type="button"
@@ -27,10 +21,15 @@
         (click)="toggleDropdown()"
         [disabled]="isDisabled"
       >
-        <div class="select">
-          {{ form.value[name] }}
-        </div>
-        <i class="fa-solid fa-caret-down icon"></i>
+        <ng-container *ngIf="selectedOption$ | async as selectedOption">
+          <div
+            class="select"
+            [ngClass]="{ placeholder: !selectedOption.value }"
+          >
+            {{ selectedOption.label || placeholder }}
+          </div>
+          <i class="fa-solid fa-caret-down icon"></i>
+        </ng-container>
       </button>
       <div
         #dropdownSection
@@ -45,9 +44,10 @@
             type="button"
             class="option"
             [ngClass]="{
-              selected: !!option.value && option.value === form.value[name]
+              placeholder: option.value === '',
+              selected: !!option.value && option.value === form?.value[name]
             }"
-            (click)="selectOption(option.value)"
+            (click)="selectOption(option)"
           >
             {{ option.label }}
           </button>

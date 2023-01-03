@@ -1,0 +1,128 @@
+@import 'styles';
+
+:host {
+  @extend %center-list;
+  width: 100%;
+
+  .container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+
+    .label {
+      width: $unit-18;
+      @extend %font-bold;
+      @extend %font-5;
+    }
+
+    .checkbox-section {
+      @extend %engraved;
+      width: calc(100% - $unit-18);
+      border-radius: 15px;
+      padding: $unit-3 $unit-4 $unit-4 $unit-1;
+
+      &.disabled {
+        cursor: not-allowed;
+        background-color: $input-disabled-color;
+
+        .row {
+          .column {
+            cursor: not-allowed;
+
+            .option-label {
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+
+      .row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+
+        .column {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          margin: $unit-2 0;
+          cursor: pointer;
+
+          &:hover {
+            .option-label {
+              color: $font-hover-color;
+            }
+
+            .option-checkbox {
+              background: $highlight-pale;
+            }
+          }
+
+          &:active {
+            .option-checkbox {
+              box-shadow: unset !important;
+            }
+          }
+
+          .option-label {
+            @extend %font-medium-no-ani;
+            @extend %font-4;
+            text-align: end;
+            width: calc(100% - $unit-9);
+            cursor: pointer;
+
+            &.selected {
+              color: $highlight;
+            }
+          }
+
+          .option-checkbox {
+            width: $unit-5;
+            height: $unit-5;
+            margin: 0 $unit-3;
+            -webkit-appearance: none;
+            appearance: none;
+            @extend %swollen-no-ani;
+            background: $button-border-color;
+            cursor: pointer;
+
+            &:hover {
+              background: $highlight-pale;
+            }
+
+            &:active {
+              box-shadow: unset !important;
+            }
+
+            &:disabled {
+              cursor: not-allowed;
+              box-shadow: unset !important;
+              background: $input-placeholder-color;
+            }
+
+            &.selected {
+              @extend %swollen-highlight-no-ani;
+              background: linear-gradient(
+                45deg,
+                $highlight 0%,
+                $highlight-pale 100%
+              );
+
+              &:disabled {
+                cursor: not-allowed;
+                box-shadow: unset !important;
+                background: $input-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ::ng-deep app-alert-text {
+    margin: $unit-4 0 $unit-5 0;
+  }
+}

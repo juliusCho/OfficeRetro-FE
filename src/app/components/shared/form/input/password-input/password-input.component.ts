@@ -5,36 +5,30 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { FormGroup } from '@angular/forms'
 import { BehaviorSubject } from 'rxjs'
+import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { SuperInputComponent } from '../../shared/super-input.component'
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-password-input',
   templateUrl: './password-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PasswordInputComponent {
-  @Input() label = 'Password'
-  @Input() width = ''
-  @Input() isDisabled = false
-  @Input() minLength = 0
-  @Input() maxLength = 50
-  @Input() required = false
-  @Input() form: FormGroup = new FormGroup({})
-  @Input() formChange$ = new BehaviorSubject<string>('')
-  @Input() infoTextType: 'none' | 'all' | 'alert' | 'length' = 'alert'
-  @Input() validator?: (value?: string) => string
-  @Input() showValidationMessage = false
+export class PasswordInputComponent extends SuperInputComponent {
+  @Input() formChange$?: BehaviorSubject<string> // form.valueChange observable
+  @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
   @Input() showPasswordResetIcon = false
 
   @Output() enter = new EventEmitter<void>()
 
-  get getValidator(): (value?: string) => string {
+  get validate(): (value?: string) => string {
     const _this = this
 
     return (value?: string) => {
-      const result = _this.validator ? _this.validator(value) : ''
+      if (this.isDisabled) return ''
 
+      const result = _this.validator ? _this.validator(value) : ''
       if (result !== '') return result
 
       if (!value) return ''

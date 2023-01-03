@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { BaseInputModule } from 'src/app/components/shared/form/shared/base-input/base-input.module'
+import { FormModule } from 'src/app/components/shared/form/form.module'
 import { SharedModule } from 'src/app/components/shared/shared.module'
 import { LoginRouterModule } from './login-routing.module'
 import LoginComponent from './login.component'
@@ -13,7 +13,7 @@ import LoginComponent from './login.component'
     LoginRouterModule,
     CommonModule,
     ReactiveFormsModule,
-    BaseInputModule,
+    FormModule,
   ],
   exports: [LoginComponent],
 })

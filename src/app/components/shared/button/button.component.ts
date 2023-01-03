@@ -14,7 +14,7 @@ import {
 })
 export class ButtonComponent {
   @Input() isDisabled = false
-  @Input() isPale = false
+  @Input() isPale = false // button label color to be pale
   @Input() isLargeFont = false
   @Input() width = ''
   @Input() style = ''

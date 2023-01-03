@@ -2,7 +2,14 @@ $main: rgb(129, 129, 255);
 $highlight: rgb(255, 181, 131);
 $error: rgb(255, 131, 131);
 
+$highlight-pale: rgb(255, 227, 208);
+
 $main-background-color: rgb(240, 243, 255);
+
+$font-color: rgb(61, 64, 126);
+$font-inactive-color: rgb(163, 163, 179);
+$font-hover-color: rgb(87, 90, 150);
+$font-error-color: rgb(170, 0, 0);
 
 $tooltip-border-color: rgb(203, 203, 252);
 
@@ -11,6 +18,10 @@ $button-border-color: rgb(234, 235, 253);
 $button-light-border-color: rgba(255, 255, 255, 0.94);
 $button-shadow-border-color: rgb(192, 198, 245);
 $button-disabled-color: rgb(236, 238, 245);
+
+$button-highlight-border-color: rgb(247, 218, 199);
+$button-highlight-light-border-color: rgba(243, 233, 255, 0.94);
+$button-highlight-shadow-border-color: rgb(227, 218, 248);
 
 $input-color: rgb(234, 235, 255);
 $input-placeholder-color: rgb(190, 192, 224);

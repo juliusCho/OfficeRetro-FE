@@ -5,7 +5,9 @@
   width: 100%;
 
   .container {
-    @extend %flex-center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
 
     .input {
@@ -24,6 +26,7 @@
       @extend %dropdown-display;
 
       &.disabled {
+        @extend %input-box-display;
         background-color: $input-disabled-color;
         cursor: not-allowed !important;
 
@@ -62,23 +65,32 @@
               color: $font-hover-color;
             }
           }
+
+          &:disabled {
+            cursor: not-allowed !important;
+            background-color: $input-disabled-color;
+            margin: $unit-3 0 0 $unit-3;
+            width: calc(100% - $unit-5);
+            height: $unit-9;
+          }
         }
 
         .options {
           margin-top: $unit-2;
-          padding: 0 $unit-3;
+          padding: $unit-3;
           max-height: $unit-22;
           overflow-y: auto;
-          visibility: hidden;
           opacity: 0;
           border-radius: 15px;
           box-shadow: $float-box-shadow;
           background-color: $input-color;
           transition: opacity 0.5s;
+          z-index: 1;
+          position: absolute;
+          width: 100%;
           @include call-onetime-ani(ani-rollup, 0.2s);
 
           &.visible {
-            visibility: visible;
             opacity: 1;
             transition: opacity 0.5s;
             @include call-onetime-ani(ani-dropdown, 0.2s);
@@ -97,7 +109,14 @@
               background-color: $main-background-color;
             }
 
+            &:active {
+              @extend %engraved;
+              @include call-onetime-ani(ani-engraved, 0.1s);
+              background-color: $main-background-color;
+            }
+
             &.selected {
+              @extend %engraved;
               background-color: $dropdown-selected-option-color;
             }
           }
@@ -106,7 +125,11 @@
     }
   }
 
+  .placeholder {
+    color: $input-placeholder-color;
+  }
+
   ::ng-deep app-alert-text {
-    margin-bottom: $unit-5;
+    margin: $unit-4 0 $unit-5 0;
   }
 }

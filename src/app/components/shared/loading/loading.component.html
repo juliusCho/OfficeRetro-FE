@@ -1,3 +1,6 @@
 <div *ngIf="loading" class="container">
-  <i class="fa-regular fa-compass"></i>
+  <i
+    class="fa-regular fa-compass"
+    [ngClass]="{ isLoading, isHidden: !isLoading }"
+  ></i>
 </div>

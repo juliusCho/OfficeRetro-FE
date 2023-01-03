@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { BehaviorSubject } from 'rxjs'
-import { forbiddenStringValidator } from 'src/app/helpers/validators'
+import { BehaviorSubject, Subscription } from 'rxjs'
+import { forbiddenStringValidator } from 'src/app/helpers/form-validators'
 import { BasePageComponent } from '../base-page.component'
 
 @Component({
@@ -14,8 +14,14 @@ export default class LoginComponent
   implements AfterContentInit, OnInit
 {
   showValidationMessage = false
-  form: FormGroup = new FormGroup({})
+  form?: FormGroup
   formSubjects: { [key: string]: unknown } = {}
+
+  private _formSubscription$?: Subscription
+
+  get formGroup() {
+    return this.form as FormGroup
+  }
 
   get emailValidator() {
     return (value?: string) => {
@@ -59,6 +65,11 @@ export default class LoginComponent
       ]),
       area: new FormControl('', [Validators.maxLength(5000)]),
       drop: new FormControl('', [Validators.required]),
+      radio: new FormControl('', [Validators.required]),
+      check: new FormControl(
+        [],
+        [Validators.required, Validators.maxLength(2)],
+      ),
     })
 
     this.formSubjects = {
@@ -66,13 +77,15 @@ export default class LoginComponent
       password: new BehaviorSubject<string>(''),
       area: new BehaviorSubject<string>(''),
       drop: new BehaviorSubject<string>(''),
+      radio: new BehaviorSubject<string>(''),
+      check: new BehaviorSubject<string[]>([]),
     }
   }
 
   ngAfterContentInit(): void {
     this.isPageLoaded = true
 
-    this.form.valueChanges.subscribe((v) => {
+    this._formSubscription$ = this.form?.valueChanges.subscribe((v) => {
       if (this.isBehaviorSubject<string>(this.formSubjects['email'])) {
         this.formSubjects['email'].next(String(v.email))
       }
@@ -85,66 +98,78 @@ export default class LoginComponent
       if (this.isBehaviorSubject<string>(this.formSubjects['drop'])) {
         this.formSubjects['drop'].next(String(v.drop))
       }
+      if (this.isBehaviorSubject<string>(this.formSubjects['radio'])) {
+        this.formSubjects['radio'].next(String(v.radio))
+      }
+      if (this.isBehaviorSubject<string[]>(this.formSubjects['check'])) {
+        this.formSubjects['check'].next(v.check ? [...v.check] : [])
+      }
     })
   }
 
   readonly onSubmit = () => {
     this.showValidationMessage = false
 
-    if (this.form.invalid) {
+    if (this.form?.invalid) {
       setTimeout(() => {
         this.showValidationMessage = true
       }, 10)
       return
     }
+
+    this.initializeForm()
+    this.isLoading = true
+    setTimeout(() => {
+      this.isLoading = false
+    }, 2000)
   }
 
   readonly getBehaviorSubjectString = (
     key: string,
   ): BehaviorSubject<string> => {
-    const subject = this.formSubjects[key]
-
-    if (this.isBehaviorSubject<string>(subject)) {
-      return subject
-    }
-
-    return new BehaviorSubject<string>('')
+    return this.getBehaviorSubject<string>(key, '')
   }
 
   readonly getBehaviorSubjectNumber = (
     key: string,
   ): BehaviorSubject<number> => {
-    const subject = this.formSubjects[key]
-
-    if (this.isBehaviorSubject<number>(subject)) {
-      return subject
-    }
-
-    return new BehaviorSubject<number>(0)
+    return this.getBehaviorSubject<number>(key, 0)
   }
 
   readonly getBehaviorSubjectBoolean = (
     key: string,
   ): BehaviorSubject<boolean> => {
-    const subject = this.formSubjects[key]
-
-    if (this.isBehaviorSubject<boolean>(subject)) {
-      return subject
-    }
-
-    return new BehaviorSubject<boolean>(false)
+    return this.getBehaviorSubject<boolean>(key, false)
   }
 
   readonly getBehaviorSubjectArray = (
     key: string,
   ): BehaviorSubject<string[]> => {
+    return this.getBehaviorSubject<string[]>(key, [])
+  }
+
+  private readonly initializeForm = () => {
+    this.form?.setValue({
+      email: '',
+      password: '',
+      area: '',
+      drop: '',
+      radio: '',
+      check: [],
+    })
+  }
+
+  private readonly getBehaviorSubject = <T>(
+    key: string,
+    initialValue: T,
+  ): BehaviorSubject<T> => {
     const subject = this.formSubjects[key]
 
-    if (this.isBehaviorSubject<string[]>(subject)) {
+    if (this.isBehaviorSubject<T>(subject)) {
       return subject
     }
 
-    return new BehaviorSubject<string[]>([])
+    return new BehaviorSubject<T>(initialValue)
   }
 
   private readonly isBehaviorSubject = <T>(
