@@ -1,12 +1,14 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
 } from '@angular/core'
 import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { getBasicStringInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { SuperInputComponent } from '../super-input.component'
 
 @AutoUnsubscribe()
@@ -18,11 +20,17 @@ export class BaseInputComponent
   extends SuperInputComponent
   implements OnInit, AfterViewInit
 {
-  @Input() formChange$?: BehaviorSubject<string> // form.valueChange observable
   @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
+  @Input() valueChange$!: BehaviorSubject<string>
 
-  protected _formChangeSubscription$?: Subscription
-  protected _formChangeObservable$?: Observable<string>
+  protected valueChangeObservable$!: Observable<string>
+  protected valueChangeSubscription$?: Subscription
+
+  constructor(
+    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+  ) {
+    super(_changeDetectorRef)
+  }
 
   ngOnInit(): void {
     if (this.isDisabled) {
@@ -32,57 +40,33 @@ export class BaseInputComponent
 
     this.form?.get(this.name)?.enable()
 
-    this._formChangeObservable$ = this.formChange$?.pipe(
+    this.valueChangeObservable$ = this.valueChange$.pipe(
       tap((v) => {
         this.showValidationMessage = false
         this.validationMessage = this.validate(v)
         this._changeDetectorRef.markForCheck()
       }),
     )
+
+    this._changeDetectorRef.detectChanges()
   }
 
   ngAfterViewInit(): void {
-    this._formChangeSubscription$ = this._formChangeObservable$?.subscribe()
+    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
   }
 
-  private readonly validate = (value?: string) => {
+  protected readonly validate = (value?: string) => {
     if (this.isDisabled) return ''
 
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result
 
-    if (!value) {
-      if (this.required) {
-        return `${this.label} is a required field`
-      }
-
-      if (this.minLength > 0) {
-        return `${this.label} must contain at least\n${this.minLength} character(s)`
-      }
-
-      return ''
-    }
-
-    if (this.maxLength === -1) {
-      if (this.minLength > 0 && this.minLength > value.length) {
-        return `${this.label} should contain\n less than ${this.minLength} character(s)`
-      }
-
-      return ''
-    }
-
-    if (this.minLength > 0) {
-      if (this.minLength > value.length || value.length > this.maxLength) {
-        return `${this.label} should contain\n${this.minLength}-${this.maxLength} characters`
-      }
-
-      return ''
-    }
-
-    if (value.length > this.maxLength) {
-      return `${this.label} should not contain\n more than ${this.maxLength} character(s)`
-    }
-
-    return ''
+    return getBasicStringInputValidationMsg({
+      value,
+      label: this.label,
+      required: this.required,
+      minLength: this.minLength,
+      maxLength: this.maxLength,
+    })
   }
 }

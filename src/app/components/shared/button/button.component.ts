@@ -13,20 +13,20 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-  @Input() isDisabled = false
-  @Input() isPale = false // button label color to be pale
-  @Input() isLargeFont = false
-  @Input() width = ''
-  @Input() style = ''
+  @Input() isDisabled?: boolean = false
+  @Input() isPale?: boolean = false // button label color to be pale
+  @Input() isLargeFont?: boolean = false
+  @Input() width?: string = ''
+  @Input() style?: string = ''
 
   @Output() click = new EventEmitter<void>()
 
   readonly getExtraCssClass = (): Record<string, boolean> => {
     return {
-      'pale-color': this.isPale,
+      'pale-color': !!this.isPale,
       enabled: !this.isDisabled,
-      disabled: this.isDisabled,
-      'large-font': this.isLargeFont,
+      disabled: !!this.isDisabled,
+      'large-font': !!this.isLargeFont,
     }
   }
 }

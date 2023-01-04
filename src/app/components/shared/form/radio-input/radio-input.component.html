@@ -1,9 +1,9 @@
-<div class="container" [formGroup]="formGroup">
+<div class="container" [formGroup]="form">
   <div *ngIf="label" class="label">{{ label }}</div>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       *ngIf="selectedOption$ | async as selectedOption"
-      class="radio-section"
+      class="input-section"
       [ngClass]="{ disabled: isDisabled }"
     >
       <div *ngFor="let optionRows of getItems(optionValues)" class="row">
@@ -27,7 +27,7 @@
             [formControlName]="name"
             [value]="option.value"
             type="radio"
-            class="option-radio"
+            class="option-input"
             [ngClass]="{ selected: selectedOption.value === option.value }"
           />
         </div>

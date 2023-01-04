@@ -54,7 +54,7 @@
 %input-display {
   @extend %engraved;
   background: $input-color;
-  width: $input-width;
+  width: 100%;
 
   &:hover {
     background-color: $main-background-color;
@@ -75,7 +75,7 @@
 %dropdown-display {
   @extend %swollen;
   background: $input-color;
-  width: calc($input-width - $unit-5);
+  width: calc(100% - $unit-5);
   height: $unit-10;
 
   &:hover {
@@ -86,6 +86,7 @@
 %input {
   border: none;
   background-color: transparent;
+  width: 100%;
   @extend %font-medium;
 
   &::-moz-selection {

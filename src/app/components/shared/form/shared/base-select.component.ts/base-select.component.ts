@@ -22,15 +22,13 @@ export class BaseSelectComponent
 {
   @Input() options?: Record<string, string>[]
   @Input() optionsFetchUrl?: string
-  @Input() excludeValue?: string
 
-  protected optionValues$: Observable<Array<{ label: string; value: string }>> =
-    of([])
+  protected optionValues$!: Observable<Array<{ label: string; value: string }>>
   protected selectedOption$ = new BehaviorSubject<{
     label: string
     value: string
   }>({
-    label: this.placeholder,
+    label: this.placeholder ?? '',
     value: '',
   })
 
@@ -42,13 +40,13 @@ export class BaseSelectComponent
   }
 
   override ngAfterViewInit(): void {
-    this._formChangeSubscription$ = this._formChangeObservable$
+    this.valueChangeSubscription$ = this.valueChangeObservable$
       ?.pipe(
         tap((v) => {
           if (v === this.selectedOption$.value.value) return
           if (v === '') {
             this.selectedOption$.next({
-              label: this.placeholder,
+              label: this.placeholder ?? '',
               value: '',
             })
 
@@ -57,22 +55,22 @@ export class BaseSelectComponent
         }),
       )
       .subscribe()
+
+    this._changeDetectorRef.detectChanges()
   }
 
-  ngAfterContentInit() {
+  ngAfterContentInit(): void {
     this.maxLength = -1
 
     this._changeDetectorRef.detectChanges()
 
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of([
-        { label: this.placeholder, value: '' },
-        ...this.options
-          .filter((o) => Object.values(o)[0] !== this.excludeValue)
-          .map((o) => {
-            const [value, label] = Object.entries(o)[0]
-            return { value, label }
-          }),
+        { label: this.placeholder ?? '', value: '' },
+        ...this.options.map((o) => {
+          const [value, label] = Object.entries(o)[0]
+          return { value, label }
+        }),
       ]).pipe(tap(this.setSelectedOptionSubject))
 
       this._changeDetectorRef.detectChanges()
@@ -90,7 +88,7 @@ export class BaseSelectComponent
   }) => {
     if (this.isDisabled) return
 
-    this.form?.get(this.name)?.setValue(option.value)
+    this.form.get(this.name)?.setValue(option.value)
     this.selectedOption$.next(option)
 
     this._changeDetectorRef.detectChanges()
@@ -105,13 +103,11 @@ export class BaseSelectComponent
       .getGeneralFetch(this.optionsFetchUrl)
       .pipe(
         map((data) => [
-          { label: this.placeholder, value: '' },
-          ...data
-            .filter((d) => String(d.id) !== this.excludeValue)
-            .map((d) => ({
-              label: d.name,
-              value: String(d.id),
-            })),
+          { label: this.placeholder ?? '', value: '' },
+          ...data.map((d) => ({
+            label: d.name,
+            value: String(d.id),
+          })),
         ]),
         tap(this.setSelectedOptionSubject),
       )
@@ -123,9 +119,11 @@ export class BaseSelectComponent
     values: Array<{ value: string; label: string }>,
   ) => {
     const value = values.find(
-      (item) => !!item.value && item.value === this.form?.value[this.name],
+      (item) => !!item.value && item.value === this.form.value[this.name],
     )
-    this.selectedOption$.next(value ?? { label: this.placeholder, value: '' })
+    this.selectedOption$.next(
+      value ?? { label: this.placeholder ?? '', value: '' },
+    )
 
     this._changeDetectorRef.markForCheck()
   }

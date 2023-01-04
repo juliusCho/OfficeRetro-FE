@@ -1,10 +1,10 @@
-<div class="container" [formGroup]="formGroup">
+<div class="container" [formGroup]="form">
   <select [formControlName]="name" [style]="'width:' + width" class="input">
     <ng-container *ngIf="optionValues$ | async as optionValues">
       <option
         *ngFor="let option of optionValues"
         [value]="option.value"
-        [selected]="option.value === form?.value[name]"
+        [selected]="option.value === form.value[name]"
       >
         {{ option.label }}
       </option>
@@ -45,7 +45,7 @@
             class="option"
             [ngClass]="{
               placeholder: option.value === '',
-              selected: !!option.value && option.value === form?.value[name]
+              selected: !!option.value && option.value === form.value[name]
             }"
             (click)="selectOption(option)"
           >

@@ -1,11 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core'
-import { BehaviorSubject, tap } from 'rxjs'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { BehaviorSubject, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { convertToColumnizedArray } from 'src/app/helpers/object-converters'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
@@ -16,19 +10,19 @@ import { BaseListInputComponent } from '../shared/base-list-input.component.ts/b
 @Component({
   selector: 'app-checkbox-input',
   templateUrl: './checkbox-input.component.html',
-  styleUrls: ['./checkbox-input.component.scss'],
+  styleUrls: [
+    '../../../../styles/components/select-options-input.component.scss',
+  ],
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckboxInputComponent
-  extends BaseListInputComponent
-  implements OnChanges
-{
-  @Input() columnCount = 2
+export class CheckboxInputComponent extends BaseListInputComponent {
+  @Input() columnCount?: number = 2
 
   selectedOptions$ = new BehaviorSubject<string[]>([])
 
   private readonly _componentUniqueId = uuid()
+  private _parentObservableSubscription$!: Subscription
 
   get columnWidth() {
     return `calc(100% / ${this.columnCount})`
@@ -39,8 +33,8 @@ export class CheckboxInputComponent
   }
 
   override ngAfterViewInit(): void {
-    this._formChangeSubscription$ = this._formChangeObservable$
-      ?.pipe(
+    this.valueChangeSubscription$ = this.valueChangeObservable$
+      .pipe(
         tap((v) => {
           if (v.length === 0) {
             this.selectedOptions$.next([])
@@ -50,24 +44,26 @@ export class CheckboxInputComponent
         }),
       )
       .subscribe()
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['optionValuesObservableSeq']?.previousValue) {
-      this.optionValues$.pipe(tap(this.setSelectedOptionsSubject))
-      return
-    }
+    this._parentObservableSubscription$ = this.optionValuesObservableListener$
+      .pipe(
+        tap(() => {
+          this.optionValues$ = this.optionValues$.pipe(
+            tap(this.setSelectedOptionsSubject),
+          )
 
-    const { previousValue, currentValue } = changes['optionValuesObservableSeq']
-    if (previousValue === currentValue) return
+          this._changeDetectorRef.markForCheck()
+        }),
+      )
+      .subscribe()
 
-    this.optionValues$.pipe(tap(this.setSelectedOptionsSubject))
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly getItems = (
     optionValues: Array<{ label: string; value: string }>,
   ) => {
-    return convertToColumnizedArray(optionValues, this.columnCount)
+    return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
   }
 
   readonly isSelectedOption = (selectedOptions: string[], option: string) => {
@@ -77,16 +73,14 @@ export class CheckboxInputComponent
   readonly selectOption = (value: string) => {
     if (this.isDisabled) return
 
-    let formValues: string[] = [...(this.form?.value[this.name] ?? [])]
+    let formValues: string[] = [...(this.form.value[this.name] ?? [])]
     if (formValues.includes(value)) {
       formValues = formValues.filter((v) => v !== value)
     } else {
       formValues.push(value)
     }
-    this.form?.get(this.name)?.setValue(formValues)
+    this.form.get(this.name)?.setValue(formValues)
     this.selectedOptions$.next(formValues)
-
-    this._changeDetectorRef.detectChanges()
 
     this.onFocusOut()
   }
@@ -95,7 +89,7 @@ export class CheckboxInputComponent
     values: Array<{ value: string; label: string }>,
   ) => {
     const vals = values
-      .filter((item) => this.form?.value[this.name].includes(item.value))
+      .filter((item) => this.form.value[this.name].includes(item.value))
       .map((item) => item.value)
 
     this.selectedOptions$.next(vals)

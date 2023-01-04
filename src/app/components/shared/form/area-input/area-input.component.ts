@@ -8,5 +8,5 @@ import { BaseInputComponent } from '../shared/base-input/base-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AreaInputComponent extends BaseInputComponent {
-  @Input() height = ''
+  @Input() height?: string = ''
 }

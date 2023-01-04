@@ -7,12 +7,14 @@ import { BaseSelectComponent } from '../shared/base-select.component.ts/base-sel
 @Component({
   selector: 'app-radio-input',
   templateUrl: './radio-input.component.html',
-  styleUrls: ['./radio-input.component.scss'],
+  styleUrls: [
+    '../../../../styles/components/select-options-input.component.scss',
+  ],
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioInputComponent extends BaseSelectComponent {
-  @Input() columnCount = 2
+  @Input() columnCount?: number = 2
 
   private readonly _componentUniqueId = uuid()
 
@@ -27,6 +29,6 @@ export class RadioInputComponent extends BaseSelectComponent {
   readonly getItems = (
     optionValues: Array<{ label: string; value: string }>,
   ) => {
-    return convertToColumnizedArray(optionValues, this.columnCount)
+    return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
   }
 }

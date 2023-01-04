@@ -13,12 +13,12 @@ import { SuperInputComponent } from '../../shared/super-input.component'
 @Component({
   selector: 'app-password-input',
   templateUrl: './password-input.component.html',
+  styles: [':host {width: 100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordInputComponent extends SuperInputComponent {
-  @Input() formChange$?: BehaviorSubject<string> // form.valueChange observable
+  @Input() valueChange$!: BehaviorSubject<string> // form.valueChange observable
   @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
-  @Input() showPasswordResetIcon = false
 
   @Output() enter = new EventEmitter<void>()
 

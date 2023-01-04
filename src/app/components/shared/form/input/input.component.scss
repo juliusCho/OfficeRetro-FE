@@ -2,20 +2,21 @@
 
 :host {
   @extend %center-list;
+  width: 100%;
 
   .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @extend %flex-center;
+    width: 100%;
 
     .label {
-      width: $unit-18;
+      width: 30%;
       @extend %font-bold;
       @extend %font-5;
     }
 
     .input-div {
       @extend %input-box-display;
+      width: 70%;
       display: flex;
       justify-content: flex-start;
       align-items: center;
@@ -31,7 +32,6 @@
 
       .input {
         @extend %input-box;
-        width: 100%;
 
         &.password {
           width: 80%;
@@ -40,7 +40,7 @@
     }
   }
 
-  ::ng-deep app-alert-text {
+  ::ng-deep div app-alert-text {
     margin-bottom: $unit-5;
     z-index: -1;
   }

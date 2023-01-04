@@ -16,7 +16,7 @@ import { BaseSelectComponent } from '../shared/base-select.component.ts/base-sel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropdownInputComponent extends BaseSelectComponent {
-  @ViewChild('dropdownSection') dropdownSection?: ElementRef
+  @ViewChild('dropdownSection') dropdownSection!: ElementRef
 
   isDropdownOpened = false
 
@@ -37,7 +37,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
   }) => {
     if (this.isDisabled) return
 
-    this.form?.get(this.name)?.setValue(option.value)
+    this.form.get(this.name)?.setValue(option.value)
     this.selectedOption$.next(option)
 
     this.isDropdownOpened = false
@@ -50,7 +50,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
   @HostListener('document:mousedown', ['$event'])
   private readonly onGlobalClick = (event: MouseEvent) => {
     if (this.isDisabled || !this.isDropdownOpened) return
-    if (this.dropdownSection?.nativeElement.contains(event.target)) {
+    if (this.dropdownSection.nativeElement.contains(event.target)) {
       return
     }
 

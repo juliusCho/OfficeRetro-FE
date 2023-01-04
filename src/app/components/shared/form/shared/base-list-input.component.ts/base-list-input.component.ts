@@ -9,6 +9,7 @@ import {
 } from '@angular/core'
 import { BehaviorSubject, map, Observable, of, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { getBasicListInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { SuperInputComponent } from '../super-input.component'
 
@@ -20,19 +21,18 @@ import { SuperInputComponent } from '../super-input.component'
 })
 export class BaseListInputComponent
   extends SuperInputComponent
-  implements OnInit, AfterViewInit, AfterContentInit
+  implements OnInit, AfterContentInit, AfterViewInit
 {
-  @Input() formChange$?: BehaviorSubject<string[]> // form.valueChange observable
   @Input() validator?: (value?: string[]) => string // fn for validate value & get invalid message
   @Input() options?: Record<string, string>[]
   @Input() optionsFetchUrl?: string
-  @Input() excludeValue?: string
+  @Input() valueChange$!: BehaviorSubject<string[]>
 
+  protected valueChangeObservable$!: Observable<string[]>
+  protected valueChangeSubscription$?: Subscription
   protected optionValues$: Observable<Array<{ label: string; value: string }>> =
     of([])
-  protected optionValuesObservableSeq = 0
-  protected _formChangeSubscription$?: Subscription
-  protected _formChangeObservable$?: Observable<string[]>
+  protected optionValuesObservableListener$ = new BehaviorSubject(0)
 
   constructor(
     private readonly _requestService: HttpCommonService,
@@ -43,37 +43,32 @@ export class BaseListInputComponent
 
   ngOnInit(): void {
     if (this.isDisabled) {
-      this.form?.get(this.name)?.disable()
+      this.form.get(this.name)?.disable()
       return
     }
 
-    this.form?.get(this.name)?.enable()
+    this.form.get(this.name)?.enable()
 
-    this._formChangeObservable$ = this.formChange$?.pipe(
+    this.valueChangeObservable$ = this.valueChange$.pipe(
       tap((v) => {
         this.showValidationMessage = false
         this.validationMessage = this.validate(v)
+
         this._changeDetectorRef.markForCheck()
       }),
     )
-  }
 
-  ngAfterViewInit(): void {
-    this._formChangeSubscription$ = this._formChangeObservable$?.subscribe()
+    this._changeDetectorRef.detectChanges()
   }
 
   ngAfterContentInit() {
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of(
-        this.options
-          .filter((o) => Object.values(o)[0] !== this.excludeValue)
-          .map((o) => {
-            const [value, label] = Object.entries(o)[0]
-            return { value, label }
-          }),
-      )
-
-      this.optionValuesObservableSeq += 1
+        this.options.map((o) => {
+          const [value, label] = Object.entries(o)[0]
+          return { value, label }
+        }),
+      ).pipe(tap(this.updateContextObservableListener))
 
       this._changeDetectorRef.detectChanges()
       return
@@ -84,6 +79,10 @@ export class BaseListInputComponent
     this.fetchOptions()
   }
 
+  ngAfterViewInit(): void {
+    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
+  }
+
   private readonly fetchOptions = () => {
     if (!this.optionsFetchUrl) return
 
@@ -91,16 +90,13 @@ export class BaseListInputComponent
       .getGeneralFetch(this.optionsFetchUrl)
       .pipe(
         map((data) =>
-          data
-            .filter((d) => String(d.id) !== this.excludeValue)
-            .map((d) => ({
-              label: d.name,
-              value: String(d.id),
-            })),
+          data.map((d) => ({
+            label: d.name,
+            value: String(d.id),
+          })),
         ),
+        tap(this.updateContextObservableListener),
       )
-
-    this.optionValuesObservableSeq += 1
 
     this._changeDetectorRef.detectChanges()
   }
@@ -111,38 +107,19 @@ export class BaseListInputComponent
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result
 
-    if (!value || value.length === 0) {
-      if (this.required) {
-        return `${this.label} requires at least 1 item`
-      }
+    return getBasicListInputValidationMsg({
+      value,
+      label: this.label,
+      required: this.required,
+      minLength: this.minLength,
+      maxLength: this.maxLength,
+    })
+  }
 
-      if (this.minLength > 0) {
-        return `${this.label} must contain at least\n${this.minLength} item(s)`
-      }
-
-      return ''
-    }
-
-    if (this.maxLength === -1) {
-      if (this.minLength > 0 && this.minLength > value.length) {
-        return `${this.label} should contain\n less than ${this.minLength} item(s)`
-      }
-
-      return ''
-    }
-
-    if (this.minLength > 0) {
-      if (this.minLength > value.length || value.length > this.maxLength) {
-        return `${this.label} should contain\n${this.minLength}-${this.maxLength} items`
-      }
-
-      return ''
-    }
-
-    if (value.length > this.maxLength) {
-      return `${this.label} should not contain\n more than ${this.maxLength} item(s)`
-    }
-
-    return ''
+  private readonly updateContextObservableListener = () => {
+    this.optionValuesObservableListener$.next(
+      this.optionValuesObservableListener$.value + 1,
+    )
+    this._changeDetectorRef.markForCheck()
   }
 }

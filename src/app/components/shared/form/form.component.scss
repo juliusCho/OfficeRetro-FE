@@ -1,0 +1,18 @@
+@import 'styles';
+
+.container {
+  width: 100%;
+  @extend %center-list;
+
+  ::ng-deep app-alert-text {
+    margin-bottom: $unit-5;
+  }
+
+  ::ng-deep app-button {
+    margin: $unit-5 0 $unit-5 0;
+  }
+
+  ::ng-deep app-button {
+    margin: $unit-4;
+  }
+}

@@ -17,16 +17,18 @@
     }
 
     .label {
-      width: $unit-18;
+      width: 30%;
       @extend %font-bold;
       @extend %font-5;
     }
 
     .input-div {
       @extend %dropdown-display;
+      width: calc(70% - $unit-5);
 
       &.disabled {
         @extend %input-box-display;
+        width: 70%;
         background-color: $input-disabled-color;
         cursor: not-allowed !important;
 
@@ -45,7 +47,6 @@
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          width: 100%;
           height: $unit-10;
           padding-right: 0;
 

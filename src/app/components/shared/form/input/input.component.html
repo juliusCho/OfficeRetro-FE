@@ -1,4 +1,4 @@
-<div class="container" [formGroup]="formGroup">
+<div class="container" [formGroup]="form">
   <label *ngIf="label" [for]="name" class="label">{{ label }}</label>
   <div class="input-div" [ngClass]="{ disabled: isDisabled }">
     <input
@@ -8,19 +8,20 @@
       [style]="'width:' + width"
       [maxLength]="maxLength"
       (keyup.enter)="onEnter()"
-      [ngClass]="{ password: type === 'password' }"
+      [ngClass]="{ password: isInnerContentExist }"
       [formControlName]="name"
       [email]="type === 'email'"
       (blur)="onFocusOut()"
       [placeholder]="isDisabled ? '' : placeholder"
     />
-    <app-password-reset-button *ngIf="showPasswordResetIcon && !isDisabled">
-    </app-password-reset-button>
+    <div #innerContent *ngIf="!isDisabled && type === 'password'">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>
 <app-length-text
   *ngIf="displayLength"
-  [length]="form?.value[name]?.length ?? 0"
+  [length]="form.value[name]?.length ?? 0"
   [maxLength]="maxLength"
 ></app-length-text>
 <app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>

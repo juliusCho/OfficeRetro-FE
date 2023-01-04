@@ -7,6 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LengthTextComponent {
-  @Input() length = 0
-  @Input() maxLength = 50
+  @Input() length?: number = 0
+  @Input() maxLength?: number = 50
 }
