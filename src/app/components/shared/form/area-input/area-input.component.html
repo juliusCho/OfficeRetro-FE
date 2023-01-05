@@ -1,6 +1,18 @@
-<div class="container" [formGroup]="form">
-  <label *ngIf="label" [for]="name" class="label">{{ label }}</label>
-  <div class="input-div" [ngClass]="{ disabled: isDisabled }">
+<div
+  class="container"
+  [formGroup]="form"
+  [ngClass]="{
+    'label-top': labelPosition === 'top'
+  }"
+>
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    [for]="name"
+    [labelPosition]="labelPosition"
+    [labelWidth]="labelWidth"
+  ></app-input-label>
+  <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <textarea
       [id]="name"
       class="input"
@@ -17,4 +29,8 @@
   [length]="form.value[name]?.length ?? 0"
   [maxLength]="maxLength"
 ></app-length-text>
-<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>
+<app-alert-text
+  *ngIf="displayAlert && isValidationNeeded"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+></app-alert-text>

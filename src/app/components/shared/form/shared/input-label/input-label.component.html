@@ -1,0 +1,20 @@
+<label
+  *ngIf="label"
+  [for]="for"
+  class="label"
+  [ngClass]="{ 'label-top': labelPosition === 'top' }"
+  [ngStyle]="{ width: labelWidth }"
+  (click)="onClick()"
+>
+  <ng-container *ngIf="doesLabelContainsLineBreak; else labelText">
+    <ng-container
+      *ngFor="let line of getLineBrokenLabel(label); let idx = index"
+    >
+      {{ line }}
+      <br *ngIf="idx === 0" />
+    </ng-container>
+  </ng-container>
+  <ng-template #labelText>
+    {{ label }}
+  </ng-template>
+</label>

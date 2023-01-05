@@ -17,14 +17,17 @@ import { SuperInputComponent } from '../super-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseInputComponent
-  extends SuperInputComponent
+  extends SuperInputComponent<string>
   implements OnInit, AfterViewInit
 {
-  @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
   @Input() valueChange$!: BehaviorSubject<string>
 
   protected valueChangeObservable$!: Observable<string>
   protected valueChangeSubscription$?: Subscription
+
+  get validator() {
+    return this.formInputSpec?.validMessageGenerator
+  }
 
   constructor(
     protected override readonly _changeDetectorRef: ChangeDetectorRef,

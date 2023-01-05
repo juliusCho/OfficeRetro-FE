@@ -2,13 +2,16 @@
 
 :host {
   width: 100%;
-  padding-left: $unit-20;
   padding-bottom: $unit-3;
 
   .container {
     height: $unit-3;
     margin: 0;
-    padding: 0;
+    padding-left: calc($form-input-label-width + $unit-7);
+
+    &.label-top {
+      padding-left: $unit-7;
+    }
 
     li {
       color: $font-error-color;

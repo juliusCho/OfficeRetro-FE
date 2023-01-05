@@ -20,12 +20,9 @@ import { SuperInputComponent } from '../super-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseListInputComponent
-  extends SuperInputComponent
+  extends SuperInputComponent<string[]>
   implements OnInit, AfterContentInit, AfterViewInit
 {
-  @Input() validator?: (value?: string[]) => string // fn for validate value & get invalid message
-  @Input() options?: Record<string, string>[]
-  @Input() optionsFetchUrl?: string
   @Input() valueChange$!: BehaviorSubject<string[]>
 
   protected valueChangeObservable$!: Observable<string[]>
@@ -33,6 +30,16 @@ export class BaseListInputComponent
   protected optionValues$: Observable<Array<{ label: string; value: string }>> =
     of([])
   protected optionValuesObservableListener$ = new BehaviorSubject(0)
+
+  get validator() {
+    return this.formInputSpec?.validMessageGenerator
+  }
+  get options() {
+    return this.formInputSpec?.options
+  }
+  get optionsFetchUrl() {
+    return this.formInputSpec?.optionsFetchUrl
+  }
 
   constructor(
     private readonly _requestService: HttpCommonService,

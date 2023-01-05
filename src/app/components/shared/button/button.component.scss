@@ -20,4 +20,20 @@
     @extend %font-bold;
     @extend %font-7;
   }
+
+  &.primary {
+    background-color: $button-primary-color;
+
+    &:hover {
+      background-color: $button-primary-hover-color;
+    }
+  }
+
+  &.clear {
+    background-color: $button-clear-color;
+
+    &:hover {
+      background-color: $button-clear-hover-color;
+    }
+  }
 }

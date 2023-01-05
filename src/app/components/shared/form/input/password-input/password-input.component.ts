@@ -16,11 +16,18 @@ import { SuperInputComponent } from '../../shared/super-input.component'
   styles: [':host {width: 100%}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PasswordInputComponent extends SuperInputComponent {
+export class PasswordInputComponent extends SuperInputComponent<string> {
   @Input() valueChange$!: BehaviorSubject<string> // form.valueChange observable
-  @Input() validator?: (value?: string) => string // fn for validate value & get invalid message
 
   @Output() enter = new EventEmitter<void>()
+
+  get inputSpec() {
+    return {
+      ...this.formInputSpec,
+      type: 'password',
+      validMessageGenerator: this.validate,
+    }
+  }
 
   get validate(): (value?: string) => string {
     const _this = this
@@ -28,13 +35,18 @@ export class PasswordInputComponent extends SuperInputComponent {
     return (value?: string) => {
       if (this.isDisabled) return ''
 
-      const result = _this.validator ? _this.validator(value) : ''
+      const result = _this.formInputSpec.validMessageGenerator
+        ? _this.formInputSpec.validMessageGenerator(value)
+        : ''
       if (result !== '') return result
 
       if (!value) return ''
 
       if (/ /g.test(value)) {
-        return `${this.label} should not contain blank space`
+        return `${(this.label ?? 'This field').replace(
+          /\n/g,
+          ' ',
+        )} should not contain blank space`
       }
 
       return ''

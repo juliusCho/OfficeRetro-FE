@@ -1,25 +1,19 @@
-@import 'styles';
+@import '../../../../styles/form/form-extensions';
 
 :host {
-  @extend %center-list;
-  width: 100%;
+  @extend %host;
 
   .container {
-    @extend %flex-center;
-    width: 100%;
-
-    .label {
-      width: 30%;
-      @extend %font-bold;
-      @extend %font-5;
-    }
-
     .input-div {
       @extend %input-box-display;
-      width: 70%;
+      width: $form-input-width;
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
+      &.no-label {
+        width: 100%;
+      }
 
       &.disabled {
         background-color: $input-disabled-color;
@@ -34,14 +28,17 @@
         @extend %input-box;
 
         &.password {
-          width: 80%;
+          width: calc(100% - $unit-11);
         }
       }
     }
   }
 
-  ::ng-deep div app-alert-text {
-    margin-bottom: $unit-5;
+  ::ng-deep app-length-text {
+    z-index: -1;
+  }
+
+  ::ng-deep app-alert-text {
     z-index: -1;
   }
 }

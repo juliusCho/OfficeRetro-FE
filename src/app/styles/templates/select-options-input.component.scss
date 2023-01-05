@@ -1,24 +1,18 @@
-@import 'styles';
+@import '../../styles/form/form-extensions';
 
 :host {
-  @extend %center-list;
-  width: 100%;
+  @extend %host;
 
   .container {
-    @extend %flex-center;
-    width: 100%;
-
-    .label {
-      width: 30%;
-      @extend %font-bold;
-      @extend %font-5;
-    }
-
     .input-section {
       @extend %engraved;
-      width: 70%;
+      width: $form-input-width;
       border-radius: 15px;
       padding: $unit-3 $unit-4 $unit-4 $unit-2;
+
+      &.no-label {
+        width: 100%;
+      }
 
       &.disabled {
         cursor: not-allowed;
@@ -45,7 +39,7 @@
           display: flex;
           justify-content: flex-end;
           align-items: center;
-          margin: $unit-2 0;
+          padding: $unit-2 0;
           cursor: pointer;
 
           &:hover {
@@ -125,6 +119,6 @@
   }
 
   ::ng-deep app-alert-text {
-    margin: $unit-2 0 $unit-5 0;
+    margin-top: $unit-2;
   }
 }

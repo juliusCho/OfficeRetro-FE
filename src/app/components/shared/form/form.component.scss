@@ -1,18 +1,51 @@
 @import 'styles';
 
 .container {
-  width: 100%;
   @extend %center-list;
 
-  ::ng-deep app-alert-text {
-    margin-bottom: $unit-5;
+  &.button-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    .input-section {
+      width: 75%;
+      margin-top: 0;
+    }
+
+    .button-section {
+      width: 25%;
+    }
   }
 
-  ::ng-deep app-button {
-    margin: $unit-5 0 $unit-5 0;
+  .input-section {
+    &.clear-exists {
+      margin-top: $unit-5;
+    }
+
+    .input-row {
+      width: 100%;
+      margin-bottom: $unit-6;
+
+      .line-wrapper {
+        width: 100%;
+        @extend %flex-center;
+
+        .box {
+          width: calc(50% - $unit-5);
+
+          &.left-item {
+            margin-right: $unit-9;
+          }
+        }
+      }
+    }
   }
 
-  ::ng-deep app-button {
-    margin: $unit-4;
+  .button-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

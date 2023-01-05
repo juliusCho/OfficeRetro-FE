@@ -5,6 +5,7 @@ export const convertToColumnizedArray = <T>(arr: T[], columnCount: number) => {
 
   let stack: T[] = []
   let columnIdx = 0
+
   arr.forEach((item) => {
     if (columnIdx + 1 === columnCount) {
       columnIdx = 0

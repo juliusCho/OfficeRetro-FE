@@ -18,6 +18,7 @@ export class ButtonComponent {
   @Input() isLargeFont?: boolean = false
   @Input() width?: string = ''
   @Input() style?: string = ''
+  @Input() color?: 'default' | 'primary' | 'clear' = 'default'
 
   @Output() click = new EventEmitter<void>()
 
@@ -27,6 +28,8 @@ export class ButtonComponent {
       enabled: !this.isDisabled,
       disabled: !!this.isDisabled,
       'large-font': !!this.isLargeFont,
+      primary: this.color === 'primary',
+      clear: this.color === 'clear',
     }
   }
 }

@@ -1,8 +1,10 @@
-import { AfterContentInit, Component } from '@angular/core'
+import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
 import { forbiddenStringValidator } from 'src/app/helpers/form-validators'
 import { isString } from 'src/app/helpers/type-checkers'
-import { FormSpec } from 'src/app/models/client-specs/form/form-spec'
+import { isValidEmail } from 'src/app/helpers/validators'
+import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+import { CssService } from 'src/app/services/shared/css.service'
 import { BasePageComponent } from '../base-page.component'
 
 @Component({
@@ -10,65 +12,60 @@ import { BasePageComponent } from '../base-page.component'
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export default class LoginComponent
-  extends BasePageComponent
-  implements AfterContentInit
-{
-  formSpecs: FormSpec<unknown>[] = [
-    {
-      key: 'email',
-      label: 'Email',
-      initValue: '',
-      formValidators: [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(50),
-        forbiddenStringValidator(/ /g),
-      ],
-      validMessageGenerator: (value?: unknown) => {
-        if (!value) return ''
-        if (!isString(value)) return ''
+export default class LoginComponent extends BasePageComponent {
+  formInputSpecs: Array<
+    FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
+  > = [
+    [
+      {
+        key: 'email',
+        label: 'Email',
+        initValue: '',
+        formValidators: [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(50),
+          forbiddenStringValidator(/ /g),
+        ],
+        validMessageGenerator: (value?: unknown) => {
+          if (!value) return ''
+          if (!isString(value)) return ''
 
-        if (/ /g.test(value)) {
-          return 'Email should not contain blank space'
-        }
+          if (/ /g.test(value)) {
+            return 'Email should not contain blank space'
+          }
 
-        if (
-          !value
-            .toLowerCase()
-            .match(
-              /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            )
-        ) {
-          return 'Invalid email format'
-        }
+          if (!isValidEmail(value)) {
+            return 'Invalid email format'
+          }
 
-        return ''
+          return ''
+        },
+        inputType: 'email',
+        infoTextType: 'all',
+        placeholder: 'example@domain.com',
+        minLength: 5,
+        maxLength: 50,
+        required: true,
       },
-      inputType: 'email',
-      infoTextType: 'all',
-      placeholder: 'example@domain.com',
-      minLength: 5,
-      maxLength: 50,
-      required: true,
-    },
-    {
-      key: 'password',
-      label: 'Password',
-      initValue: '',
-      formValidators: [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(50),
-        forbiddenStringValidator(/ /g),
-      ],
-      inputType: 'password',
-      infoTextType: 'all',
-      placeholder: 'Password',
-      minLength: 8,
-      maxLength: 50,
-      required: true,
-    },
+      {
+        key: 'password',
+        label: 'Pass\nword',
+        initValue: '',
+        formValidators: [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(50),
+          forbiddenStringValidator(/ /g),
+        ],
+        inputType: 'password-login',
+        infoTextType: 'all',
+        placeholder: 'Password',
+        minLength: 8,
+        maxLength: 50,
+        required: true,
+      },
+    ],
     {
       key: 'area',
       label: 'Area',
@@ -134,14 +131,14 @@ export default class LoginComponent
     },
   ]
 
-  ngAfterContentInit(): void {
-    this.isPageLoaded = true
+  constructor(public readonly _cssService: CssService) {
+    super()
   }
 
-  readonly onSubmit = () => {
-    this.isLoading = true
+  readonly onSubmit = (formValue: Record<string, unknown>) => {
+    this.isPageLoaded = false
     setTimeout(() => {
-      this.isLoading = false
+      this.isPageLoaded = true
     }, 2000)
   }
 }

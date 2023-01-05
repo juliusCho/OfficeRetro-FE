@@ -1,10 +1,22 @@
-<div class="container" [formGroup]="form">
-  <div *ngIf="label" class="label">{{ label }}</div>
+<div
+  class="container"
+  [formGroup]="form"
+  [ngClass]="{
+    'label-top': labelPosition === 'top'
+  }"
+>
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    [labelPosition]="labelPosition"
+    [labelWidth]="labelWidth"
+  ></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       *ngIf="selectedOption$ | async as selectedOption"
       class="input-section"
-      [ngClass]="{ disabled: isDisabled }"
+      [ngClass]="inputAreaClass"
+      [ngStyle]="inputAreaStyle"
     >
       <div *ngFor="let optionRows of getItems(optionValues)" class="row">
         <div
@@ -35,7 +47,11 @@
     </div>
   </ng-container>
 </div>
-<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>
+<app-alert-text
+  *ngIf="displayAlert && isValidationNeeded"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+></app-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

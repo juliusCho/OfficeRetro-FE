@@ -1,9 +1,9 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   Output,
   ViewChild,
 } from '@angular/core'
@@ -15,15 +15,29 @@ import { BaseInputComponent } from '../shared/base-input/base-input.component'
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputComponent extends BaseInputComponent {
-  @Input() type?: 'email' | 'text' | 'password' = 'text'
-
+export class InputComponent
+  extends BaseInputComponent
+  implements AfterContentInit
+{
   @Output() enter = new EventEmitter<void>()
 
-  @ViewChild('innerContent') innerContentRef?: ElementRef
+  @ViewChild('innerContent') innerContentRef!: ElementRef
 
-  get isInnerContentExist() {
-    return (this.innerContentRef?.nativeElement.children.length ?? 0) > 0
+  isInnerContentExist = false
+
+  get type() {
+    const result = this.formInputSpec?.inputType ?? 'text'
+    if (result === 'text' || result === 'email' || result === 'password')
+      return result
+    if (result === 'password-login') return 'password'
+    return 'text'
+  }
+
+  ngAfterContentInit(): void {
+    this.isInnerContentExist =
+      (this.innerContentRef?.nativeElement.children.length ?? 0) > 0
+
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly onEnter = () => {

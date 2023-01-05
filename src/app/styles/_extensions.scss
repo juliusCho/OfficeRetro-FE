@@ -128,7 +128,7 @@
 
 %textarea {
   @extend %input;
-  height: -webkit-fill-available;
+  height: 100%;
   padding: $unit-3 $unit-4;
   border-radius: 15px;
   resize: none;

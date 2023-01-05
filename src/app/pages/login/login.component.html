@@ -2,8 +2,13 @@
 <div class="form" [ngClass]="{ loaded: isPageLoaded }">
   <app-form
     submitLabel="Login"
-    [formSpecs]="formSpecs"
-    (submit)="onSubmit()"
+    cancelLabel="Cancel"
+    [formInputSpecs]="formInputSpecs"
+    [isValidationNeeded]="true"
+    (submit)="onSubmit($event)"
+    buttonPosition="right"
+    [labelWidth]="_cssService.getSize('unit-20')"
+    buttonAreaWidth="15rem"
   ></app-form>
 </div>
 <app-button>Register</app-button>
@@ -12,4 +17,4 @@
   <app-button [isPale]="true" width="200px">About Office Retro</app-button>
 </div>
 
-<app-loading [loading]="!isPageLoaded || isLoading"></app-loading>
+<app-loading [loading]="!isPageLoaded"></app-loading>

@@ -1,162 +1,137 @@
-<form [formGroup]="form" class="container" [style]="'width:' + width">
-  <ng-container *ngFor="let formSpec of formSpecs">
-    <ng-container [ngSwitch]="formSpec.inputType">
-      <app-input
-        *ngSwitchCase="'text'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [showValidationMessage]="showValidationMessage"
-        (enter)="onSubmit()"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-input>
-      <app-input
-        *ngSwitchCase="'email'"
-        type="email"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [showValidationMessage]="showValidationMessage"
-        (enter)="onSubmit()"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-input>
-      <app-password-input
-        *ngSwitchCase="'password'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [showValidationMessage]="showValidationMessage"
-        (enter)="onSubmit()"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-password-input>
-      <app-password-input
-        *ngSwitchCase="'password-login'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [showValidationMessage]="showValidationMessage"
-        (enter)="onSubmit()"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
+<form
+  [formGroup]="form"
+  class="container"
+  [style]="'width:' + width"
+  [ngClass]="{ 'button-side': buttonPosition === 'right' }"
+>
+  <app-button
+    *ngIf="buttonPosition !== 'right' && clearLabel"
+    (click)="onClear()"
+    color="clear"
+    >{{ clearLabel }}</app-button
+  >
+  <div
+    class="input-section"
+    [ngClass]="{ 'clear-exists': buttonPosition !== 'right' && clearLabel }"
+    [ngStyle]="inputSectionStyle"
+  >
+    <div *ngFor="let formInputSpecItem of formInputSpecs" class="input-row">
+      <ng-container
+        [ngTemplateOutlet]="
+          isSpecArray(formInputSpecItem) ? wrappedInputItem : inputItem
+        "
+        [ngTemplateOutletContext]="{
+          formInputSpec: formInputSpecItem,
+          formInputSpecList: formInputSpecItem
+        }"
       >
-        <app-password-reset-button></app-password-reset-button>
-      </app-password-input>
-      <app-area-input
-        *ngSwitchCase="'textarea'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [height]="formSpec.height"
-        [showValidationMessage]="showValidationMessage"
-        (enter)="onSubmit()"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-area-input>
-      <app-dropdown-input
-        *ngSwitchCase="'select'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [options]="formSpec.options"
-        [optionsFetchUrl]="formSpec.optionsFetchUrl"
-        [showValidationMessage]="showValidationMessage"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-dropdown-input>
-      <app-radio-input
-        *ngSwitchCase="'radio'"
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [columnCount]="formSpec.columnCount"
-        [options]="formSpec.options"
-        [optionsFetchUrl]="formSpec.optionsFetchUrl"
-        [showValidationMessage]="showValidationMessage"
-        [form]="form"
-        [valueChange$]="getValueObservableString(formSpec.key)"
-      ></app-radio-input>
-      <app-checkbox-input
-        *ngSwitchDefault
-        [name]="formSpec.key"
-        [label]="formSpec.label"
-        [labelPosition]="formSpec.labelPosition"
-        [infoTextType]="formSpec.infoTextType"
-        [placeholder]="formSpec.placeholder"
-        [minLength]="formSpec.minLength"
-        [maxLength]="formSpec.maxLength"
-        [required]="formSpec.required"
-        [isDisabled]="formSpec.disabled"
-        [validator]="formSpec.validMessageGenerator"
-        [width]="formSpec.width"
-        [columnCount]="formSpec.columnCount"
-        [options]="formSpec.options"
-        [optionsFetchUrl]="formSpec.optionsFetchUrl"
-        [showValidationMessage]="showValidationMessage"
-        [form]="form"
-        [valueChange$]="getValueObservableArray(formSpec.key)"
-      ></app-checkbox-input>
-    </ng-container>
-  </ng-container>
-  <app-button *ngIf="submitLabel" (click)="onSubmit()">{{
-    submitLabel
-  }}</app-button>
+      </ng-container>
+      <ng-template #wrappedInputItem let-formInputSpecList="formInputSpecList">
+        <div class="line-wrapper">
+          <div
+            *ngFor="let fis of formInputSpecList; let idx = index"
+            class="box"
+            [ngClass]="{ 'left-item': idx === 0 }"
+          >
+            <ng-container
+              [ngTemplateOutlet]="inputItem"
+              [ngTemplateOutletContext]="{ formInputSpec: fis }"
+            ></ng-container>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="button-section" [ngStyle]="buttonSectionStyle">
+    <app-button *ngIf="submitLabel" (click)="onSubmit()" color="primary">{{
+      submitLabel
+    }}</app-button>
+    <app-button *ngIf="cancelLabel" (click)="onCancel()">{{
+      cancelLabel
+    }}</app-button>
+  </div>
 </form>
+
+<ng-template #inputItem let-formInputSpec="formInputSpec">
+  <ng-container [ngSwitch]="formInputSpec.inputType">
+    <app-input
+      *ngSwitchCase="'text'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="formInputSpec"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-input>
+    <app-input
+      *ngSwitchCase="'email'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      type="email"
+      (enter)="onSubmit()"
+      [formInputSpec]="formInputSpec"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-input>
+    <app-password-input
+      *ngSwitchCase="'password'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="formInputSpec"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-password-input>
+    <app-password-input
+      *ngSwitchCase="'password-login'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="formInputSpec"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    >
+      <app-password-reset-button></app-password-reset-button>
+    </app-password-input>
+    <app-area-input
+      *ngSwitchCase="'textarea'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="formInputSpec"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-area-input>
+    <app-dropdown-input
+      *ngSwitchCase="'select'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="formInputSpec"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-dropdown-input>
+    <app-radio-input
+      *ngSwitchCase="'radio'"
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="formInputSpec"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-radio-input>
+    <app-checkbox-input
+      *ngSwitchDefault
+      [valueChange$]="getValueObservableArray(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="formInputSpec"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-checkbox-input>
+  </ng-container>
+</ng-template>

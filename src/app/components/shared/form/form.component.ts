@@ -9,7 +9,8 @@ import {
   Output,
 } from '@angular/core'
 import { BehaviorSubject, debounceTime, tap } from 'rxjs'
-import { FormSpec } from 'src/app/models/client-specs/form/form-spec'
+import { isArray } from 'src/app/helpers/type-checkers'
+import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { FormService } from 'src/app/services/form/form.service'
 
 @Component({
@@ -20,16 +21,40 @@ import { FormService } from 'src/app/services/form/form.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormComponent implements OnInit, AfterContentInit {
-  @Input() formSpecs!: FormSpec<unknown>[]
+  @Input() formInputSpecs!: Array<
+    FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
+  >
   @Input() submitLabel?: string
+  @Input() submitColor?: string
+  @Input() cancelLabel?: string
+  @Input() clearLabel?: string
   @Input() width?: string = ''
+  @Input() isValidationNeeded?: boolean = false
+  @Input() buttonPosition?: 'bottom' | 'right' = 'bottom'
+  @Input() labelWidth?: string
+  @Input() buttonAreaWidth?: string
 
-  @Output() submit = new EventEmitter<void>()
+  @Output() submit = new EventEmitter<Record<string, unknown>>()
+  @Output() cancel = new EventEmitter<void>()
 
   showValidationMessage = false
 
   get form() {
     return this._formService.form
+  }
+
+  get doesWidthLayoutAdjust() {
+    return this.buttonPosition !== 'right' || !this.buttonAreaWidth
+  }
+
+  get inputSectionStyle() {
+    if (this.doesWidthLayoutAdjust) return {}
+    return { width: `calc(100% - ${this.buttonAreaWidth})` }
+  }
+
+  get buttonSectionStyle() {
+    if (this.doesWidthLayoutAdjust) return {}
+    return { width: this.buttonAreaWidth }
   }
 
   constructor(
@@ -38,7 +63,7 @@ export class FormComponent implements OnInit, AfterContentInit {
   ) {}
 
   ngOnInit(): void {
-    this._formService.initialize(this.formSpecs)
+    this._formService.initialize(this.formInputSpecs)
   }
 
   ngAfterContentInit(): void {
@@ -56,6 +81,27 @@ export class FormComponent implements OnInit, AfterContentInit {
         }),
       )
       .subscribe()
+  }
+
+  readonly isSpecArray = (
+    formInputSpec:
+      | FormInputSpec<unknown>
+      | [FormInputSpec<unknown>, FormInputSpec<unknown>],
+  ) => {
+    return isArray(formInputSpec)
+  }
+
+  readonly isFormSpec = (
+    formInputSpec: unknown,
+  ): formInputSpec is FormInputSpec<unknown> => {
+    if (!formInputSpec || typeof formInputSpec !== 'object') return false
+    if (
+      'key' in formInputSpec &&
+      'iniValue' in formInputSpec &&
+      'inputType' in formInputSpec
+    )
+      return true
+    return false
   }
 
   readonly getValueObservableString = (key: string) => {
@@ -78,9 +124,19 @@ export class FormComponent implements OnInit, AfterContentInit {
 
   readonly onSubmit = () => {
     this.submitAction()
+
     if (this._formService.form.valid) {
       this._formService.reinitializeData()
     }
+  }
+
+  readonly onCancel = () => {
+    this.initializeForm()
+    this.cancel.emit()
+  }
+
+  readonly onClear = () => {
+    this.initializeForm()
   }
 
   private readonly submitAction = () => {
@@ -95,6 +151,11 @@ export class FormComponent implements OnInit, AfterContentInit {
       return
     }
 
-    this.submit.emit()
+    this.submit.emit(this._formService.form.value)
+  }
+
+  private readonly initializeForm = () => {
+    this._formService.reinitializeData()
+    this._changeDetectorRef.detectChanges()
   }
 }

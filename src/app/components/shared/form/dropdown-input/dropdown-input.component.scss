@@ -1,14 +1,19 @@
-@import 'styles';
+@import '../../../../styles/form/form-extensions';
 
 :host {
-  @extend %center-list;
-  width: 100%;
+  @extend %host;
 
   .container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 100%;
+
+    &.label-top {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
 
     .input {
       visibility: hidden;
@@ -16,19 +21,17 @@
       width: 0;
     }
 
-    .label {
-      width: 30%;
-      @extend %font-bold;
-      @extend %font-5;
-    }
-
     .input-div {
       @extend %dropdown-display;
-      width: calc(70% - $unit-5);
+      width: calc($form-input-width - $unit-5);
+
+      &.no-label {
+        width: 100%;
+      }
 
       &.disabled {
         @extend %input-box-display;
-        width: 70%;
+        width: calc($form-input-width - $unit-5);
         background-color: $input-disabled-color;
         cursor: not-allowed !important;
 
@@ -51,11 +54,11 @@
           padding-right: 0;
 
           .select {
-            width: 80%;
+            width: calc(100% - $unit-11);
           }
 
           .icon {
-            width: 20%;
+            width: $unit-11;
             text-align: center;
             border: none;
             background-color: transparent;
@@ -131,6 +134,6 @@
   }
 
   ::ng-deep app-alert-text {
-    margin: $unit-4 0 $unit-5 0;
+    margin-top: $unit-4;
   }
 }

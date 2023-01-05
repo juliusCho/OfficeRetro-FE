@@ -7,7 +7,7 @@ import {
   isString,
   isStringArray,
 } from 'src/app/helpers/type-checkers'
-import { FormSpec } from 'src/app/models/client-specs/form/form-spec'
+import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 
 @Injectable()
 export class FormService implements OnDestroy {
@@ -16,7 +16,7 @@ export class FormService implements OnDestroy {
   private _formSubjects: { [key: string]: BehaviorSubject<unknown> } = {}
   private _formValueChanges$!: Observable<unknown>
   private _formSubscription$!: Subscription
-  private _inputInfos!: FormSpec<unknown>[]
+  private _inputInfos!: FormInputSpec<unknown>[]
 
   get form() {
     if (!this._initialized)
@@ -43,10 +43,14 @@ export class FormService implements OnDestroy {
     })
   }
 
-  readonly initialize = (inputInfos: FormSpec<unknown>[]) => {
+  readonly initialize = (
+    inputInfos: Array<
+      FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
+    >,
+  ) => {
     if (this._initialized) return
 
-    this._inputInfos = inputInfos
+    this._inputInfos = inputInfos.flat()
 
     const formGroup: Record<string, FormControl> = {}
 

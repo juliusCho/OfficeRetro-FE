@@ -6,7 +6,7 @@ export const getBasicStringInputValidationMsg = (arg: {
   maxLength?: number
 }) => {
   const { value, label, required, minLength, maxLength } = arg
-  const lbl = label ?? 'This field'
+  const lbl = (label ?? 'This field').replace(/\n/g, ' ')
 
   if (!value) {
     if (required) {
@@ -14,7 +14,7 @@ export const getBasicStringInputValidationMsg = (arg: {
     }
 
     if (!!minLength && minLength > 0) {
-      return `${lbl} must contain at least\n${minLength} character(s)`
+      return `${lbl} must contain at least ${minLength} character(s)`
     }
 
     return ''
@@ -22,7 +22,7 @@ export const getBasicStringInputValidationMsg = (arg: {
 
   if (maxLength === -1) {
     if (!!minLength && minLength > 0 && minLength > value.length) {
-      return `${lbl} should contain\n less than ${minLength} character(s)`
+      return `${lbl} should contain less than ${minLength} character(s)`
     }
 
     return ''
@@ -30,14 +30,14 @@ export const getBasicStringInputValidationMsg = (arg: {
 
   if (!!minLength && minLength > 0) {
     if (minLength > value.length || (!!maxLength && value.length > maxLength)) {
-      return `${lbl} should contain\n${minLength}-${maxLength} characters`
+      return `${lbl} should contain ${minLength}-${maxLength} characters`
     }
 
     return ''
   }
 
   if (!!maxLength && value.length > maxLength) {
-    return `${lbl} should not contain\n more than ${maxLength} character(s)`
+    return `${lbl} should not contain more than ${maxLength} character(s)`
   }
 
   return ''
@@ -51,7 +51,7 @@ export const getBasicListInputValidationMsg = (arg: {
   maxLength?: number
 }) => {
   const { value, label, required, minLength, maxLength } = arg
-  const lbl = label ?? 'This field'
+  const lbl = (label ?? 'This field').replace(/\\n/g, ' ')
 
   if (!value || value.length === 0) {
     if (required) {
@@ -67,7 +67,7 @@ export const getBasicListInputValidationMsg = (arg: {
 
   if (maxLength === -1) {
     if (!!minLength && minLength > 0 && minLength > value.length) {
-      return `${lbl} should contain\n less than ${minLength} item(s)`
+      return `${lbl} should contain less than ${minLength} item(s)`
     }
 
     return ''
@@ -75,14 +75,14 @@ export const getBasicListInputValidationMsg = (arg: {
 
   if (!!minLength && minLength > 0) {
     if (minLength > value.length || (!!maxLength && value.length > maxLength)) {
-      return `${lbl} should contain\n${minLength}-${maxLength} items`
+      return `${lbl} should contain ${minLength}-${maxLength} items`
     }
 
     return ''
   }
 
   if (!!maxLength && value.length > maxLength) {
-    return `${lbl} should not contain\n more than ${maxLength} item(s)`
+    return `${lbl} should not contain more than ${maxLength} item(s)`
   }
 
   return ''

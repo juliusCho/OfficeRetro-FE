@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
 } from '@angular/core'
 import { BehaviorSubject, map, Observable, of, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
@@ -20,9 +19,6 @@ export class BaseSelectComponent
   extends BaseInputComponent
   implements AfterContentInit
 {
-  @Input() options?: Record<string, string>[]
-  @Input() optionsFetchUrl?: string
-
   protected optionValues$!: Observable<Array<{ label: string; value: string }>>
   protected selectedOption$ = new BehaviorSubject<{
     label: string
@@ -31,6 +27,13 @@ export class BaseSelectComponent
     label: this.placeholder ?? '',
     value: '',
   })
+
+  get options() {
+    return this.formInputSpec?.options
+  }
+  get optionsFetchUrl() {
+    return this.formInputSpec?.optionsFetchUrl
+  }
 
   constructor(
     private readonly _requestService: HttpCommonService,

@@ -14,3 +14,6 @@
   justify-content: center;
   align-items: center;
 }
+
+$form-input-label-width: $unit-20;
+$form-input-width: calc(100% - $unit-20);

@@ -1,4 +1,10 @@
-<div class="container" [formGroup]="form">
+<div
+  class="container"
+  [formGroup]="form"
+  [ngClass]="{
+    'label-top': labelPosition === 'top'
+  }"
+>
   <select [formControlName]="name" [style]="'width:' + width" class="input">
     <ng-container *ngIf="optionValues$ | async as optionValues">
       <option
@@ -10,10 +16,14 @@
       </option>
     </ng-container>
   </select>
-  <label *ngIf="label" class="label" (click)="toggleDropdown()">{{
-    label
-  }}</label>
-  <div class="input-div" [ngClass]="{ disabled: isDisabled }">
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    (click)="toggleDropdown()"
+    [labelPosition]="labelPosition"
+    [labelWidth]="labelWidth"
+  ></app-input-label>
+  <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <div class="select-section">
       <button
         type="button"
@@ -56,7 +66,11 @@
     </div>
   </div>
 </div>
-<app-alert-text *ngIf="displayAlert" [text]="alertMessage"></app-alert-text>
+<app-alert-text
+  *ngIf="displayAlert && isValidationNeeded"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+></app-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

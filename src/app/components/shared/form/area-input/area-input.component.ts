@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { BaseInputComponent } from '../shared/base-input/base-input.component'
 
 @Component({
@@ -8,5 +8,7 @@ import { BaseInputComponent } from '../shared/base-input/base-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AreaInputComponent extends BaseInputComponent {
-  @Input() height?: string = ''
+  get height() {
+    return this.formInputSpec?.height ?? ''
+  }
 }

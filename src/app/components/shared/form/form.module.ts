@@ -18,6 +18,7 @@ import { AlertTextComponent } from './shared/alert-text/alert-text.component'
 import { BaseInputComponent } from './shared/base-input/base-input.component'
 import { BaseListInputComponent } from './shared/base-list-input.component.ts/base-list-input.component'
 import { BaseSelectComponent } from './shared/base-select.component.ts/base-select.component'
+import { InputLabelComponent } from './shared/input-label/input-label.component'
 import { LengthTextComponent } from './shared/length-text/length-text.component'
 import { SuperInputComponent } from './shared/super-input.component'
 
@@ -40,6 +41,7 @@ const declarations = [
   TooltipComponent,
   PasswordResetButtonComponent,
   PasswordInputComponent,
+  InputLabelComponent,
 ]
 
 @NgModule({
