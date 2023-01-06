@@ -1,10 +1,4 @@
-<div
-  class="container"
-  [formGroup]="form"
-  [ngClass]="{
-    'label-top': labelPosition === 'top'
-  }"
->
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
   <app-input-label
     *ngIf="label"
     [label]="label"

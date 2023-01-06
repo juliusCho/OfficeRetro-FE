@@ -118,8 +118,8 @@ export class BaseListInputComponent
       value,
       label: this.label,
       required: this.required,
-      minLength: this.minLength,
-      maxLength: this.maxLength,
+      min: this.min,
+      max: this.max,
     })
   }
 

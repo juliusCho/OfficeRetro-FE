@@ -1,4 +1,4 @@
-@import '../../../../styles/form/form-extensions';
+@import '../../../../styles/form/form-input-extensions';
 
 :host {
   @extend %host;
@@ -23,7 +23,7 @@
 
     .input-div {
       @extend %dropdown-display;
-      width: calc($form-input-width - $unit-5);
+      width: calc($form-input-width - $unit-3);
 
       &.no-label {
         width: 100%;
@@ -31,7 +31,8 @@
 
       &.disabled {
         @extend %input-box-display;
-        width: calc($form-input-width - $unit-5);
+        width: $form-input-width;
+
         background-color: $input-disabled-color;
         cursor: not-allowed !important;
 

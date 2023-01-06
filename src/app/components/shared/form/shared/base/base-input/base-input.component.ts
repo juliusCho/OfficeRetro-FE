@@ -9,6 +9,8 @@ import {
 import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicStringInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { isString } from 'src/app/helpers/type-checkers'
+import { isValidEmail } from 'src/app/helpers/validators'
 import { SuperInputComponent } from '../super-input.component'
 
 @AutoUnsubscribe()
@@ -64,12 +66,28 @@ export class BaseInputComponent
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result
 
-    return getBasicStringInputValidationMsg({
+    const validResult = getBasicStringInputValidationMsg({
       value,
       label: this.label,
       required: this.required,
-      minLength: this.minLength,
-      maxLength: this.maxLength,
+      min: this.min,
+      max: this.max,
     })
+    if (validResult !== '') return validResult
+
+    if (this.formInputSpec.inputType !== 'email') return ''
+
+    if (!value) return ''
+    if (!isString(value)) return ''
+
+    if (/ /g.test(value)) {
+      return 'Email should not contain blank space'
+    }
+
+    if (!isValidEmail(value)) {
+      return 'Invalid email format'
+    }
+
+    return ''
   }
 }

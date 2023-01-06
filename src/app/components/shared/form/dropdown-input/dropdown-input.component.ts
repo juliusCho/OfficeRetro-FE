@@ -1,12 +1,14 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
   ViewChild,
 } from '@angular/core'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
-import { BaseSelectComponent } from '../shared/base-select.component.ts/base-select.component'
+import { CssService } from 'src/app/services/shared/css.service'
+import { BaseSelectComponent } from '../shared/base/base-input/base-select-input/base-select.component'
 
 @Component({
   selector: 'app-dropdown-input',
@@ -19,6 +21,30 @@ export class DropdownInputComponent extends BaseSelectComponent {
   @ViewChild('dropdownSection') dropdownSection!: ElementRef
 
   isDropdownOpened = false
+
+  get dropdownInputAreaStyle() {
+    if (this.label && this.labelPosition !== 'top' && this.labelWidth) {
+      return {
+        width: `calc(calc(100% - ${
+          this.isDisabled ? '0px' : this._cssService.getSize('unit-3')
+        }) - ${this.labelWidth})`,
+      }
+    }
+
+    return {
+      width: `calc(100% - ${
+        this.isDisabled ? '0px' : this._cssService.getSize('unit-3')
+      })`,
+    }
+  }
+
+  constructor(
+    private readonly _cssService: CssService,
+    protected override readonly _requestService: HttpCommonService,
+    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+  ) {
+    super(_requestService, _changeDetectorRef)
+  }
 
   readonly toggleDropdown = () => {
     if (this.isDisabled) return

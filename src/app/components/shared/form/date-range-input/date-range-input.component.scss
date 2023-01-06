@@ -1,0 +1,45 @@
+@import '../../../../styles/form/form-input-extensions';
+
+:host {
+  @extend %host-date-input;
+
+  .container {
+    ::ng-deep mat-form-field {
+      .mat-mdc-text-field-wrapper.mdc-text-field {
+        .mat-mdc-form-field-flex {
+          .mat-mdc-form-field-infix {
+            ::ng-deep mat-date-range-input {
+              height: calc(100% - 0.75rem) !important;
+              width: calc(100% - $unit-13);
+
+              .mat-date-range-input-container {
+                width: 100% !important;
+                height: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+
+                input {
+                  width: 100% !important;
+                  height: 100% !important;
+                  @extend %input-box;
+                  @extend %input-font;
+                }
+
+                .mat-date-range-input-wrapper {
+                  height: 100% !important;
+                  text-align: end;
+                  width: calc(50% - 4px) !important;
+
+                  &.mat-date-range-input-end-wrapper {
+                    text-align: start;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

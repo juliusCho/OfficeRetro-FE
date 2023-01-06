@@ -1,8 +1,7 @@
 import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
+import * as moment from 'moment'
 import { forbiddenStringValidator } from 'src/app/helpers/form-validators'
-import { isString } from 'src/app/helpers/type-checkers'
-import { isValidEmail } from 'src/app/helpers/validators'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { CssService } from 'src/app/services/shared/css.service'
 import { BasePageComponent } from '../base-page.component'
@@ -13,6 +12,8 @@ import { BasePageComponent } from '../base-page.component'
   styleUrls: ['./login.component.scss'],
 })
 export default class LoginComponent extends BasePageComponent {
+  layoutPlay = false
+
   formInputSpecs: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   > = [
@@ -23,29 +24,15 @@ export default class LoginComponent extends BasePageComponent {
         initValue: '',
         formValidators: [
           Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(50),
+          Validators.min(5),
+          Validators.max(50),
           forbiddenStringValidator(/ /g),
         ],
-        validMessageGenerator: (value?: unknown) => {
-          if (!value) return ''
-          if (!isString(value)) return ''
-
-          if (/ /g.test(value)) {
-            return 'Email should not contain blank space'
-          }
-
-          if (!isValidEmail(value)) {
-            return 'Invalid email format'
-          }
-
-          return ''
-        },
         inputType: 'email',
         infoTextType: 'all',
         placeholder: 'example@domain.com',
-        minLength: 5,
-        maxLength: 50,
+        min: '5',
+        max: '50',
         required: true,
       },
       {
@@ -54,28 +41,28 @@ export default class LoginComponent extends BasePageComponent {
         initValue: '',
         formValidators: [
           Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(50),
+          Validators.min(8),
+          Validators.max(50),
           forbiddenStringValidator(/ /g),
         ],
         inputType: 'password-login',
         infoTextType: 'all',
         placeholder: 'Password',
-        minLength: 8,
-        maxLength: 50,
+        min: '8',
+        max: '50',
         required: true,
       },
     ],
-    {
-      key: 'area',
-      label: 'Area',
-      initValue: '',
-      formValidators: [Validators.maxLength(5000)],
-      inputType: 'textarea',
-      infoTextType: 'all',
-      placeholder: 'AWEGAWEG@#',
-      maxLength: 5000,
-    },
+    // {
+    //   key: 'area',
+    //   label: 'Area',
+    //   initValue: '',
+    //   formValidators: [Validators.max(5000)],
+    //   inputType: 'textarea',
+    //   infoTextType: 'all',
+    //   placeholder: 'AWEGAWEG@#',
+    //   max: '5000',
+    // },
     {
       key: 'drop',
       label: 'Dropdown',
@@ -85,6 +72,7 @@ export default class LoginComponent extends BasePageComponent {
       infoTextType: 'all',
       placeholder: 'Select',
       required: true,
+      labelPosition: 'top',
       options: [
         { '1': 'hey' },
         { '2': 'hello' },
@@ -93,41 +81,66 @@ export default class LoginComponent extends BasePageComponent {
         { '5': 'halo' },
       ],
     },
+    // {
+    //   key: 'radio',
+    //   label: 'Radio',
+    //   initValue: '',
+    //   formValidators: [Validators.required],
+    //   inputType: 'radio',
+    //   infoTextType: 'all',
+    //   placeholder: 'Must Select',
+    //   required: true,
+    //   options: [
+    //     { '1': 'hey' },
+    //     { '2': 'hello' },
+    //     { '3': 'hhhh' },
+    //     { '4': 'hola' },
+    //     { '5': 'halo' },
+    //   ],
+    //   columnCount: 2,
+    // },
+    // {
+    //   key: 'check',
+    //   label: 'Check',
+    //   initValue: '',
+    //   formValidators: [Validators.required, Validators.max(2)],
+    //   inputType: 'checkbox',
+    //   infoTextType: 'all',
+    //   max: '2',
+    //   required: true,
+    //   options: [
+    //     { '1': 'hey' },
+    //     { '2': 'hello' },
+    //     { '3': 'hhhh' },
+    //     { '4': 'hola' },
+    //     { '5': 'halo' },
+    //   ],
+    //   columnCount: 3,
+    // },
     {
-      key: 'radio',
-      label: 'Radio',
-      initValue: '',
+      key: 'range',
+      label: 'Date Range',
+      initValue: [undefined, undefined],
+      inputType: 'date-range',
+      formValidators: [[Validators.required], [Validators.required]],
+      min: moment().add(-7, 'd').format(),
+      max: moment().add(7, 'd').format(),
+      required: true,
+      infoTextType: 'all',
+      disabled: true,
+    },
+    {
+      key: 'date',
+      label: 'Date',
+      initValue: undefined,
+      inputType: 'date',
       formValidators: [Validators.required],
-      inputType: 'radio',
-      infoTextType: 'all',
-      placeholder: 'Must Select',
+      min: moment().add(-7, 'd').format(),
+      max: moment().add(7, 'd').format(),
       required: true,
-      options: [
-        { '1': 'hey' },
-        { '2': 'hello' },
-        { '3': 'hhhh' },
-        { '4': 'hola' },
-        { '5': 'halo' },
-      ],
-      columnCount: 2,
-    },
-    {
-      key: 'check',
-      label: 'Check',
-      initValue: '',
-      formValidators: [Validators.required, Validators.maxLength(2)],
-      inputType: 'checkbox',
       infoTextType: 'all',
-      maxLength: 2,
-      required: true,
-      options: [
-        { '1': 'hey' },
-        { '2': 'hello' },
-        { '3': 'hhhh' },
-        { '4': 'hola' },
-        { '5': 'halo' },
-      ],
-      columnCount: 3,
+      disabled: true,
+      labelPosition: 'top',
     },
   ]
 
@@ -136,6 +149,7 @@ export default class LoginComponent extends BasePageComponent {
   }
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
+    console.log('onSubmit', formValue)
     this.isPageLoaded = false
     setTimeout(() => {
       this.isPageLoaded = true

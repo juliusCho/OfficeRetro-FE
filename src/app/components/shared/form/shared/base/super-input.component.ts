@@ -6,6 +6,7 @@ import {
 } from '@angular/core'
 import { FormGroup } from '@angular/forms'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { isNumber } from 'src/app/helpers/type-checkers'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 
 @AutoUnsubscribe()
@@ -24,7 +25,7 @@ export class SuperInputComponent<T> {
   }
 
   private _showValidationMessage = false
-  private _maxLength?: number
+  private _max?: string
 
   protected validationMessage = ''
 
@@ -37,14 +38,18 @@ export class SuperInputComponent<T> {
   get width() {
     return this.formInputSpec?.width ?? ''
   }
-  get minLength() {
-    return this.formInputSpec?.minLength ?? 0
+  get min() {
+    return this.formInputSpec?.min ?? '0'
+  }
+  get max() {
+    return this._max ?? this.formInputSpec?.max ?? '0'
+  }
+  set max(value: string) {
+    this._max = value
+    this._changeDetectorRef.detectChanges()
   }
   get maxLength() {
-    return this._maxLength ?? this.formInputSpec?.maxLength ?? 0
-  }
-  set maxLength(value: number) {
-    this._maxLength = value
+    return isNumber(this.max) ? Number(this.max) : -1
   }
   get isDisabled() {
     return this.formInputSpec?.disabled ?? false
@@ -76,6 +81,10 @@ export class SuperInputComponent<T> {
 
   get alertMessage() {
     return this._showValidationMessage ? this.validationMessage : ''
+  }
+
+  get containerClass() {
+    return { 'label-top': this.labelPosition === 'top' }
   }
 
   get inputAreaClass() {

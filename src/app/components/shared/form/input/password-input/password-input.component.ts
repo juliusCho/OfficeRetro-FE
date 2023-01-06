@@ -7,7 +7,7 @@ import {
 } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { SuperInputComponent } from '../../shared/super-input.component'
+import { SuperInputComponent } from '../../shared/base/super-input.component'
 
 @AutoUnsubscribe()
 @Component({

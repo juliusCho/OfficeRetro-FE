@@ -35,7 +35,13 @@
           >
             <ng-container
               [ngTemplateOutlet]="inputItem"
-              [ngTemplateOutletContext]="{ formInputSpec: fis }"
+              [ngTemplateOutletContext]="{
+                formInputSpec: fis,
+                labelPositionOverride: getArrayFormInputSpecLabelPosition(
+                  idx,
+                  formInputSpecList
+                )
+              }"
             ></ng-container>
           </div>
         </div>
@@ -52,13 +58,17 @@
   </div>
 </form>
 
-<ng-template #inputItem let-formInputSpec="formInputSpec">
+<ng-template
+  #inputItem
+  let-formInputSpec="formInputSpec"
+  let-labelPositionOverride="labelPositionOverride"
+>
   <ng-container [ngSwitch]="formInputSpec.inputType">
     <app-input
       *ngSwitchCase="'text'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       (enter)="onSubmit()"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
@@ -69,7 +79,7 @@
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       type="email"
       (enter)="onSubmit()"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
@@ -79,7 +89,7 @@
       *ngSwitchCase="'password'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       (enter)="onSubmit()"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
@@ -89,7 +99,7 @@
       *ngSwitchCase="'password-login'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       (enter)="onSubmit()"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
@@ -101,7 +111,7 @@
       *ngSwitchCase="'textarea'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
@@ -110,7 +120,7 @@
       *ngSwitchCase="'select'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
@@ -119,19 +129,37 @@
       *ngSwitchCase="'radio'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
       [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
     ></app-radio-input>
     <app-checkbox-input
-      *ngSwitchDefault
+      *ngSwitchCase="'checkbox'"
       [valueChange$]="getValueObservableArray(formInputSpec.key)"
       [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="formInputSpec"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
     ></app-checkbox-input>
+    <app-date-input
+      *ngSwitchCase="'date'"
+      [valueChange$]="getValueObservableStringOrUndefined(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-date-input>
+    <app-date-range-input
+      *ngSwitchDefault
+      [valueChange$]="getValueObservableDateRange(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+    ></app-date-range-input>
   </ng-container>
 </ng-template>

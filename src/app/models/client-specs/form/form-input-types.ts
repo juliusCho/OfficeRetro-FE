@@ -7,6 +7,7 @@ export type InputType =
   | 'select'
   | 'radio'
   | 'checkbox'
+  | 'date'
   | 'date-range'
   | 'list'
 

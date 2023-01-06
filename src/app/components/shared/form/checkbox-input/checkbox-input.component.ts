@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { BehaviorSubject, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { convertToColumnizedArray } from 'src/app/helpers/object-converters'
+import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
-import { BaseListInputComponent } from '../shared/base-list-input.component.ts/base-list-input.component'
+import { BaseListInputComponent } from '../shared/base/base-list-input/base-list-input.component'
 
 @AutoUnsubscribe()
 @Component({

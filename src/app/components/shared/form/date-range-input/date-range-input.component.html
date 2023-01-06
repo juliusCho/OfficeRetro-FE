@@ -1,0 +1,44 @@
+<div class="container" [ngClass]="containerClass">
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    [labelPosition]="labelPosition"
+    [labelWidth]="labelWidth"
+  ></app-input-label>
+  <mat-form-field
+    [formGroup]="form"
+    [ngClass]="inputAreaClass"
+    [ngStyle]="inputAreaStyle"
+  >
+    <mat-date-range-input
+      [rangePicker]="picker"
+      [min]="minDate"
+      [max]="maxDate"
+      [disabled]="isDisabled"
+    >
+      <input
+        matStartDate
+        [formControlName]="name + 'Start'"
+        (dateChange)="selectDateRange('start', $event)"
+        placeholder="DD/MM/YYYY"
+      />
+      <input
+        matEndDate
+        [formControlName]="name + 'End'"
+        (dateChange)="selectDateRange('end', $event)"
+        placeholder="DD/MM/YYYY"
+      />
+    </mat-date-range-input>
+    <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>
+    <mat-date-range-picker
+      #picker
+      (closed)="onPickerClose()"
+    ></mat-date-range-picker>
+  </mat-form-field>
+</div>
+<app-alert-text
+  *ngIf="displayAlert && isValidationNeeded"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+  [labelWidth]="labelWidth"
+></app-alert-text>

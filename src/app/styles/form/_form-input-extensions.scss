@@ -1,0 +1,108 @@
+@import 'styles';
+
+%host {
+  @extend %center-list;
+  width: 100%;
+
+  .container {
+    @extend %flex-center;
+    width: 100%;
+
+    &.no-validation {
+      margin-bottom: $unit-5;
+    }
+
+    &.label-top {
+      align-items: flex-start;
+      @extend %center-list;
+    }
+  }
+}
+
+%host-date-input {
+  @extend %host;
+
+  .container {
+    ::ng-deep mat-form-field {
+      @extend %input-box-display;
+      flex-direction: unset !important;
+      width: $form-input-width;
+      background-color: $input-color !important;
+      border-radius: 35px;
+
+      &.no-label {
+        width: 100% !important;
+      }
+
+      &.disabled {
+        background-color: $input-disabled-color !important;
+        cursor: not-allowed !important;
+
+        &:hover {
+          background-color: $input-disabled-color !important;
+        }
+      }
+
+      &:hover {
+        background-color: $main-background-color !important;
+      }
+
+      .mat-mdc-text-field-wrapper.mdc-text-field {
+        padding: 0 !important;
+        position: unset !important;
+        will-change: unset !important;
+        background-color: unset !important;
+        width: 100% !important;
+        height: 100% !important;
+
+        .mat-mdc-form-field-focus-overlay {
+          visibility: hidden !important;
+        }
+
+        .mat-mdc-form-field-flex {
+          height: 100% !important;
+          width: 100%;
+
+          .mat-mdc-form-field-infix {
+            height: 100% !important;
+            padding: 0 !important;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            .icon {
+              width: $unit-13;
+              height: calc(100% - 0.75rem);
+              text-align: center;
+              border: none;
+              background-color: transparent;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              @extend %font-5;
+              @include call-onetime-ani(ani-opacity);
+
+              &:hover {
+                color: $font-hover-color;
+              }
+            }
+          }
+        }
+
+        .mdc-line-ripple {
+          visibility: hidden;
+        }
+      }
+
+      .mat-mdc-form-field-subscript-wrapper {
+        &.mat-mdc-form-field-bottom-align {
+          visibility: hidden !important;
+          width: 0 !important;
+        }
+      }
+    }
+  }
+}

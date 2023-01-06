@@ -1,12 +1,26 @@
 import { Injectable, OnDestroy } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+} from '@angular/forms'
+import * as moment from 'moment'
 import { BehaviorSubject, Observable, of, Subscription, tap } from 'rxjs'
 import {
+  isArray,
   isBoolean,
+  isDateArray,
   isNumber,
   isString,
   isStringArray,
 } from 'src/app/helpers/type-checkers'
+import {
+  momentToDateRange,
+  momentToDateString,
+  valueToDateRange,
+  valueToDateString,
+} from 'src/app/helpers/value-converters'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 
 @Injectable()
@@ -55,13 +69,7 @@ export class FormService implements OnDestroy {
     const formGroup: Record<string, FormControl> = {}
 
     this._inputInfos.forEach((inputInfo) => {
-      formGroup[inputInfo.key] = new FormControl(
-        inputInfo.initValue,
-        inputInfo.formValidators,
-      )
-      this._formSubjects[inputInfo.key] = new BehaviorSubject(
-        inputInfo.initValue,
-      )
+      this.setFormGroupAndSubject(inputInfo, formGroup)
     })
 
     this._form = this._formBuilder.group(formGroup)
@@ -79,21 +87,82 @@ export class FormService implements OnDestroy {
     return this._formSubjects[key]
   }
 
+  readonly subscribe = () => {
+    if (!this._initialized) return
+    this._formSubscription$ = this._formValueChanges$.subscribe()
+  }
+
   readonly reinitializeData = () => {
     if (!this._initialized) return
 
     const formGroup: Record<string, unknown> = {}
 
     this._inputInfos.forEach((inputInfo) => {
-      formGroup[inputInfo.key] = inputInfo.initValue
+      if (
+        inputInfo.inputType === 'date-range' &&
+        isDateArray(inputInfo.initValue)
+      ) {
+        formGroup[`${inputInfo.key}Start`] = inputInfo.initValue[0]
+          ? moment(inputInfo.initValue[0])
+          : null
+        formGroup[`${inputInfo.key}End`] = inputInfo.initValue[1]
+          ? moment(inputInfo.initValue[1])
+          : null
+      } else {
+        formGroup[inputInfo.key] = inputInfo.initValue
+      }
     })
 
     this._form.setValue(formGroup)
   }
 
-  readonly subscribe = () => {
-    if (!this._initialized) return
-    this._formSubscription$ = this._formValueChanges$.subscribe()
+  private readonly setFormGroupAndSubject = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, FormControl>,
+  ) => {
+    if (
+      inputInfo.inputType === 'date-range' &&
+      isArray(inputInfo.formValidators) &&
+      inputInfo.formValidators.length === 2 &&
+      isArray(inputInfo.formValidators[0]) &&
+      isArray(inputInfo.formValidators[1]) &&
+      isDateArray(inputInfo.initValue)
+    ) {
+      formGroup[`${inputInfo.key}Start`] = new FormControl(
+        inputInfo.initValue[0] ? moment(inputInfo.initValue[0]) : undefined,
+        inputInfo.formValidators[0],
+      )
+      formGroup[`${inputInfo.key}End`] = new FormControl(
+        inputInfo.initValue[1] ? moment(inputInfo.initValue[1]) : undefined,
+        inputInfo.formValidators[1],
+      )
+
+      this._formSubjects[inputInfo.key] = new BehaviorSubject(
+        valueToDateRange(inputInfo.initValue) as unknown,
+      )
+    } else if (inputInfo.inputType === 'date') {
+      formGroup[inputInfo.key] = new FormControl(
+        inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
+        inputInfo.formValidators as ValidatorFn[],
+      )
+
+      this._formSubjects[inputInfo.key] = new BehaviorSubject(
+        valueToDateString(inputInfo.initValue) as unknown,
+      )
+    } else if (
+      !inputInfo.formValidators ||
+      inputInfo.formValidators.length === 0 ||
+      !isArray(inputInfo.formValidators[0])
+    ) {
+      formGroup[inputInfo.key] = new FormControl(
+        inputInfo.initValue,
+        inputInfo.formValidators as ValidatorFn[],
+      )
+
+      this._formSubjects[inputInfo.key] = new BehaviorSubject(
+        inputInfo.initValue,
+      )
+    }
   }
 
   private readonly bindToValueChanges = () => {
@@ -110,6 +179,16 @@ export class FormService implements OnDestroy {
           } else if (isStringArray(formValue)) {
             this._formSubjects[inputInfo.key].next(
               formValue ? [...formValue] : [],
+            )
+          } else if (!formValue && inputInfo.inputType === 'date-range') {
+            const startValue = v[`${inputInfo.key}Start`]
+            const endValue = v[`${inputInfo.key}End`]
+            this._formSubjects[inputInfo.key].next(
+              momentToDateRange([startValue, endValue]) as unknown,
+            )
+          } else if (inputInfo.inputType === 'date') {
+            this._formSubjects[inputInfo.key].next(
+              momentToDateString(formValue) as unknown,
             )
           }
         })

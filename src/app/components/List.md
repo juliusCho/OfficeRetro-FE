@@ -9,14 +9,16 @@
   - TextLoading
 - Form
 
+  - InputLabel
   - Input
     - PasswordInput
       - PasswordResetButton
-    - DropdownInput
     - LengthText
+  - DropdownInput
   - AreaInput
   - RadioInput
   - CheckboxInput
+  - DateInput
   - DateRangeInput
 
 - ListInput

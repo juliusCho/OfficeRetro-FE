@@ -1,0 +1,29 @@
+<div class="container" [ngClass]="containerClass">
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    [labelPosition]="labelPosition"
+    [labelWidth]="labelWidth"
+  ></app-input-label>
+  <mat-form-field
+    [formGroup]="form"
+    [ngClass]="inputAreaClass"
+    [ngStyle]="inputAreaStyle"
+  >
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [formControlName]="name"
+      (dateChange)="selectDate($event)"
+      placeholder="DD/MM/YYYY"
+    />
+    <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>
+    <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>
+  </mat-form-field>
+</div>
+<app-alert-text
+  *ngIf="displayAlert && isValidationNeeded"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+  [labelWidth]="labelWidth"
+></app-alert-text>

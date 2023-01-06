@@ -1,13 +1,13 @@
-import { AfterViewInit, Component } from '@angular/core'
+import { AfterContentInit, Component } from '@angular/core'
 
 @Component({
   template: '',
 })
-export class BasePageComponent implements AfterViewInit {
+export class BasePageComponent implements AfterContentInit {
   protected isPageLoaded = false
   protected isLoading = true
 
-  ngAfterViewInit(): void {
+  ngAfterContentInit(): void {
     this.isPageLoaded = true
   }
 }

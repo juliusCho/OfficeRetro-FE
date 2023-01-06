@@ -1,0 +1,23 @@
+@import '../../../../styles/form/form-input-extensions';
+
+:host {
+  @extend %host-date-input;
+
+  .container {
+    ::ng-deep mat-form-field {
+      .mat-mdc-text-field-wrapper.mdc-text-field {
+        .mat-mdc-form-field-flex {
+          .mat-mdc-form-field-infix {
+            input {
+              height: calc(100% - 0.75rem) !important;
+              width: calc(100% - $unit-13);
+              @extend %input-box;
+              @extend %input-font;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}

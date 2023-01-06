@@ -6,13 +6,13 @@ export interface FormInputSpec<T> {
   label?: string
   labelPosition?: 'side' | 'top'
   initValue: T
-  formValidators?: ValidatorFn[]
+  formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]]
   validMessageGenerator?: (value?: T) => string
   inputType: InputType
   infoTextType?: InputUnderneathDisplay // text display underneath the input
   placeholder?: string
-  minLength?: number
-  maxLength?: number // -1: infinite length
+  min?: string
+  max?: string // -1: infinite length
   required?: boolean
   disabled?: boolean
   options?: Record<string, string>[]

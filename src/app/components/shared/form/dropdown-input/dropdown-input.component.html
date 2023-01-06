@@ -1,10 +1,4 @@
-<div
-  class="container"
-  [formGroup]="form"
-  [ngClass]="{
-    'label-top': labelPosition === 'top'
-  }"
->
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
   <select [formControlName]="name" [style]="'width:' + width" class="input">
     <ng-container *ngIf="optionValues$ | async as optionValues">
       <option
@@ -23,7 +17,11 @@
     [labelPosition]="labelPosition"
     [labelWidth]="labelWidth"
   ></app-input-label>
-  <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
+  <div
+    class="input-div"
+    [ngClass]="inputAreaClass"
+    [ngStyle]="dropdownInputAreaStyle"
+  >
     <div class="select-section">
       <button
         type="button"

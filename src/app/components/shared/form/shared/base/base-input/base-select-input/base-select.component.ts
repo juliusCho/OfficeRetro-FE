@@ -7,7 +7,7 @@ import {
 import { BehaviorSubject, map, Observable, of, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
-import { BaseInputComponent } from '../base-input/base-input.component'
+import { BaseInputComponent } from '../base-input.component'
 
 @AutoUnsubscribe()
 @Component({
@@ -36,7 +36,7 @@ export class BaseSelectComponent
   }
 
   constructor(
-    private readonly _requestService: HttpCommonService,
+    protected readonly _requestService: HttpCommonService,
     protected override readonly _changeDetectorRef: ChangeDetectorRef,
   ) {
     super(_changeDetectorRef)
@@ -63,7 +63,7 @@ export class BaseSelectComponent
   }
 
   ngAfterContentInit(): void {
-    this.maxLength = -1
+    this.max = '-1'
 
     this._changeDetectorRef.detectChanges()
 

@@ -1,10 +1,4 @@
-<div
-  class="container"
-  [formGroup]="form"
-  [ngClass]="{
-    'label-top': labelPosition === 'top'
-  }"
->
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
   <app-input-label
     *ngIf="label"
     [label]="label"
@@ -17,7 +11,7 @@
       [id]="name"
       class="input"
       [style]="'width:' + width + ';height:' + height"
-      [maxLength]="maxLength"
+      [maxLength]="max"
       [formControlName]="name"
       (blur)="onFocusOut()"
       [placeholder]="isDisabled ? '' : placeholder"

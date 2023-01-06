@@ -1,10 +1,4 @@
-<div
-  class="container"
-  [formGroup]="form"
-  [ngClass]="{
-    'label-top': labelPosition === 'top'
-  }"
->
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
   <app-input-label
     *ngIf="label"
     [label]="label"
@@ -18,7 +12,7 @@
       [type]="type === 'email' ? 'text' : type"
       class="input"
       [style]="'width:' + width"
-      [maxLength]="maxLength"
+      [maxLength]="max"
       (keyup.enter)="onEnter()"
       [ngClass]="{ password: isInnerContentExist }"
       [formControlName]="name"

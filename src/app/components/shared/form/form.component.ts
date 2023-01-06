@@ -8,11 +8,13 @@ import {
   OnInit,
   Output,
 } from '@angular/core'
-import { BehaviorSubject, debounceTime, tap } from 'rxjs'
+import { BehaviorSubject, debounceTime, Subscription, tap } from 'rxjs'
+import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isArray } from 'src/app/helpers/type-checkers'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { FormService } from 'src/app/services/form/form.service'
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -38,6 +40,8 @@ export class FormComponent implements OnInit, AfterContentInit {
   @Output() cancel = new EventEmitter<void>()
 
   showValidationMessage = false
+
+  private _formValueChangeSubscription$?: Subscription
 
   get form() {
     return this._formService.form
@@ -72,7 +76,7 @@ export class FormComponent implements OnInit, AfterContentInit {
       return
     }
 
-    this._formService.formValueChange
+    this._formValueChangeSubscription$ = this._formService.formValueChange
       .pipe(
         debounceTime(1000),
         tap(() => {
@@ -81,6 +85,8 @@ export class FormComponent implements OnInit, AfterContentInit {
         }),
       )
       .subscribe()
+
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly isSpecArray = (
@@ -120,6 +126,35 @@ export class FormComponent implements OnInit, AfterContentInit {
     return this._formService.getValueObservable(key) as BehaviorSubject<
       string[]
     >
+  }
+
+  readonly getValueObservableStringOrUndefined = (key: string) => {
+    return this._formService.getValueObservable(key) as BehaviorSubject<
+      string | undefined
+    >
+  }
+
+  readonly getValueObservableDateRange = (key: string) => {
+    return this._formService.getValueObservable(key) as BehaviorSubject<
+      [string | undefined, string | undefined]
+    >
+  }
+
+  readonly getFormInputSpec = <T>(
+    formInputSpec: FormInputSpec<T>,
+    labelPosition?: 'top' | 'side',
+  ) => {
+    if (!labelPosition) return formInputSpec
+    return { ...formInputSpec, labelPosition }
+  }
+
+  readonly getArrayFormInputSpecLabelPosition = (
+    inputSpecIdx: number,
+    formInputSpecs: [FormInputSpec<unknown>, FormInputSpec<unknown>],
+  ) => {
+    return inputSpecIdx === 0
+      ? formInputSpecs[0].labelPosition ?? formInputSpecs[1].labelPosition
+      : undefined
   }
 
   readonly onSubmit = () => {

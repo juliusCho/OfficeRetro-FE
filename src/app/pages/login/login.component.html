@@ -1,5 +1,25 @@
 <app-centre-title>Office Retro</app-centre-title>
-<div class="form" [ngClass]="{ loaded: isPageLoaded }">
+<div class="form" [ngClass]="{ loaded: isPageLoaded, layoutPlay }">
+  <app-form
+    *ngIf="!layoutPlay; else play"
+    clearLabel="Clear"
+    submitLabel="Login"
+    cancelLabel="Cancel"
+    [formInputSpecs]="formInputSpecs"
+    [isValidationNeeded]="true"
+    (submit)="onSubmit($event)"
+    [labelWidth]="_cssService.getSize('unit-20')"
+  ></app-form>
+</div>
+<app-button>Register</app-button>
+<div class="other-buttons">
+  <app-button [isPale]="true" width="200px">Inquiry Page</app-button>
+  <app-button [isPale]="true" width="200px">About Office Retro</app-button>
+</div>
+
+<app-loading [loading]="!isPageLoaded"></app-loading>
+
+<ng-template #play>
   <app-form
     submitLabel="Login"
     cancelLabel="Cancel"
@@ -10,11 +30,4 @@
     [labelWidth]="_cssService.getSize('unit-20')"
     buttonAreaWidth="15rem"
   ></app-form>
-</div>
-<app-button>Register</app-button>
-<div class="other-buttons">
-  <app-button [isPale]="true" width="200px">Inquiry Page</app-button>
-  <app-button [isPale]="true" width="200px">About Office Retro</app-button>
-</div>
-
-<app-loading [loading]="!isPageLoaded"></app-loading>
+</ng-template>

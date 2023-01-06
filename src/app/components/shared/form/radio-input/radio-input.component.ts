@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { convertToColumnizedArray } from 'src/app/helpers/object-converters'
+import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
-import { BaseSelectComponent } from '../shared/base-select.component.ts/base-select.component'
+import { BaseSelectComponent } from '../shared/base/base-input/base-select-input/base-select.component'
 
 @Component({
   selector: 'app-radio-input',
