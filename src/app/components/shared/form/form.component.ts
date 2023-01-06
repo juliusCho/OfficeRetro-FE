@@ -1,16 +1,19 @@
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core'
 import { BehaviorSubject, debounceTime, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isArray } from 'src/app/helpers/type-checkers'
+import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { FormService } from 'src/app/services/form/form.service'
 
@@ -22,7 +25,7 @@ import { FormService } from 'src/app/services/form/form.service'
   providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent implements OnInit, AfterContentInit {
+export class FormComponent implements OnInit, AfterViewInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
@@ -31,16 +34,21 @@ export class FormComponent implements OnInit, AfterContentInit {
   @Input() cancelLabel?: string
   @Input() clearLabel?: string
   @Input() width?: string = ''
-  @Input() isValidationNeeded?: boolean = false
+  @Input() isValidationNeeded?: boolean = false // no input validation checks
   @Input() buttonPosition?: 'bottom' | 'right' = 'bottom'
-  @Input() labelWidth?: string
   @Input() buttonAreaWidth?: string
+  @Input() labelWidth?: string // label width per each input
+  @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
+  @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
 
   @Output() submit = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
 
+  @ViewChild('submitInjectTag') submitInjectTag!: ElementRef
+
   showValidationMessage = false
 
+  private _injectedButtonOnClick$?: Subscription
   private _formValueChangeSubscription$?: Subscription
 
   get form() {
@@ -70,13 +78,16 @@ export class FormComponent implements OnInit, AfterContentInit {
     this._formService.initialize(this.formInputSpecs)
   }
 
-  ngAfterContentInit(): void {
-    if (this.submitLabel) {
-      this._formService.subscribe()
+  ngAfterViewInit(): void {
+    if (
+      this.submitInjectTag.nativeElement.children.length > 0 ||
+      this.submitLabel
+    ) {
+      this._formService.subscribeValueChanges()
       return
     }
 
-    this._formValueChangeSubscription$ = this._formService.formValueChange
+    this._formValueChangeSubscription$ = this._formService.formValueChange$
       .pipe(
         debounceTime(1000),
         tap(() => {

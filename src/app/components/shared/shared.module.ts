@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { CentreTitleComponent } from './centre-title/centre-title.component'
+import { CenterTitleComponent } from './center-title/center-title.component'
 import { FormModule } from './form/form.module'
 import { LoadingComponent } from './loading/loading.component'
 
-export const declarations = [CentreTitleComponent, LoadingComponent]
+export const declarations = [CenterTitleComponent, LoadingComponent]
 
 @NgModule({
   declarations,

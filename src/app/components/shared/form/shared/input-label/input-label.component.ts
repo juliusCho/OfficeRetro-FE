@@ -1,16 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
   selector: 'app-input-label',
   templateUrl: './input-label.component.html',
   styleUrls: ['./input-label.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputLabelComponent {
   @Input() label!: string

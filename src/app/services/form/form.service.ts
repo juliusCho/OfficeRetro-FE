@@ -6,7 +6,14 @@ import {
   ValidatorFn,
 } from '@angular/forms'
 import * as moment from 'moment'
-import { BehaviorSubject, Observable, of, Subscription, tap } from 'rxjs'
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  shareReplay,
+  Subscription,
+  tap,
+} from 'rxjs'
 import {
   isArray,
   isBoolean,
@@ -38,7 +45,7 @@ export class FormService implements OnDestroy {
     return this._form as FormGroup<Record<string, FormControl>>
   }
 
-  get formValueChange() {
+  get formValueChange$() {
     if (!this._initialized) return of()
     return this._formValueChanges$
   }
@@ -87,7 +94,7 @@ export class FormService implements OnDestroy {
     return this._formSubjects[key]
   }
 
-  readonly subscribe = () => {
+  readonly subscribeValueChanges = () => {
     if (!this._initialized) return
     this._formSubscription$ = this._formValueChanges$.subscribe()
   }
@@ -109,7 +116,7 @@ export class FormService implements OnDestroy {
           ? moment(inputInfo.initValue[1])
           : null
       } else {
-        formGroup[inputInfo.key] = inputInfo.initValue
+        formGroup[inputInfo.key] = inputInfo.initValue ?? null
       }
     })
 
@@ -167,6 +174,7 @@ export class FormService implements OnDestroy {
 
   private readonly bindToValueChanges = () => {
     this._formValueChanges$ = this._form.valueChanges.pipe(
+      shareReplay({ bufferSize: 1, refCount: true }),
       tap((v: { [key: string]: unknown }) => {
         this._inputInfos.forEach((inputInfo) => {
           const formValue = v[inputInfo.key]

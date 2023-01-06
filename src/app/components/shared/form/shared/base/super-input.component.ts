@@ -7,6 +7,7 @@ import {
 import { FormGroup } from '@angular/forms'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isNumber } from 'src/app/helpers/type-checkers'
+import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 
 @AutoUnsubscribe()
@@ -19,6 +20,7 @@ export class SuperInputComponent<T> {
   @Input() labelWidth?: string
   @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
   @Input() formInputSpec!: FormInputSpec<T>
+  @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
 
   @Input() set showValidationMessage(value: boolean) {
     this._showValidationMessage = value
@@ -46,7 +48,7 @@ export class SuperInputComponent<T> {
   }
   set max(value: string) {
     this._max = value
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
   get maxLength() {
     return isNumber(this.max) ? Number(this.max) : -1
@@ -57,9 +59,6 @@ export class SuperInputComponent<T> {
   get required() {
     return this.formInputSpec?.required ?? false
   }
-  get infoTextType() {
-    return this.formInputSpec?.infoTextType ?? 'none'
-  }
   get placeholder() {
     return this.formInputSpec?.placeholder ?? ''
   }
@@ -68,7 +67,7 @@ export class SuperInputComponent<T> {
   }
 
   get showValidationMessage() {
-    return this._showValidationMessage
+    return !!this.isValidationNeeded && this._showValidationMessage
   }
 
   get displayLength() {
@@ -76,11 +75,16 @@ export class SuperInputComponent<T> {
   }
 
   get displayAlert() {
-    return this.infoTextType === 'all' || this.infoTextType === 'alert'
+    return (
+      this.isValidationNeeded &&
+      (this.infoTextType === 'all' || this.infoTextType === 'alert')
+    )
   }
 
   get alertMessage() {
-    return this._showValidationMessage ? this.validationMessage : ''
+    return this.isValidationNeeded && this._showValidationMessage
+      ? this.validationMessage
+      : ''
   }
 
   get containerClass() {
@@ -102,10 +106,12 @@ export class SuperInputComponent<T> {
     return {}
   }
 
-  constructor(protected readonly _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(protected readonly changeDetectorRef: ChangeDetectorRef) {}
 
   protected readonly onFocusOut = () => {
+    if (!this.isValidationNeeded) return
+
     this.showValidationMessage = true
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 }

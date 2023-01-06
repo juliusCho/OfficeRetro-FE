@@ -2,7 +2,7 @@
 
 - Tooltip
 - Button
-- CentreTitle
+- CenterTitle
 - Text
   - AlertText
 - Loading
@@ -10,10 +10,10 @@
 - Form
 
   - InputLabel
+  - LengthText
   - Input
     - PasswordInput
       - PasswordResetButton
-    - LengthText
   - DropdownInput
   - AreaInput
   - RadioInput

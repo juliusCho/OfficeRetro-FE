@@ -1,9 +1,9 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   Output,
   ViewChild,
 } from '@angular/core'
@@ -15,10 +15,9 @@ import { BaseInputComponent } from '../shared/base/base-input/base-input.compone
   styleUrls: ['./input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputComponent
-  extends BaseInputComponent
-  implements AfterContentInit
-{
+export class InputComponent extends BaseInputComponent {
+  @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
+
   @Output() enter = new EventEmitter<void>()
 
   @ViewChild('innerContent') innerContentRef!: ElementRef
@@ -33,17 +32,19 @@ export class InputComponent
     return 'text'
   }
 
-  ngAfterContentInit(): void {
+  override ngAfterViewInit(): void {
+    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
+
     this.isInnerContentExist =
       (this.innerContentRef?.nativeElement.children.length ?? 0) > 0
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   readonly onEnter = () => {
     this.showValidationMessage = true
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
 
     this.enter.emit()
   }

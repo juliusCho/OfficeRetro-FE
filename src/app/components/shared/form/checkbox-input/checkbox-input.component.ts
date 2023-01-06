@@ -35,17 +35,7 @@ export class CheckboxInputComponent extends BaseListInputComponent {
   }
 
   override ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$
-      .pipe(
-        tap((v) => {
-          if (v.length === 0) {
-            this.selectedOptions$.next([])
-
-            this._changeDetectorRef.markForCheck()
-          }
-        }),
-      )
-      .subscribe()
+    this.subscribeFormValueChange()
 
     this._parentObservableSubscription$ = this.optionValuesObservableListener$
       .pipe(
@@ -54,12 +44,12 @@ export class CheckboxInputComponent extends BaseListInputComponent {
             tap(this.setSelectedOptionsSubject),
           )
 
-          this._changeDetectorRef.markForCheck()
+          this.changeDetectorRef.markForCheck()
         }),
       )
       .subscribe()
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   readonly getItems = (
@@ -87,6 +77,20 @@ export class CheckboxInputComponent extends BaseListInputComponent {
     this.onFocusOut()
   }
 
+  private readonly subscribeFormValueChange = () => {
+    this.valueChangeSubscription$ = this.valueChangeObservable$
+      .pipe(
+        tap((v) => {
+          if (v.length === 0) {
+            this.selectedOptions$.next([])
+
+            this.changeDetectorRef.markForCheck()
+          }
+        }),
+      )
+      .subscribe()
+  }
+
   private readonly setSelectedOptionsSubject = (
     values: Array<{ value: string; label: string }>,
   ) => {
@@ -96,6 +100,6 @@ export class CheckboxInputComponent extends BaseListInputComponent {
 
     this.selectedOptions$.next(vals)
 
-    this._changeDetectorRef.markForCheck()
+    this.changeDetectorRef.markForCheck()
   }
 }

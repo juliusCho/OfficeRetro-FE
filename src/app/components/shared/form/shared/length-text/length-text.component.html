@@ -1,3 +1,6 @@
-<span *ngIf="!!maxLength && maxLength > 0" class="container"
+<span
+  *ngIf="!!maxLength && maxLength > 0"
+  class="container"
+  [ngClass]="{ 'flex-start': flexStart }"
   >({{ length }} / {{ maxLength }})</span
 >

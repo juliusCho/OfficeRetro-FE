@@ -32,7 +32,9 @@ export class BaseListInputComponent
   protected optionValuesObservableListener$ = new BehaviorSubject(0)
 
   get validator() {
-    return this.formInputSpec?.validMessageGenerator
+    return this.isValidationNeeded
+      ? undefined
+      : this.formInputSpec?.validMessageGenerator
   }
   get options() {
     return this.formInputSpec?.options
@@ -43,9 +45,9 @@ export class BaseListInputComponent
 
   constructor(
     private readonly _requestService: HttpCommonService,
-    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+    protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_changeDetectorRef)
+    super(changeDetectorRef)
   }
 
   ngOnInit(): void {
@@ -61,11 +63,11 @@ export class BaseListInputComponent
         this.showValidationMessage = false
         this.validationMessage = this.validate(v)
 
-        this._changeDetectorRef.markForCheck()
+        this.changeDetectorRef.markForCheck()
       }),
     )
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   ngAfterContentInit() {
@@ -77,7 +79,7 @@ export class BaseListInputComponent
         }),
       ).pipe(tap(this.updateContextObservableListener))
 
-      this._changeDetectorRef.detectChanges()
+      this.changeDetectorRef.detectChanges()
       return
     }
 
@@ -105,11 +107,11 @@ export class BaseListInputComponent
         tap(this.updateContextObservableListener),
       )
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   private readonly validate = (value?: string[]) => {
-    if (this.isDisabled) return ''
+    if (this.isDisabled || !this.isValidationNeeded) return ''
 
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result
@@ -127,6 +129,6 @@ export class BaseListInputComponent
     this.optionValuesObservableListener$.next(
       this.optionValuesObservableListener$.value + 1,
     )
-    this._changeDetectorRef.markForCheck()
+    this.changeDetectorRef.markForCheck()
   }
 }

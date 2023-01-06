@@ -40,10 +40,10 @@ export class DropdownInputComponent extends BaseSelectComponent {
 
   constructor(
     private readonly _cssService: CssService,
-    protected override readonly _requestService: HttpCommonService,
-    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+    protected override readonly requestService: HttpCommonService,
+    protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_requestService, _changeDetectorRef)
+    super(requestService, changeDetectorRef)
   }
 
   readonly toggleDropdown = () => {
@@ -54,7 +54,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
       this.showValidationMessage = false
     }
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   override readonly selectOption = (option: {
@@ -68,7 +68,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
 
     this.isDropdownOpened = false
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
 
     this.onFocusOut()
   }
@@ -82,7 +82,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
 
     this.isDropdownOpened = false
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
 
     this.onFocusOut()
   }

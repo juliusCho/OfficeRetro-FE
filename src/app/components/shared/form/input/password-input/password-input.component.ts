@@ -18,6 +18,7 @@ import { SuperInputComponent } from '../../shared/base/super-input.component'
 })
 export class PasswordInputComponent extends SuperInputComponent<string> {
   @Input() valueChange$!: BehaviorSubject<string> // form.valueChange observable
+  @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
   @Output() enter = new EventEmitter<void>()
 
@@ -29,7 +30,9 @@ export class PasswordInputComponent extends SuperInputComponent<string> {
     }
   }
 
-  get validate(): (value?: string) => string {
+  get validate(): ((value?: string) => string) | undefined {
+    if (!this.isValidationNeeded) return
+
     const _this = this
 
     return (value?: string) => {

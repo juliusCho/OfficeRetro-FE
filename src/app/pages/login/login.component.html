@@ -1,15 +1,18 @@
-<app-centre-title>Office Retro</app-centre-title>
+<app-center-title>Office Retro</app-center-title>
 <div class="form" [ngClass]="{ loaded: isPageLoaded, layoutPlay }">
   <app-form
     *ngIf="!layoutPlay; else play"
     clearLabel="Clear"
-    submitLabel="Login"
     cancelLabel="Cancel"
     [formInputSpecs]="formInputSpecs"
     [isValidationNeeded]="true"
     (submit)="onSubmit($event)"
     [labelWidth]="_cssService.getSize('unit-20')"
-  ></app-form>
+    lengthLabelPosition="left"
+    infoTextType="all"
+  >
+    <button type="button" style="cursor: pointer">Q$@#$@Q#$AQA#$Y</button>
+  </app-form>
 </div>
 <app-button>Register</app-button>
 <div class="other-buttons">

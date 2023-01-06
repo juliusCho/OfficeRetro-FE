@@ -22,10 +22,12 @@ export class BaseDateInputComponent<T>
 {
   @Input() valueChange$!: BehaviorSubject<T>
 
-  protected _valueChangeObservable$?: Observable<T>
+  protected valueChangeObservable$?: Observable<T>
 
   get validator() {
-    return this.formInputSpec?.validMessageGenerator
+    return this.isValidationNeeded
+      ? this.formInputSpec?.validMessageGenerator
+      : undefined
   }
 
   get minDate() {
@@ -40,9 +42,9 @@ export class BaseDateInputComponent<T>
   }
 
   constructor(
-    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+    protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_changeDetectorRef)
+    super(changeDetectorRef)
   }
 
   ngOnInit(): void {
@@ -53,15 +55,15 @@ export class BaseDateInputComponent<T>
 
     this.form?.get(this.name)?.enable()
 
-    this._valueChangeObservable$ = this.valueChange$.pipe(
+    this.valueChangeObservable$ = this.valueChange$.pipe(
       tap((v) => {
         this.showValidationMessage = false
 
-        this._changeDetectorRef.markForCheck()
+        this.changeDetectorRef.markForCheck()
       }),
     )
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   readonly onPickerClose = () => {

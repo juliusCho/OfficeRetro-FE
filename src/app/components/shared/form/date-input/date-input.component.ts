@@ -24,17 +24,17 @@ export class DateInputComponent
   private _valueChangeSubscription$?: Subscription
 
   ngAfterContentInit(): void {
-    this._valueChangeSubscription$ = this._valueChangeObservable$
+    this._valueChangeSubscription$ = this.valueChangeObservable$
       ?.pipe(
         tap((v) => {
           this.validationMessage = this.validate(v)
 
-          this._changeDetectorRef.markForCheck()
+          this.changeDetectorRef.markForCheck()
         }),
       )
       .subscribe()
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   readonly selectDate = (event: MatDatepickerInputEvent<moment.Moment>) => {
@@ -43,17 +43,19 @@ export class DateInputComponent
     if (!moment(event.value).isValid()) {
       this.form.get(this.name)?.setValue(undefined)
 
-      this.validationMessage = `${(this.label ?? 'This field').replace(
-        /\\n/g,
-        ' ',
-      )} must be filled in correct format of "DD/MM/YYYY"`
+      if (this.isValidationNeeded) {
+        this.validationMessage = `${(this.label ?? 'This field').replace(
+          /\\n/g,
+          ' ',
+        )} must be filled in correct format of "DD/MM/YYYY"`
+      }
     }
 
     this.onFocusOut()
   }
 
   readonly validate = (value?: string) => {
-    if (this.isDisabled) return ''
+    if (this.isDisabled || !this.isValidationNeeded) return ''
 
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result

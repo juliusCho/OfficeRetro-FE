@@ -49,9 +49,15 @@
     </div>
   </div>
   <div class="button-section" [ngStyle]="buttonSectionStyle">
-    <app-button *ngIf="submitLabel" (click)="onSubmit()" color="primary">{{
-      submitLabel
-    }}</app-button>
+    <div #submitInjectTag (click)="onSubmit()">
+      <ng-content></ng-content>
+    </div>
+    <app-button
+      *ngIf="submitLabel && submitInjectTag.children.length === 0"
+      (click)="onSubmit()"
+      color="primary"
+      >{{ submitLabel }}</app-button
+    >
     <app-button *ngIf="cancelLabel" (click)="onCancel()">{{
       cancelLabel
     }}</app-button>
@@ -73,6 +79,8 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [lengthLabelPosition]="lengthLabelPosition"
+      [infoTextType]="infoTextType"
     ></app-input>
     <app-input
       *ngSwitchCase="'email'"
@@ -84,29 +92,9 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [lengthLabelPosition]="lengthLabelPosition"
+      [infoTextType]="infoTextType"
     ></app-input>
-    <app-password-input
-      *ngSwitchCase="'password'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
-      (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
-    ></app-password-input>
-    <app-password-input
-      *ngSwitchCase="'password-login'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
-      (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
-    >
-      <app-password-reset-button></app-password-reset-button>
-    </app-password-input>
     <app-area-input
       *ngSwitchCase="'textarea'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -115,6 +103,7 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-area-input>
     <app-dropdown-input
       *ngSwitchCase="'select'"
@@ -124,6 +113,7 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-dropdown-input>
     <app-radio-input
       *ngSwitchCase="'radio'"
@@ -133,6 +123,7 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-radio-input>
     <app-checkbox-input
       *ngSwitchCase="'checkbox'"
@@ -142,6 +133,7 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-checkbox-input>
     <app-date-input
       *ngSwitchCase="'date'"
@@ -151,15 +143,33 @@
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-date-input>
     <app-date-range-input
-      *ngSwitchDefault
+      *ngSwitchCase="'date-range'"
       [valueChange$]="getValueObservableDateRange(formInputSpec.key)"
       [showValidationMessage]="showValidationMessage"
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
     ></app-date-range-input>
+    <app-password-input
+      *ngSwitchDefault
+      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+      [lengthLabelPosition]="lengthLabelPosition"
+      [infoTextType]="infoTextType"
+    >
+      <app-password-reset-button
+        *ngIf="formInputSpec.inputType === 'password-login'"
+      ></app-password-reset-button>
+    </app-password-input>
   </ng-container>
 </ng-template>

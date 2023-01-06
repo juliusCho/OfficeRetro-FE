@@ -36,10 +36,10 @@ export class BaseSelectComponent
   }
 
   constructor(
-    protected readonly _requestService: HttpCommonService,
-    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+    protected readonly requestService: HttpCommonService,
+    protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_changeDetectorRef)
+    super(changeDetectorRef)
   }
 
   override ngAfterViewInit(): void {
@@ -53,19 +53,19 @@ export class BaseSelectComponent
               value: '',
             })
 
-            this._changeDetectorRef.markForCheck()
+            this.changeDetectorRef.markForCheck()
           }
         }),
       )
       .subscribe()
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   ngAfterContentInit(): void {
     this.max = '-1'
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
 
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of([
@@ -76,7 +76,7 @@ export class BaseSelectComponent
         }),
       ]).pipe(tap(this.setSelectedOptionSubject))
 
-      this._changeDetectorRef.detectChanges()
+      this.changeDetectorRef.detectChanges()
       return
     }
 
@@ -94,7 +94,7 @@ export class BaseSelectComponent
     this.form.get(this.name)?.setValue(option.value)
     this.selectedOption$.next(option)
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
 
     this.onFocusOut()
   }
@@ -102,7 +102,7 @@ export class BaseSelectComponent
   private readonly fetchOptions = () => {
     if (!this.optionsFetchUrl) return
 
-    this.optionValues$ = this._requestService
+    this.optionValues$ = this.requestService
       .getGeneralFetch(this.optionsFetchUrl)
       .pipe(
         map((data) => [
@@ -115,7 +115,7 @@ export class BaseSelectComponent
         tap(this.setSelectedOptionSubject),
       )
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   private readonly setSelectedOptionSubject = (
@@ -128,6 +128,6 @@ export class BaseSelectComponent
       value ?? { label: this.placeholder ?? '', value: '' },
     )
 
-    this._changeDetectorRef.markForCheck()
+    this.changeDetectorRef.markForCheck()
   }
 }

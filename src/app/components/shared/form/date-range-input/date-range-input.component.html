@@ -14,7 +14,6 @@
       [rangePicker]="picker"
       [min]="minDate"
       [max]="maxDate"
-      [disabled]="isDisabled"
     >
       <input
         matStartDate
@@ -37,7 +36,7 @@
   </mat-form-field>
 </div>
 <app-alert-text
-  *ngIf="displayAlert && isValidationNeeded"
+  *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
   [labelWidth]="labelWidth"

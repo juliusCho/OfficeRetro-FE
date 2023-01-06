@@ -16,13 +16,15 @@
       [formControlName]="name"
       (dateChange)="selectDate($event)"
       placeholder="DD/MM/YYYY"
+      [min]="minDate"
+      [max]="maxDate"
     />
     <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>
     <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>
   </mat-form-field>
 </div>
 <app-alert-text
-  *ngIf="displayAlert && isValidationNeeded"
+  *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
   [labelWidth]="labelWidth"

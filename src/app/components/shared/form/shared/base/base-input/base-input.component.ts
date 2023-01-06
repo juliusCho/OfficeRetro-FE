@@ -32,9 +32,9 @@ export class BaseInputComponent
   }
 
   constructor(
-    protected override readonly _changeDetectorRef: ChangeDetectorRef,
+    protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(_changeDetectorRef)
+    super(changeDetectorRef)
   }
 
   ngOnInit(): void {
@@ -49,11 +49,11 @@ export class BaseInputComponent
       tap((v) => {
         this.showValidationMessage = false
         this.validationMessage = this.validate(v)
-        this._changeDetectorRef.markForCheck()
+        this.changeDetectorRef.markForCheck()
       }),
     )
 
-    this._changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges()
   }
 
   ngAfterViewInit(): void {
@@ -61,7 +61,7 @@ export class BaseInputComponent
   }
 
   protected readonly validate = (value?: string) => {
-    if (this.isDisabled) return ''
+    if (this.isDisabled || !this.isValidationNeeded) return ''
 
     const result = this.validator ? this.validator(value) : ''
     if (result !== '') return result

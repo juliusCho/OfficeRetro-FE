@@ -1,5 +1,5 @@
 import { ValidatorFn } from '@angular/forms'
-import { InputType, InputUnderneathDisplay } from './form-input-types'
+import { InputType } from './form-input-types'
 
 export interface FormInputSpec<T> {
   key: string
@@ -9,7 +9,6 @@ export interface FormInputSpec<T> {
   formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]]
   validMessageGenerator?: (value?: T) => string
   inputType: InputType
-  infoTextType?: InputUnderneathDisplay // text display underneath the input
   placeholder?: string
   min?: string
   max?: string // -1: infinite length

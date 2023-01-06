@@ -5,7 +5,14 @@
     [for]="name"
     [labelPosition]="labelPosition"
     [labelWidth]="labelWidth"
-  ></app-input-label>
+  >
+    <app-length-text
+      *ngIf="displayLength && lengthLabelPosition === 'left'"
+      [length]="form.value[name]?.length ?? 0"
+      [maxLength]="maxLength"
+      [flexStart]="true"
+    ></app-length-text>
+  </app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <input
       [id]="name"
@@ -26,12 +33,12 @@
   </div>
 </div>
 <app-length-text
-  *ngIf="displayLength"
+  *ngIf="displayLength && lengthLabelPosition !== 'left'"
   [length]="form.value[name]?.length ?? 0"
   [maxLength]="maxLength"
 ></app-length-text>
 <app-alert-text
-  *ngIf="displayAlert && isValidationNeeded"
+  *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
   [labelWidth]="labelWidth"
