@@ -81,7 +81,21 @@
       [labelWidth]="labelWidth"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-    ></app-input>
+    >
+    </app-input>
+    <app-color-input
+      *ngSwitchCase="'text-color'"
+      [valueChange$]="getValueObservableStringPair(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+      [lengthLabelPosition]="lengthLabelPosition"
+      [infoTextType]="infoTextType"
+    >
+    </app-color-input>
     <app-input
       *ngSwitchCase="'email'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -138,6 +152,7 @@
     <app-date-input
       *ngSwitchCase="'date'"
       [valueChange$]="getValueObservableStringOrUndefined(formInputSpec.key)"
+      (enter)="onSubmit()"
       [showValidationMessage]="showValidationMessage"
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
@@ -148,6 +163,7 @@
     <app-date-range-input
       *ngSwitchCase="'date-range'"
       [valueChange$]="getValueObservableDateRange(formInputSpec.key)"
+      (enter)="onSubmit()"
       [showValidationMessage]="showValidationMessage"
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"

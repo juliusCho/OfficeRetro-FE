@@ -2,21 +2,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
+  EventEmitter,
+  Output,
 } from '@angular/core'
 import * as moment from 'moment'
-import { BehaviorSubject } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isDate } from 'src/app/helpers/type-checkers'
 import { SuperInputComponent } from '../super-input.component'
 
-@AutoUnsubscribe()
 @Component({
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
-  @Input() valueChange$!: BehaviorSubject<T>
+  @Output() enter = new EventEmitter<void>()
 
   get validator() {
     return this.isValidationNeeded
@@ -57,5 +55,13 @@ export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
     )} must be filled in correct format of "DD/MM/YYYY"`
 
     this.changeDetectorRef.detectChanges()
+  }
+
+  protected readonly onEnter = () => {
+    this.showValidationMessage = true
+
+    this.changeDetectorRef.detectChanges()
+
+    this.enter.emit()
   }
 }

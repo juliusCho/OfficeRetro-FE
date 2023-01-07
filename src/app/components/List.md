@@ -14,6 +14,8 @@
   - Input
     - PasswordInput
       - PasswordResetButton
+    - ColorInput
+      - ColorPicker
   - DropdownInput
   - AreaInput
   - RadioInput

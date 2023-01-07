@@ -21,9 +21,15 @@
 }
 
 %engraved {
-  box-sizing: border-box;
   border-radius: 35px;
   @include call-onetime-ani(ani-engraved);
+}
+
+%engraved-slight {
+  border-radius: 35px;
+  border: $input-border-slight;
+  box-shadow: $input-box-shadow-slight;
+  @include call-onetime-ani(ani-opacity);
 }
 
 %button {

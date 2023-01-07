@@ -18,6 +18,8 @@
       placeholder="DD/MM/YYYY"
       [min]="minDate"
       [max]="maxDate"
+      (keyup.enter)="onEnter()"
+      autocomplete="off"
     />
     <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>
     <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>

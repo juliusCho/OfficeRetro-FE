@@ -1,5 +1,6 @@
 export type InputType =
   | 'text'
+  | 'text-color'
   | 'email'
   | 'password'
   | 'password-login'

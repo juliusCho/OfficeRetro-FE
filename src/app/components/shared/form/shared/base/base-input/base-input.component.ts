@@ -3,10 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
 } from '@angular/core'
-import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs'
+import { Observable, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicStringInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { isString } from 'src/app/helpers/type-checkers'
@@ -22,8 +21,6 @@ export class BaseInputComponent
   extends SuperInputComponent<string>
   implements OnInit, AfterViewInit
 {
-  @Input() valueChange$!: BehaviorSubject<string>
-
   protected valueChangeObservable$?: Observable<string>
   protected valueChangeSubscription$?: Subscription
 

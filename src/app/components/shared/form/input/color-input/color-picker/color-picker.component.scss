@@ -1,0 +1,26 @@
+@import 'styles';
+
+:host {
+  width: calc($unit-11 - 2px);
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .container {
+    @extend %engraved-slight;
+    width: $unit-7;
+    height: $unit-7;
+    border: 1px solid transparent !important;
+    caret-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7 !important;
+    }
+
+    :ng-deep color-picker {
+      color: transparent;
+    }
+  }
+}

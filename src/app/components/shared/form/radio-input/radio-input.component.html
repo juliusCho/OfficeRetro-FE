@@ -35,6 +35,7 @@
             [value]="option.value"
             type="radio"
             class="option-input"
+            autocomplete="off"
             [ngClass]="{
               selected: getSelectedOption(optionValues).value === option.value
             }"

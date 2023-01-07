@@ -7,6 +7,8 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
+import { ColorPickerModule } from 'ngx-color-picker'
+import { DATE_DISPLAY_FORMAT } from 'src/app/models/client-specs/form/constants'
 import { ButtonComponent } from '../button/button.component'
 import { TextLoadingComponent } from '../loading/text-loading/text-loading.component'
 import { TextComponent } from '../text/text.component'
@@ -17,6 +19,8 @@ import { DateInputComponent } from './date-input/date-input.component'
 import { DateRangeInputComponent } from './date-range-input/date-range-input.component'
 import { DropdownInputComponent } from './dropdown-input/dropdown-input.component'
 import { FormComponent } from './form.component'
+import { ColorInputComponent } from './input/color-input/color-input.component'
+import { ColorPickerComponent } from './input/color-input/color-picker/color-picker.component'
 import { InputComponent } from './input/input.component'
 import { PasswordInputComponent } from './input/password-input/password-input.component'
 import { PasswordResetButtonComponent } from './input/password-input/password-reset-button/password-reset-button.component'
@@ -53,6 +57,8 @@ const declarations = [
   DateRangeInputComponent,
   DateInputComponent,
   BaseDateInputComponent,
+  ColorInputComponent,
+  ColorPickerComponent,
 ]
 
 @NgModule({
@@ -65,6 +71,7 @@ const declarations = [
     MatInputModule,
     MatFormFieldModule,
     MatMomentDateModule,
+    ColorPickerModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-NZ' },
@@ -75,9 +82,9 @@ const declarations = [
           dateInput: 'DD/MM/YYYY',
         },
         display: {
-          dateInput: 'DD/MM/YYYY',
+          dateInput: DATE_DISPLAY_FORMAT,
           monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'DD/MM/YYYY',
+          dateA11yLabel: DATE_DISPLAY_FORMAT,
           monthYearA11yLabel: 'MMMM YYYY',
         },
       },

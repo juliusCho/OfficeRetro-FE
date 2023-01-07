@@ -27,7 +27,7 @@
       .input {
         @extend %input-box;
 
-        &.password {
+        &.icon-exists {
           width: calc(100% - $unit-11);
         }
       }

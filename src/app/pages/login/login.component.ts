@@ -23,6 +23,17 @@ export default class LoginComponent extends BasePageComponent {
   formInputSpecs: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   > = [
+    {
+      key: 'color',
+      label: 'Color',
+      initValue: ['', ''],
+      inputType: 'text-color',
+      placeholder: 'aaa',
+      formValidators: [Validators.required],
+      required: true,
+      min: '5',
+      max: '50',
+    },
     [
       {
         key: 'email',
@@ -103,7 +114,7 @@ export default class LoginComponent extends BasePageComponent {
     {
       key: 'check',
       label: 'Check',
-      initValue: '',
+      initValue: [],
       formValidators: [
         listMinimumSelectValidator(1),
         listMaximumSelectValidator(2),

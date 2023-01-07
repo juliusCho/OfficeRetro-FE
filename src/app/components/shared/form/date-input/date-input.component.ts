@@ -28,7 +28,7 @@ export class DateInputComponent
     this.form?.get(this.name)?.enable()
 
     this._valueChangeSubscription$ = this.valueChange$
-      .pipe(
+      ?.pipe(
         tap((v) => {
           this.showValidationMessage = false
           this.validationMessage = this.validate(v)

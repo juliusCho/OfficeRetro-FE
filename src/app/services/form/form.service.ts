@@ -28,6 +28,7 @@ import {
   valueToDateRange,
   valueToDateString,
 } from 'src/app/helpers/value-converters'
+import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/client-specs/form/constants'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 
 @Injectable()
@@ -87,17 +88,45 @@ export class FormService implements OnDestroy {
 
     this._form = this._formBuilder.group(formGroup)
 
-    this.bindToValueChanges()
-
     this._initialized = true
   }
 
-  readonly getValueObservable = (key: string): BehaviorSubject<any> => {
-    if (!this._initialized) {
-      return new BehaviorSubject(null)
-    }
+  readonly bindToValueChanges = () => {
+    this._formValueChanges$ = this._form.valueChanges.pipe(
+      shareReplay({ bufferSize: 1, refCount: true }),
+      tap((v: { [key: string]: unknown }) => {
+        this._inputInfos.forEach((inputInfo) => {
+          const formValue = v[inputInfo.key]
 
-    return this._formSubjects[key]
+          switch (inputInfo.inputType) {
+            case 'text-color':
+              this.bindTextColorToSubject(inputInfo.key, v)
+              break
+            case 'date':
+              this.bindDateToSubject(inputInfo.key, formValue)
+              break
+            case 'date-range':
+              this.bindDateRangeToSubject(inputInfo.key, v)
+              break
+            default:
+              if (isString(formValue)) {
+                this._formSubjects[inputInfo.key].next(String(formValue ?? ''))
+              } else if (isNumber(formValue)) {
+                this._formSubjects[inputInfo.key].next(Number(formValue ?? 0))
+              } else if (isBoolean(formValue)) {
+                this._formSubjects[inputInfo.key].next(
+                  Boolean(formValue ?? false),
+                )
+              } else if (isStringArray(formValue)) {
+                this._formSubjects[inputInfo.key].next(
+                  formValue ? [...formValue] : [],
+                )
+              }
+              break
+          }
+        })
+      }),
+    )
   }
 
   readonly subscribeValueChanges = () => {
@@ -110,24 +139,30 @@ export class FormService implements OnDestroy {
     this._formSubscription$ = this._formValueChanges$.subscribe()
   }
 
+  readonly getValueObservable = (key: string): BehaviorSubject<any> => {
+    if (!this._initialized) {
+      return new BehaviorSubject(null)
+    }
+
+    return this._formSubjects[key]
+  }
+
   readonly reinitializeData = () => {
     if (!this._initialized) return
 
     const formGroup: Record<string, unknown> = {}
 
     this._inputInfos.forEach((inputInfo) => {
-      if (
-        inputInfo.inputType === 'date-range' &&
-        isDateArray(inputInfo.initValue)
-      ) {
-        formGroup[`${inputInfo.key}Start`] = inputInfo.initValue[0]
-          ? moment(inputInfo.initValue[0])
-          : null
-        formGroup[`${inputInfo.key}End`] = inputInfo.initValue[1]
-          ? moment(inputInfo.initValue[1])
-          : null
-      } else {
-        formGroup[inputInfo.key] = inputInfo.initValue ?? null
+      switch (inputInfo.inputType) {
+        case 'text-color':
+          this.setInitTextColor(inputInfo, formGroup)
+          break
+        case 'date-range':
+          this.setInitDateRange(inputInfo, formGroup)
+          break
+        default:
+          formGroup[inputInfo.key] = inputInfo.initValue ?? null
+          break
       }
     })
 
@@ -138,14 +173,79 @@ export class FormService implements OnDestroy {
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, FormControl>,
   ) => {
-    if (
-      inputInfo.inputType === 'date-range' &&
-      isArray(inputInfo.formValidators) &&
-      inputInfo.formValidators.length === 2 &&
-      isArray(inputInfo.formValidators[0]) &&
-      isArray(inputInfo.formValidators[1]) &&
-      isDateArray(inputInfo.initValue)
-    ) {
+    switch (inputInfo.inputType) {
+      case 'text-color':
+        this.setTextColorToFormAndSubject(inputInfo, formGroup)
+        break
+      case 'date':
+        if (this.isFormValidatorPair(inputInfo.formValidators)) return
+
+        formGroup[inputInfo.key] = new FormControl(
+          inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
+          inputInfo.formValidators as ValidatorFn[],
+        )
+
+        this._formSubjects[inputInfo.key] = new BehaviorSubject(
+          valueToDateString(inputInfo.initValue) as unknown,
+        )
+        break
+      case 'date-range':
+        this.setDateRangeToFormAndSubject(inputInfo, formGroup)
+        break
+      default:
+        if (this.isFormValidatorPair(inputInfo.formValidators)) return
+
+        formGroup[inputInfo.key] = new FormControl(
+          inputInfo.initValue,
+          inputInfo.formValidators as ValidatorFn[],
+        )
+
+        this._formSubjects[inputInfo.key] = new BehaviorSubject(
+          inputInfo.initValue as unknown,
+        )
+        break
+    }
+  }
+
+  private readonly isFormValidatorPair = (
+    formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]],
+  ): formValidators is [ValidatorFn[], ValidatorFn[]] => {
+    return (
+      !!formValidators &&
+      formValidators.length > 0 &&
+      isArray(formValidators[0])
+    )
+  }
+
+  private readonly setTextColorToFormAndSubject = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isStringArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+    if (this.isFormValidatorPair(inputInfo.formValidators)) return
+
+    formGroup[`${inputInfo.key}Text`] = new FormControl(
+      inputInfo.initValue[0] ?? '',
+      inputInfo.formValidators,
+    )
+    formGroup[`${inputInfo.key}Color`] = new FormControl(
+      inputInfo.initValue[1] ?? COLOR_PICKER_DEFAULT_COLOR,
+    )
+
+    this._formSubjects[inputInfo.key] = new BehaviorSubject(
+      inputInfo.initValue as unknown,
+    )
+  }
+
+  private readonly setDateRangeToFormAndSubject = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isDateArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+
+    if (this.isFormValidatorPair(inputInfo.formValidators)) {
       formGroup[`${inputInfo.key}Start`] = new FormControl(
         inputInfo.initValue[0] ? moment(inputInfo.initValue[0]) : undefined,
         inputInfo.formValidators[0],
@@ -154,64 +254,68 @@ export class FormService implements OnDestroy {
         inputInfo.initValue[1] ? moment(inputInfo.initValue[1]) : undefined,
         inputInfo.formValidators[1],
       )
-
-      this._formSubjects[inputInfo.key] = new BehaviorSubject(
-        valueToDateRange(inputInfo.initValue) as unknown,
+    } else {
+      formGroup[`${inputInfo.key}Start`] = new FormControl(
+        inputInfo.initValue[0] ? moment(inputInfo.initValue[0]) : undefined,
       )
-    } else if (inputInfo.inputType === 'date') {
-      formGroup[inputInfo.key] = new FormControl(
-        inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
-        inputInfo.formValidators as ValidatorFn[],
-      )
-
-      this._formSubjects[inputInfo.key] = new BehaviorSubject(
-        valueToDateString(inputInfo.initValue) as unknown,
-      )
-    } else if (
-      !inputInfo.formValidators ||
-      inputInfo.formValidators.length === 0 ||
-      !isArray(inputInfo.formValidators[0])
-    ) {
-      formGroup[inputInfo.key] = new FormControl(
-        inputInfo.initValue,
-        inputInfo.formValidators as ValidatorFn[],
-      )
-
-      this._formSubjects[inputInfo.key] = new BehaviorSubject(
-        inputInfo.initValue,
+      formGroup[`${inputInfo.key}End`] = new FormControl(
+        inputInfo.initValue[1] ? moment(inputInfo.initValue[1]) : undefined,
       )
     }
+
+    this._formSubjects[inputInfo.key] = new BehaviorSubject(
+      valueToDateRange(inputInfo.initValue) as unknown,
+    )
   }
 
-  private readonly bindToValueChanges = () => {
-    this._formValueChanges$ = this._form.valueChanges.pipe(
-      shareReplay({ bufferSize: 1, refCount: true }),
-      tap((v: { [key: string]: unknown }) => {
-        this._inputInfos.forEach((inputInfo) => {
-          const formValue = v[inputInfo.key]
-          if (isString(formValue)) {
-            this._formSubjects[inputInfo.key].next(String(formValue ?? ''))
-          } else if (isNumber(formValue)) {
-            this._formSubjects[inputInfo.key].next(Number(formValue ?? 0))
-          } else if (isBoolean(formValue)) {
-            this._formSubjects[inputInfo.key].next(Boolean(formValue ?? false))
-          } else if (isStringArray(formValue)) {
-            this._formSubjects[inputInfo.key].next(
-              formValue ? [...formValue] : [],
-            )
-          } else if (!formValue && inputInfo.inputType === 'date-range') {
-            const startValue = v[`${inputInfo.key}Start`]
-            const endValue = v[`${inputInfo.key}End`]
-            this._formSubjects[inputInfo.key].next(
-              momentToDateRange([startValue, endValue]) as unknown,
-            )
-          } else if (inputInfo.inputType === 'date') {
-            this._formSubjects[inputInfo.key].next(
-              momentToDateString(formValue) as unknown,
-            )
-          }
-        })
-      }),
+  private readonly bindTextColorToSubject = (
+    key: string,
+    form: { [key: string]: unknown },
+  ) => {
+    const textValue = form[`${key}Text`]
+    const colorValue = form[`${key}Color`]
+
+    this._formSubjects[key].next([textValue ?? '', colorValue ?? ''])
+  }
+
+  private readonly bindDateToSubject = (key: string, formValue: unknown) => {
+    this._formSubjects[key].next(momentToDateString(formValue) as unknown)
+  }
+
+  private readonly bindDateRangeToSubject = (
+    key: string,
+    form: { [key: string]: unknown },
+  ) => {
+    const startValue = form[`${key}Start`]
+    const endValue = form[`${key}End`]
+
+    this._formSubjects[key].next(
+      momentToDateRange([startValue, endValue]) as unknown,
     )
+  }
+
+  private readonly setInitTextColor = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isStringArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+
+    formGroup[`${inputInfo.key}Text`] = inputInfo.initValue[0] ?? ''
+    formGroup[`${inputInfo.key}Color`] = inputInfo.initValue[1] ?? ''
+  }
+
+  private readonly setInitDateRange = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isDateArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+
+    const [start, end] = inputInfo.initValue
+    if (!moment(start).isValid() || !moment(end).isValid()) return
+
+    formGroup[`${inputInfo.key}Start`] = start ? moment(start) : null
+    formGroup[`${inputInfo.key}End`] = end ? moment(end) : null
   }
 }

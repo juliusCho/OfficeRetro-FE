@@ -1,4 +1,5 @@
 import {
+  AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,7 +26,7 @@ import { FormService } from 'src/app/services/form/form.service'
   providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent implements OnInit, AfterViewInit {
+export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
@@ -40,7 +41,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   @Input() labelWidth?: string // label width per each input
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
-  @Input() confirmed?: boolean = true
+  @Input() isConfirmed?: boolean = true
 
   @Output() submit = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
@@ -76,6 +77,10 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._formService.initialize(this.formInputSpecs)
+  }
+
+  ngAfterContentInit(): void {
+    this._formService.bindToValueChanges()
   }
 
   ngAfterViewInit(): void {
@@ -151,6 +156,12 @@ export class FormComponent implements OnInit, AfterViewInit {
     >
   }
 
+  readonly getValueObservableStringPair = (key: string) => {
+    return this._formService.getValueObservable(key) as BehaviorSubject<
+      [string, string]
+    >
+  }
+
   readonly getFormInputSpec = <T>(
     formInputSpec: FormInputSpec<T>,
     labelPosition?: 'top' | 'side',
@@ -171,7 +182,7 @@ export class FormComponent implements OnInit, AfterViewInit {
   readonly onSubmit = () => {
     this.submitAction()
 
-    if (this.confirmed && this._formService.form.valid) {
+    if (this.isConfirmed && this._formService.form.valid) {
       this._formService.reinitializeData()
     }
   }
@@ -191,6 +202,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     this._changeDetectorRef.detectChanges()
 
     if (this._formService.form.invalid) {
+      console.log('form invalid', this.form)
       setTimeout(() => {
         this.showValidationMessage = true
         this._changeDetectorRef.markForCheck()

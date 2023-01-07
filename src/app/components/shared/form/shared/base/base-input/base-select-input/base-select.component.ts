@@ -5,11 +5,9 @@ import {
   Component,
 } from '@angular/core'
 import { map, Observable, of } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { BaseInputComponent } from '../base-input.component'
 
-@AutoUnsubscribe()
 @Component({
   template: '',
   providers: [HttpCommonService],

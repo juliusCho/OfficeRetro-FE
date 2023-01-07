@@ -21,13 +21,17 @@
       [style]="'width:' + width"
       [maxLength]="max"
       (keyup.enter)="onEnter()"
-      [ngClass]="{ password: isInnerContentExist }"
+      [ngClass]="{ 'icon-exists': isInnerContentExist }"
       [formControlName]="name"
       [email]="type === 'email'"
       (blur)="onFocusOut()"
       [placeholder]="isDisabled ? '' : placeholder"
+      autocomplete="off"
     />
-    <div #innerContent *ngIf="!isDisabled && type === 'password'">
+    <div
+      #innerContent
+      *ngIf="!isDisabled && (type === 'password' || type === 'text')"
+    >
       <ng-content></ng-content>
     </div>
   </div>

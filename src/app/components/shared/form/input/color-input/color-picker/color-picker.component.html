@@ -1,0 +1,13 @@
+<input
+  class="container"
+  [colorPicker]="color ?? defaultColor"
+  [style.background]="color ?? defaultColor"
+  (colorPickerChange)="onSelect($event)"
+  (colorPickerClose)="onSelect($event)"
+  (colorPickerCancel)="onSelect($event)"
+  (colorPickerSelect)="onSelect($event)"
+  [cpDisableInput]="isDisabled ?? false"
+  [cpDisabled]="isDisabled ?? false"
+  [cpFallbackColor]="defaultColor"
+  autocomplete="off"
+/>

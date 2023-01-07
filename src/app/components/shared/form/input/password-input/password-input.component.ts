@@ -5,11 +5,8 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { SuperInputComponent } from '../../shared/base/super-input.component'
 
-@AutoUnsubscribe()
 @Component({
   selector: 'app-password-input',
   templateUrl: './password-input.component.html',
@@ -17,7 +14,6 @@ import { SuperInputComponent } from '../../shared/base/super-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordInputComponent extends SuperInputComponent<string> {
-  @Input() valueChange$!: BehaviorSubject<string> // form.valueChange observable
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
   @Output() enter = new EventEmitter<void>()

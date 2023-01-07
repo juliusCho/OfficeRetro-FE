@@ -4,14 +4,20 @@ $font-shadow: 1px 1px 1px rgb(128, 126, 255), 0 0 1px rgb(190, 190, 255),
 $button-border: 1px solid $button-border-color;
 $button-box-shadow: -6px -2px 13px 2px $button-light-border-color,
   6px 8px 11px 2px $button-shadow-border-color;
+$button-box-shadow-slight: -4px -1px 8px 1px $button-light-border-color,
+  4px 5px 7px 1px $button-shadow-border-color;
 
 $button-highlight-border: 1px solid $button-highlight-border-color;
 $button-highlight-box-shadow: -6px -2px 10px 2px $button-highlight-light-border-color,
   6px 6px 6px 2px $button-highlight-shadow-border-color;
 
 $input-border: 1px solid $input-border-color;
+$input-border-slight: 1px solid $input-border-slight-color;
 $input-box-shadow: -2px -2px 1px $input-shadow-border-color,
   inset -5px -5px 6px $input-light-border-inner-color,
   inset 5px 5px 6px $input-light-border-color;
+$input-box-shadow-slight: -1px -1px 0.7px $input-shadow-border-color,
+  inset -2px -2px 4px $input-light-border-inner-color,
+  inset 2px 2px 6px $input-light-border-color;
 
 $float-box-shadow: 5px 5px 5px 1px rgba(176, 182, 226, 0.7);

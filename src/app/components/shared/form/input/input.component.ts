@@ -25,11 +25,17 @@ export class InputComponent extends BaseInputComponent {
   isInnerContentExist = false
 
   get type() {
-    const result = this.formInputSpec?.inputType ?? 'text'
-    if (result === 'text' || result === 'email' || result === 'password')
-      return result
-    if (result === 'password-login') return 'password'
-    return 'text'
+    const inputType = this.formInputSpec?.inputType ?? 'text'
+
+    if (
+      inputType === 'text' ||
+      inputType === 'email' ||
+      inputType === 'password'
+    ) {
+      return inputType
+    }
+
+    return inputType === 'password-login' ? 'password' : 'text'
   }
 
   override ngAfterViewInit(): void {

@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
 } from '@angular/core'
-import { BehaviorSubject, map, Observable, of, Subscription, tap } from 'rxjs'
+import { map, Observable, of, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicListInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
@@ -21,8 +20,6 @@ export class BaseListInputComponent
   extends SuperInputComponent<string[]>
   implements OnInit
 {
-  @Input() valueChange$!: BehaviorSubject<string[]>
-
   private _valueChangeSubscription$?: Subscription
 
   protected optionValues$!: Observable<Array<{ label: string; value: string }>>

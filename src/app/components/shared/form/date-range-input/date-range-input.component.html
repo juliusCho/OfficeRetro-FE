@@ -20,12 +20,16 @@
         [formControlName]="name + 'Start'"
         (dateChange)="selectDateRange('start', $event)"
         placeholder="DD/MM/YYYY"
+        (keyup.enter)="onEnter()"
+        autocomplete="off"
       />
       <input
         matEndDate
         [formControlName]="name + 'End'"
         (dateChange)="selectDateRange('end', $event)"
         placeholder="DD/MM/YYYY"
+        (keyup.enter)="onEnter()"
+        autocomplete="off"
       />
     </mat-date-range-input>
     <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>

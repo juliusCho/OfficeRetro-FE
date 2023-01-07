@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { BehaviorSubject } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
 import { BaseListInputComponent } from '../shared/base/base-list-input/base-list-input.component'
 
-@AutoUnsubscribe()
 @Component({
   selector: 'app-checkbox-input',
   templateUrl: './checkbox-input.component.html',
@@ -17,8 +14,6 @@ import { BaseListInputComponent } from '../shared/base/base-list-input/base-list
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxInputComponent extends BaseListInputComponent {
-  selectedOptions$ = new BehaviorSubject<string[]>([])
-
   private readonly _componentUniqueId = uuid()
 
   get columnCount() {
