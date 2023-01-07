@@ -1,7 +1,13 @@
 import { Component } from '@angular/core'
 import { Validators } from '@angular/forms'
 import * as moment from 'moment'
-import { forbiddenStringValidator } from 'src/app/helpers/form-validators'
+import {
+  dateMaximumValidator,
+  dateMinimumValidator,
+  forbiddenStringValidator,
+  listMaximumSelectValidator,
+  listMinimumSelectValidator,
+} from 'src/app/helpers/form-validators'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { CssService } from 'src/app/services/shared/css.service'
 import { BasePageComponent } from '../base-page.component'
@@ -98,7 +104,10 @@ export default class LoginComponent extends BasePageComponent {
       key: 'check',
       label: 'Check',
       initValue: '',
-      formValidators: [Validators.required, Validators.max(2)],
+      formValidators: [
+        listMinimumSelectValidator(1),
+        listMaximumSelectValidator(2),
+      ],
       inputType: 'checkbox',
       max: '2',
       required: true,
@@ -116,7 +125,18 @@ export default class LoginComponent extends BasePageComponent {
       label: 'Date Range',
       initValue: [undefined, undefined],
       inputType: 'date-range',
-      formValidators: [[Validators.required], [Validators.required]],
+      formValidators: [
+        [
+          Validators.required,
+          dateMinimumValidator(moment().add(-7, 'd')),
+          dateMaximumValidator(moment().add(7, 'd')),
+        ],
+        [
+          Validators.required,
+          dateMinimumValidator(moment().add(-7, 'd')),
+          dateMaximumValidator(moment().add(7, 'd')),
+        ],
+      ],
       min: moment().add(-7, 'd').format(),
       max: moment().add(7, 'd').format(),
       required: true,
@@ -126,7 +146,11 @@ export default class LoginComponent extends BasePageComponent {
       label: 'Date',
       initValue: undefined,
       inputType: 'date',
-      formValidators: [Validators.required],
+      formValidators: [
+        Validators.required,
+        dateMinimumValidator(moment().add(-7, 'd')),
+        dateMaximumValidator(moment().add(7, 'd')),
+      ],
       min: moment().add(-7, 'd').format(),
       max: moment().add(7, 'd').format(),
       required: true,

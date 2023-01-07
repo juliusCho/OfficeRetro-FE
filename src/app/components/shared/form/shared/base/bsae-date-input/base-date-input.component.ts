@@ -3,10 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnInit,
 } from '@angular/core'
 import * as moment from 'moment'
-import { BehaviorSubject, Observable, tap } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isDate } from 'src/app/helpers/type-checkers'
 import { SuperInputComponent } from '../super-input.component'
@@ -16,13 +15,8 @@ import { SuperInputComponent } from '../super-input.component'
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseDateInputComponent<T>
-  extends SuperInputComponent<T>
-  implements OnInit
-{
+export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
   @Input() valueChange$!: BehaviorSubject<T>
-
-  protected valueChangeObservable$?: Observable<T>
 
   get validator() {
     return this.isValidationNeeded
@@ -47,27 +41,21 @@ export class BaseDateInputComponent<T>
     super(changeDetectorRef)
   }
 
-  ngOnInit(): void {
-    if (this.isDisabled) {
-      this.form?.get(this.name)?.disable()
-      return
-    }
-
-    this.form?.get(this.name)?.enable()
-
-    this.valueChangeObservable$ = this.valueChange$.pipe(
-      tap((v) => {
-        this.showValidationMessage = false
-
-        this.changeDetectorRef.markForCheck()
-      }),
-    )
-
-    this.changeDetectorRef.detectChanges()
-  }
-
-  readonly onPickerClose = () => {
+  protected readonly onPickerClose = () => {
     if (this.isDisabled) return
     this.onFocusOut()
+  }
+
+  protected readonly setFormValueAndShowMessage = (formKey: string) => {
+    this.form.get(formKey)?.setValue(undefined)
+
+    if (!this.isValidationNeeded) return
+
+    this.validationMessage = `${(this.label ?? 'This field').replace(
+      /\\n/g,
+      ' ',
+    )} must be filled in correct format of "DD/MM/YYYY"`
+
+    this.changeDetectorRef.detectChanges()
   }
 }

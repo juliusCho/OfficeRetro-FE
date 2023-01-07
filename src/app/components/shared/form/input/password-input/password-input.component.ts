@@ -31,13 +31,11 @@ export class PasswordInputComponent extends SuperInputComponent<string> {
   }
 
   get validate(): ((value?: string) => string) | undefined {
-    if (!this.isValidationNeeded) return
+    if (this.isDisabled || !this.isValidationNeeded) return
 
     const _this = this
 
     return (value?: string) => {
-      if (this.isDisabled) return ''
-
       const result = _this.formInputSpec.validMessageGenerator
         ? _this.formInputSpec.validMessageGenerator(value)
         : ''

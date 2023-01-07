@@ -1,4 +1,4 @@
-<div class="container" [formGroup]="form" [ngClass]="containerClass">
+<div class="container" [ngClass]="containerClass">
   <app-input-label
     *ngIf="label"
     [label]="label"
@@ -7,7 +7,6 @@
   ></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
-      *ngIf="selectedOptions$ | async as selectedOptions"
       class="input-section"
       [ngClass]="inputAreaClass"
       [ngStyle]="inputAreaStyle"
@@ -23,18 +22,23 @@
             [for]="option.value"
             class="option-label"
             [ngClass]="{
-              selected: isSelectedOption(selectedOptions, option.value)
+              selected: isSelectedOption(
+                getSelectedOptions(optionValues),
+                option.value
+              )
             }"
             >{{ option.label }}</label
           >
           <input
             [id]="componentUniqueId + option.value"
-            [formControlName]="name"
             [value]="option.value"
             type="checkbox"
             class="option-input"
             [ngClass]="{
-              selected: isSelectedOption(selectedOptions, option.value)
+              selected: isSelectedOption(
+                getSelectedOptions(optionValues),
+                option.value
+              )
             }"
           />
         </div>

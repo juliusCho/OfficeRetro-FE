@@ -33,7 +33,7 @@ export class InputComponent extends BaseInputComponent {
   }
 
   override ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
+    this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
 
     this.isInnerContentExist =
       (this.innerContentRef?.nativeElement.children.length ?? 0) > 0

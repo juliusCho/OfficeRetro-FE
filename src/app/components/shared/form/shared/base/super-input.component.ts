@@ -67,7 +67,7 @@ export class SuperInputComponent<T> {
   }
 
   get showValidationMessage() {
-    return !!this.isValidationNeeded && this._showValidationMessage
+    return this._showValidationMessage
   }
 
   get displayLength() {
@@ -82,9 +82,7 @@ export class SuperInputComponent<T> {
   }
 
   get alertMessage() {
-    return this.isValidationNeeded && this._showValidationMessage
-      ? this.validationMessage
-      : ''
+    return this._showValidationMessage ? this.validationMessage : ''
   }
 
   get containerClass() {
@@ -99,11 +97,9 @@ export class SuperInputComponent<T> {
   }
 
   get inputAreaStyle() {
-    if (this.label && this.labelPosition !== 'top' && this.labelWidth) {
-      return { width: `calc(100% - ${this.labelWidth})` }
-    }
-
-    return {}
+    return this.label && this.labelPosition !== 'top' && this.labelWidth
+      ? { width: `calc(100% - ${this.labelWidth})` }
+      : {}
   }
 
   constructor(protected readonly changeDetectorRef: ChangeDetectorRef) {}

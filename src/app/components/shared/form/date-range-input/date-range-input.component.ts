@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
 import { Subscription, tap } from 'rxjs'
@@ -13,12 +13,13 @@ import { BaseDateInputComponent } from '../shared/base/bsae-date-input/base-date
   styleUrls: ['./date-range-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangeInputComponent extends BaseDateInputComponent<
-  [string | undefined, string | undefined]
-> {
+export class DateRangeInputComponent
+  extends BaseDateInputComponent<[string | undefined, string | undefined]>
+  implements OnInit
+{
   private _valueChangeSubscription$?: Subscription
 
-  override ngOnInit(): void {
+  ngOnInit(): void {
     if (this.isDisabled) {
       this.form?.get(`${this.name}Start`)?.disable()
       this.form?.get(`${this.name}End`)?.disable()
@@ -49,16 +50,9 @@ export class DateRangeInputComponent extends BaseDateInputComponent<
     if (this.isDisabled) return
 
     if (!moment(event.value).isValid()) {
-      this.form
-        .get(`${this.name}${type === 'start' ? 'Start' : 'End'}`)
-        ?.setValue(undefined)
-
-      if (this.validationMessage) {
-        this.validationMessage = `${(this.label ?? 'This field').replace(
-          /\\n/g,
-          ' ',
-        )} must be filled in correct format of "DD/MM/YYYY"`
-      }
+      this.setFormValueAndShowMessage(
+        `${this.name}${type === 'start' ? 'Start' : 'End'}`,
+      )
     }
 
     this.onFocusOut()

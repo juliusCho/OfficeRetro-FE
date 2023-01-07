@@ -35,11 +35,12 @@ export class FormComponent implements OnInit, AfterViewInit {
   @Input() clearLabel?: string
   @Input() width?: string = ''
   @Input() isValidationNeeded?: boolean = false // no input validation checks
-  @Input() buttonPosition?: 'bottom' | 'right' = 'bottom'
+  @Input() buttonAreaPosition?: 'bottom' | 'right' = 'bottom'
   @Input() buttonAreaWidth?: string
   @Input() labelWidth?: string // label width per each input
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
+  @Input() confirmed?: boolean = true
 
   @Output() submit = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
@@ -49,24 +50,23 @@ export class FormComponent implements OnInit, AfterViewInit {
   showValidationMessage = false
 
   private _injectedButtonOnClick$?: Subscription
-  private _formValueChangeSubscription$?: Subscription
 
   get form() {
     return this._formService.form
   }
 
   get doesWidthLayoutAdjust() {
-    return this.buttonPosition !== 'right' || !this.buttonAreaWidth
+    return this.buttonAreaPosition !== 'right' || !this.buttonAreaWidth
   }
 
   get inputSectionStyle() {
-    if (this.doesWidthLayoutAdjust) return {}
-    return { width: `calc(100% - ${this.buttonAreaWidth})` }
+    return this.doesWidthLayoutAdjust
+      ? {}
+      : { width: `calc(100% - ${this.buttonAreaWidth})` }
   }
 
   get buttonSectionStyle() {
-    if (this.doesWidthLayoutAdjust) return {}
-    return { width: this.buttonAreaWidth }
+    return this.doesWidthLayoutAdjust ? {} : { width: this.buttonAreaWidth }
   }
 
   constructor(
@@ -87,17 +87,18 @@ export class FormComponent implements OnInit, AfterViewInit {
       return
     }
 
-    this._formValueChangeSubscription$ = this._formService.formValueChange$
-      .pipe(
+    this._formService.formValueChange$ =
+      this._formService.formValueChange$.pipe(
         debounceTime(1000),
         tap(() => {
           this.submitAction()
           this._changeDetectorRef.markForCheck()
         }),
       )
-      .subscribe()
 
     this._changeDetectorRef.detectChanges()
+
+    this._formService.subscribeValueChanges()
   }
 
   readonly isSpecArray = (
@@ -112,13 +113,12 @@ export class FormComponent implements OnInit, AfterViewInit {
     formInputSpec: unknown,
   ): formInputSpec is FormInputSpec<unknown> => {
     if (!formInputSpec || typeof formInputSpec !== 'object') return false
-    if (
+
+    return (
       'key' in formInputSpec &&
       'iniValue' in formInputSpec &&
       'inputType' in formInputSpec
     )
-      return true
-    return false
   }
 
   readonly getValueObservableString = (key: string) => {
@@ -171,13 +171,14 @@ export class FormComponent implements OnInit, AfterViewInit {
   readonly onSubmit = () => {
     this.submitAction()
 
-    if (this._formService.form.valid) {
+    if (this.confirmed && this._formService.form.valid) {
       this._formService.reinitializeData()
     }
   }
 
   readonly onCancel = () => {
     this.initializeForm()
+
     this.cancel.emit()
   }
 

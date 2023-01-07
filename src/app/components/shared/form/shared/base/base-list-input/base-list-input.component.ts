@@ -1,6 +1,4 @@
 import {
-  AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -21,15 +19,13 @@ import { SuperInputComponent } from '../super-input.component'
 })
 export class BaseListInputComponent
   extends SuperInputComponent<string[]>
-  implements OnInit, AfterContentInit, AfterViewInit
+  implements OnInit
 {
   @Input() valueChange$!: BehaviorSubject<string[]>
 
-  protected valueChangeObservable$!: Observable<string[]>
-  protected valueChangeSubscription$?: Subscription
-  protected optionValues$: Observable<Array<{ label: string; value: string }>> =
-    of([])
-  protected optionValuesObservableListener$ = new BehaviorSubject(0)
+  private _valueChangeSubscription$?: Subscription
+
+  protected optionValues$!: Observable<Array<{ label: string; value: string }>>
 
   get validator() {
     return this.isValidationNeeded
@@ -58,38 +54,54 @@ export class BaseListInputComponent
 
     this.form.get(this.name)?.enable()
 
-    this.valueChangeObservable$ = this.valueChange$.pipe(
-      tap((v) => {
-        this.showValidationMessage = false
-        this.validationMessage = this.validate(v)
+    this._valueChangeSubscription$ = this.valueChange$
+      .pipe(
+        tap((v) => {
+          this.showValidationMessage = false
+          this.validationMessage = this.validate(v)
 
-        this.changeDetectorRef.markForCheck()
-      }),
-    )
+          this.changeDetectorRef.markForCheck()
+        }),
+      )
+      .subscribe()
 
     this.changeDetectorRef.detectChanges()
+
+    this.setOptionValueObservable()
   }
 
-  ngAfterContentInit() {
+  protected readonly getSelectedOptions = (
+    optionValues: Array<{ label: string; value: string }>,
+  ) => {
+    const selected = this.form.value[this.name]
+
+    return !selected
+      ? []
+      : optionValues
+          .filter((option) => selected.includes(option.value))
+          .map((option) => option.value)
+  }
+
+  private readonly setOptionValueObservable = () => {
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of(
         this.options.map((o) => {
           const [value, label] = Object.entries(o)[0]
           return { value, label }
         }),
-      ).pipe(tap(this.updateContextObservableListener))
+      )
 
       this.changeDetectorRef.detectChanges()
       return
     }
 
-    if (!this.optionsFetchUrl) return
+    if (!this.optionsFetchUrl) {
+      this.optionValues$ = of([])
+      this.changeDetectorRef.detectChanges()
+      return
+    }
 
     this.fetchOptions()
-  }
-
-  ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
   }
 
   private readonly fetchOptions = () => {
@@ -104,7 +116,6 @@ export class BaseListInputComponent
             value: String(d.id),
           })),
         ),
-        tap(this.updateContextObservableListener),
       )
 
     this.changeDetectorRef.detectChanges()
@@ -123,12 +134,5 @@ export class BaseListInputComponent
       min: this.min,
       max: this.max,
     })
-  }
-
-  private readonly updateContextObservableListener = () => {
-    this.optionValuesObservableListener$.next(
-      this.optionValuesObservableListener$.value + 1,
-    )
-    this.changeDetectorRef.markForCheck()
   }
 }

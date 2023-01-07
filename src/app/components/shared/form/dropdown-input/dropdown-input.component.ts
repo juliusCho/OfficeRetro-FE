@@ -64,7 +64,6 @@ export class DropdownInputComponent extends BaseSelectComponent {
     if (this.isDisabled) return
 
     this.form.get(this.name)?.setValue(option.value)
-    this.selectedOption$.next(option)
 
     this.isDropdownOpened = false
 

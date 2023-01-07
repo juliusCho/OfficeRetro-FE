@@ -165,6 +165,10 @@ export const getBasicDateRangeInputValidationMsg = (arg: {
         }
       }
 
+      if (startDate.diff(endDate, 'days') > 0) {
+        return `${lbl} has the start date set later than the end date`
+      }
+
       return ''
     }
 

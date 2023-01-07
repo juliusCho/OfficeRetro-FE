@@ -1,8 +1,4 @@
-import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
 import { Subscription, tap } from 'rxjs'
@@ -19,14 +15,22 @@ import { BaseDateInputComponent } from '../shared/base/bsae-date-input/base-date
 })
 export class DateInputComponent
   extends BaseDateInputComponent<string | undefined>
-  implements AfterContentInit
+  implements OnInit
 {
   private _valueChangeSubscription$?: Subscription
 
-  ngAfterContentInit(): void {
-    this._valueChangeSubscription$ = this.valueChangeObservable$
-      ?.pipe(
+  ngOnInit(): void {
+    if (this.isDisabled) {
+      this.form?.get(this.name)?.disable()
+      return
+    }
+
+    this.form?.get(this.name)?.enable()
+
+    this._valueChangeSubscription$ = this.valueChange$
+      .pipe(
         tap((v) => {
+          this.showValidationMessage = false
           this.validationMessage = this.validate(v)
 
           this.changeDetectorRef.markForCheck()
@@ -41,14 +45,7 @@ export class DateInputComponent
     if (this.isDisabled) return
 
     if (!moment(event.value).isValid()) {
-      this.form.get(this.name)?.setValue(undefined)
-
-      if (this.isValidationNeeded) {
-        this.validationMessage = `${(this.label ?? 'This field').replace(
-          /\\n/g,
-          ' ',
-        )} must be filled in correct format of "DD/MM/YYYY"`
-      }
+      this.setFormValueAndShowMessage(this.name)
     }
 
     this.onFocusOut()

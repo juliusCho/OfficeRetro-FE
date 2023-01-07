@@ -7,7 +7,6 @@
   ></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
-      *ngIf="selectedOption$ | async as selectedOption"
       class="input-section"
       [ngClass]="inputAreaClass"
       [ngStyle]="inputAreaStyle"
@@ -23,7 +22,9 @@
             [for]="componentUniqueId + option.value || 'empty'"
             class="option-label"
             [ngClass]="{
-              selected: !!option.value && selectedOption.value === option.value,
+              selected:
+                !!option.value &&
+                getSelectedOption(optionValues).value === option.value,
               placeholder: !option.value
             }"
             >{{ option.label }}</label
@@ -34,7 +35,9 @@
             [value]="option.value"
             type="radio"
             class="option-input"
-            [ngClass]="{ selected: selectedOption.value === option.value }"
+            [ngClass]="{
+              selected: getSelectedOption(optionValues).value === option.value
+            }"
           />
         </div>
       </div>

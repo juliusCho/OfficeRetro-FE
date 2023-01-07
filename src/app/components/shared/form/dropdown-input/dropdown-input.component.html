@@ -22,44 +22,41 @@
     [ngClass]="inputAreaClass"
     [ngStyle]="dropdownInputAreaStyle"
   >
-    <div class="select-section">
+    <div
+      class="select-section"
+      *ngIf="optionValues$ | async as optionValues; else loading"
+    >
       <button
         type="button"
         class="select-button"
         (click)="toggleDropdown()"
         [disabled]="isDisabled"
       >
-        <ng-container *ngIf="selectedOption$ | async as selectedOption">
-          <div
-            class="select"
-            [ngClass]="{ placeholder: !selectedOption.value }"
-          >
-            {{ selectedOption.label || placeholder }}
-          </div>
-          <i class="fa-solid fa-caret-down icon"></i>
-        </ng-container>
+        <div
+          class="select"
+          [ngClass]="{ placeholder: !getSelectedOption(optionValues).value }"
+        >
+          {{ getSelectedOption(optionValues).label || placeholder }}
+        </div>
+        <i class="fa-solid fa-caret-down icon"></i>
       </button>
       <div
         #dropdownSection
         class="options"
         [ngClass]="{ visible: isDropdownOpened }"
       >
-        <ng-container
-          *ngIf="optionValues$ | async as optionValues; else loading"
+        <button
+          *ngFor="let option of optionValues"
+          type="button"
+          class="option"
+          [ngClass]="{
+            placeholder: option.value === '',
+            selected: !!option.value && option.value === form.value[name]
+          }"
+          (click)="selectOption(option)"
         >
-          <button
-            *ngFor="let option of optionValues"
-            type="button"
-            class="option"
-            [ngClass]="{
-              placeholder: option.value === '',
-              selected: !!option.value && option.value === form.value[name]
-            }"
-            (click)="selectOption(option)"
-          >
-            {{ option.label }}
-          </button>
-        </ng-container>
+          {{ option.label }}
+        </button>
       </div>
     </div>
   </div>

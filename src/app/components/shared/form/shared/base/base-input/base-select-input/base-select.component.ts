@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
 } from '@angular/core'
-import { BehaviorSubject, map, Observable, of, tap } from 'rxjs'
+import { map, Observable, of } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { BaseInputComponent } from '../base-input.component'
@@ -20,13 +20,6 @@ export class BaseSelectComponent
   implements AfterContentInit
 {
   protected optionValues$!: Observable<Array<{ label: string; value: string }>>
-  protected selectedOption$ = new BehaviorSubject<{
-    label: string
-    value: string
-  }>({
-    label: this.placeholder ?? '',
-    value: '',
-  })
 
   get options() {
     return this.formInputSpec?.options
@@ -42,26 +35,6 @@ export class BaseSelectComponent
     super(changeDetectorRef)
   }
 
-  override ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$
-      ?.pipe(
-        tap((v) => {
-          if (v === this.selectedOption$.value.value) return
-          if (v === '') {
-            this.selectedOption$.next({
-              label: this.placeholder ?? '',
-              value: '',
-            })
-
-            this.changeDetectorRef.markForCheck()
-          }
-        }),
-      )
-      .subscribe()
-
-    this.changeDetectorRef.detectChanges()
-  }
-
   ngAfterContentInit(): void {
     this.max = '-1'
 
@@ -74,13 +47,17 @@ export class BaseSelectComponent
           const [value, label] = Object.entries(o)[0]
           return { value, label }
         }),
-      ]).pipe(tap(this.setSelectedOptionSubject))
+      ])
 
       this.changeDetectorRef.detectChanges()
       return
     }
 
-    if (!this.optionsFetchUrl) return
+    if (!this.optionsFetchUrl) {
+      this.optionValues$ = of([])
+      this.changeDetectorRef.detectChanges()
+      return
+    }
 
     this.fetchOptions()
   }
@@ -92,11 +69,21 @@ export class BaseSelectComponent
     if (this.isDisabled) return
 
     this.form.get(this.name)?.setValue(option.value)
-    this.selectedOption$.next(option)
-
-    this.changeDetectorRef.detectChanges()
 
     this.onFocusOut()
+  }
+
+  protected readonly getSelectedOption = (
+    optionValues: Array<{ label: string; value: string }>,
+  ) => {
+    const selected = this.form.value[this.name]
+    const initValue = { label: this.placeholder ?? '', value: '' }
+
+    if (!selected) return initValue
+
+    return !selected
+      ? initValue
+      : optionValues.find((option) => option.value === selected) ?? initValue
   }
 
   private readonly fetchOptions = () => {
@@ -112,22 +99,8 @@ export class BaseSelectComponent
             value: String(d.id),
           })),
         ]),
-        tap(this.setSelectedOptionSubject),
       )
 
     this.changeDetectorRef.detectChanges()
-  }
-
-  private readonly setSelectedOptionSubject = (
-    values: Array<{ value: string; label: string }>,
-  ) => {
-    const value = values.find(
-      (item) => !!item.value && item.value === this.form.value[this.name],
-    )
-    this.selectedOption$.next(
-      value ?? { label: this.placeholder ?? '', value: '' },
-    )
-
-    this.changeDetectorRef.markForCheck()
   }
 }

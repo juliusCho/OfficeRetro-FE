@@ -36,7 +36,7 @@ export class FormService implements OnDestroy {
   private _form!: FormGroup
   private _formSubjects: { [key: string]: BehaviorSubject<unknown> } = {}
   private _formValueChanges$!: Observable<unknown>
-  private _formSubscription$!: Subscription
+  private _formSubscription$?: Subscription
   private _inputInfos!: FormInputSpec<unknown>[]
 
   get form() {
@@ -50,13 +50,19 @@ export class FormService implements OnDestroy {
     return this._formValueChanges$
   }
 
+  set formValueChange$(value: Observable<unknown>) {
+    this._formValueChanges$ = value
+  }
+
   constructor(private readonly _formBuilder: FormBuilder) {}
 
   ngOnDestroy() {
     if (!this._initialized) return
 
-    this._formSubscription$.unsubscribe()
-    this._formSubscription$.closed = true
+    if (this._formSubscription$) {
+      this._formSubscription$.unsubscribe()
+      this._formSubscription$.closed = true
+    }
 
     Object.values(this._formSubjects).forEach((subject) => {
       subject.unsubscribe()
@@ -96,6 +102,11 @@ export class FormService implements OnDestroy {
 
   readonly subscribeValueChanges = () => {
     if (!this._initialized) return
+
+    if (this._formSubscription$) {
+      this._formSubscription$.unsubscribe()
+    }
+
     this._formSubscription$ = this._formValueChanges$.subscribe()
   }
 

@@ -24,7 +24,7 @@ export class BaseInputComponent
 {
   @Input() valueChange$!: BehaviorSubject<string>
 
-  protected valueChangeObservable$!: Observable<string>
+  protected valueChangeObservable$?: Observable<string>
   protected valueChangeSubscription$?: Subscription
 
   get validator() {
@@ -49,6 +49,7 @@ export class BaseInputComponent
       tap((v) => {
         this.showValidationMessage = false
         this.validationMessage = this.validate(v)
+
         this.changeDetectorRef.markForCheck()
       }),
     )
@@ -57,7 +58,7 @@ export class BaseInputComponent
   }
 
   ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$.subscribe()
+    this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
   }
 
   protected readonly validate = (value?: string) => {
@@ -77,8 +78,7 @@ export class BaseInputComponent
 
     if (this.formInputSpec.inputType !== 'email') return ''
 
-    if (!value) return ''
-    if (!isString(value)) return ''
+    if (!value || !isString(value)) return ''
 
     if (/ /g.test(value)) {
       return 'Email should not contain blank space'

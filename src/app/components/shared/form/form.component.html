@@ -2,17 +2,17 @@
   [formGroup]="form"
   class="container"
   [style]="'width:' + width"
-  [ngClass]="{ 'button-side': buttonPosition === 'right' }"
+  [ngClass]="{ 'button-side': buttonAreaPosition === 'right' }"
 >
   <app-button
-    *ngIf="buttonPosition !== 'right' && clearLabel"
+    *ngIf="buttonAreaPosition !== 'right' && clearLabel"
     (click)="onClear()"
     color="clear"
     >{{ clearLabel }}</app-button
   >
   <div
     class="input-section"
-    [ngClass]="{ 'clear-exists': buttonPosition !== 'right' && clearLabel }"
+    [ngClass]="{ 'clear-exists': buttonAreaPosition !== 'right' && clearLabel }"
     [ngStyle]="inputSectionStyle"
   >
     <div *ngFor="let formInputSpecItem of formInputSpecs" class="input-row">
