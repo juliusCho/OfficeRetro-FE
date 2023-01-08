@@ -5,7 +5,9 @@ import {
   Component,
 } from '@angular/core'
 import { map, Observable, of } from 'rxjs'
+import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
+import { CssService } from 'src/app/services/shared/css.service'
 import { BaseInputComponent } from '../base-input.component'
 
 @Component({
@@ -17,7 +19,7 @@ export class BaseSelectComponent
   extends BaseInputComponent
   implements AfterContentInit
 {
-  protected optionValues$!: Observable<Array<{ label: string; value: string }>>
+  protected optionValues$!: Observable<FormInputOption[]>
 
   get options() {
     return this.formInputSpec?.options
@@ -28,9 +30,10 @@ export class BaseSelectComponent
 
   constructor(
     protected readonly requestService: HttpCommonService,
+    protected override readonly cssService: CssService,
     protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(changeDetectorRef)
+    super(cssService, changeDetectorRef)
   }
 
   ngAfterContentInit(): void {
@@ -41,10 +44,7 @@ export class BaseSelectComponent
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of([
         { label: this.placeholder ?? '', value: '' },
-        ...this.options.map((o) => {
-          const [value, label] = Object.entries(o)[0]
-          return { value, label }
-        }),
+        ...this.options,
       ])
 
       this.changeDetectorRef.detectChanges()
@@ -60,10 +60,7 @@ export class BaseSelectComponent
     this.fetchOptions()
   }
 
-  protected readonly selectOption = (option: {
-    value: string
-    label: string
-  }) => {
+  protected readonly selectOption = (option: FormInputOption) => {
     if (this.isDisabled) return
 
     this.form.get(this.name)?.setValue(option.value)
@@ -71,9 +68,7 @@ export class BaseSelectComponent
     this.onFocusOut()
   }
 
-  protected readonly getSelectedOption = (
-    optionValues: Array<{ label: string; value: string }>,
-  ) => {
+  protected readonly getSelectedOption = (optionValues: FormInputOption[]) => {
     const selected = this.form.value[this.name]
     const initValue = { label: this.placeholder ?? '', value: '' }
 
@@ -93,6 +88,7 @@ export class BaseSelectComponent
         map((data) => [
           { label: this.placeholder ?? '', value: '' },
           ...data.map((d) => ({
+            ...d,
             label: d.name,
             value: String(d.id),
           })),

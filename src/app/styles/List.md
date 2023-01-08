@@ -1,9 +1,11 @@
 # Globals
 
-- Icons
+- Fonts
 - Colors
-- Paddings
-- Alignments
+- Sizes
+- Animations
+- ETC Variables
+- ETC Preset Classes
 
 # Breakpoints
 

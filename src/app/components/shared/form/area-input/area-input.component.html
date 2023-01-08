@@ -4,13 +4,14 @@
     [label]="label"
     [for]="name"
     [labelPosition]="labelPosition"
-    [labelWidth]="labelWidth"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <textarea
       [id]="name"
       class="input"
-      [style]="'width:' + width + ';height:' + height"
       [maxLength]="max"
       [formControlName]="name"
       (blur)="onFocusOut()"

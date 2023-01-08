@@ -1,9 +1,4 @@
-<form
-  [formGroup]="form"
-  class="container"
-  [style]="'width:' + width"
-  [ngClass]="{ 'button-side': buttonAreaPosition === 'right' }"
->
+<form [formGroup]="form" class="container" [ngClass]="extraStyle">
   <app-button
     *ngIf="buttonAreaPosition !== 'right' && clearLabel"
     (click)="onClear()"
@@ -81,6 +76,7 @@
       [labelWidth]="labelWidth"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     >
     </app-input>
     <app-color-input
@@ -94,6 +90,7 @@
       [labelWidth]="labelWidth"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     >
     </app-color-input>
     <app-input
@@ -108,6 +105,7 @@
       [labelWidth]="labelWidth"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-input>
     <app-area-input
       *ngSwitchCase="'textarea'"
@@ -118,6 +116,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-area-input>
     <app-dropdown-input
       *ngSwitchCase="'select'"
@@ -128,6 +127,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-dropdown-input>
     <app-radio-input
       *ngSwitchCase="'radio'"
@@ -138,6 +138,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-radio-input>
     <app-checkbox-input
       *ngSwitchCase="'checkbox'"
@@ -148,6 +149,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-checkbox-input>
     <app-date-input
       *ngSwitchCase="'date'"
@@ -159,6 +161,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-date-input>
     <app-date-range-input
       *ngSwitchCase="'date-range'"
@@ -170,7 +173,21 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelWidth]="labelWidth"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     ></app-date-range-input>
+    <app-list-input
+      *ngSwitchCase="'list'"
+      [valueChange$]="getValueObservableArray(formInputSpec.key)"
+      [showValidationMessage]="showValidationMessage"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelWidth]="labelWidth"
+      [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
+      [listInputLabel]="formInputSpec.listInputLabel"
+      [isFormSubmitted]="isFormSubmitted"
+    ></app-list-input>
     <app-password-input
       *ngSwitchDefault
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -182,6 +199,7 @@
       [labelWidth]="labelWidth"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
     >
       <app-password-reset-button
         *ngIf="formInputSpec.inputType === 'password-login'"

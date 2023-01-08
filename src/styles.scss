@@ -58,25 +58,26 @@ body {
     user-select: none;
 
     &::-webkit-scrollbar {
-      width: $unit-4;
-      height: $unit-4;
+      width: $unit-8;
+      height: $unit-8;
     }
     &::-webkit-scrollbar-track {
       background: transparent;
     }
     &::-webkit-scrollbar-thumb {
-      border-radius: 9999px;
-      background-color: $scrollbar-color;
+      @extend %swollen;
+      border: $unit-3 solid transparent;
       background: linear-gradient(
         45deg,
         $scrollbar-color 0%,
         $scrollbar-hover-color 100%
       );
       background-clip: padding-box;
-      @extend %swollen;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: $scrollbar-hover-color;
+      border-radius: 9999px;
+
+      &:hover {
+        background-color: $scrollbar-hover-color;
+      }
     }
     &::-webkit-scrollbar-button {
       display: none;

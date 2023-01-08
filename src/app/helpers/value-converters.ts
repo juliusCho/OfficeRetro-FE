@@ -1,5 +1,5 @@
 import * as moment from 'moment'
-import { DATE_FORMAT } from '../models/client-specs/form/constants'
+import { DATE_FORMAT } from '../models/constants/form-constants'
 import { isArray, isConvertibleToMoment, isDate } from './type-checkers'
 
 export const convertToColumnizedArray = <T>(

@@ -1,0 +1,10 @@
+<app-button
+  [isDisabled]="isDisabled"
+  [width]="size"
+  [height]="size"
+  [style]="plusStyle"
+  [color]="color"
+  (click)="onClick()"
+>
+  <i [class]="'icon ' + plusIcon" [ngStyle]="{ 'font-size': cssIconSize }"></i>
+</app-button>

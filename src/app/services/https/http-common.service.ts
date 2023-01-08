@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { catchError, Observable, retry, throwError } from 'rxjs'
+import { catchError, Observable, retry, shareReplay, throwError } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Injectable()
@@ -23,10 +23,9 @@ export class HttpCommonService {
   constructor(protected readonly _http: HttpClient) {}
 
   readonly getGeneralFetch = (url: string) => {
-    return this.httpRequest<Array<{ id: number; name: string }>>(
-      'get',
-      `${environment.apiUrl}/${url}`,
-    )
+    return this.httpRequest<
+      Array<{ id: number; name: string; [key: string]: unknown }>
+    >('get', `${environment.apiUrl}/${url}`)
   }
 
   protected readonly httpRequest = <TResponse>(
@@ -38,6 +37,7 @@ export class HttpCommonService {
       ? this._http[method](url, this.httpOptions)
       : this._http[method](url, requestBody, this.httpOptions)
     ).pipe(
+      shareReplay({ bufferSize: 1, refCount: true }),
       retry(1),
       catchError(this.handleError),
     ) as unknown as Observable<TResponse>

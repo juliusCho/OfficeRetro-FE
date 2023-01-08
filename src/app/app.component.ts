@@ -13,4 +13,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this._cssService.loadSizes()
   }
+
+  readonly onActivate = () => {
+    document.body.scrollTop = 0
+  }
 }

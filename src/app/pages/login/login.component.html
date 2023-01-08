@@ -7,17 +7,19 @@
     [formInputSpecs]="formInputSpecs"
     [isValidationNeeded]="true"
     (submit)="onSubmit($event)"
-    [labelWidth]="_cssService.getSize('unit-20')"
+    labelWidth="unit-20"
     lengthLabelPosition="left"
     infoTextType="all"
+    buttonAreaPosition="right"
+    buttonAreaWidth="unit-27"
   >
     <button type="button" style="cursor: pointer">Q$@#$@Q#$AQA#$Y</button>
   </app-form>
 </div>
 <app-button>Register</app-button>
 <div class="other-buttons">
-  <app-button [isPale]="true" width="200px">Inquiry Page</app-button>
-  <app-button [isPale]="true" width="200px">About Office Retro</app-button>
+  <app-button [isPale]="true" width="unit-24">Inquiry Page</app-button>
+  <app-button [isPale]="true" width="unit-24">About Office Retro</app-button>
 </div>
 
 <app-loading [loading]="!isPageLoaded"></app-loading>
@@ -29,8 +31,8 @@
     [formInputSpecs]="formInputSpecs"
     [isValidationNeeded]="true"
     (submit)="onSubmit($event)"
+    labelWidth="unit-20"
     buttonAreaPosition="right"
-    [labelWidth]="_cssService.getSize('unit-20')"
-    buttonAreaWidth="15rem"
+    buttonAreaWidth="unit-27"
   ></app-form>
 </ng-template>

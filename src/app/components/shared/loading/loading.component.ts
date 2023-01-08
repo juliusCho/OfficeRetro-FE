@@ -4,6 +4,7 @@ import {
   Component,
   Input,
 } from '@angular/core'
+import { ICONS } from 'src/app/models/constants/css-constants'
 
 @Component({
   selector: 'app-loading',
@@ -39,6 +40,10 @@ export class LoadingComponent {
 
   get loading() {
     return this._loading
+  }
+
+  get loadingIcon() {
+    return ICONS.LOADING_COMPASS
   }
 
   constructor(private readonly _changeDetectorRef: ChangeDetectorRef) {}

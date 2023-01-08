@@ -15,7 +15,9 @@
     [label]="label"
     (click)="toggleDropdown()"
     [labelPosition]="labelPosition"
-    [labelWidth]="labelWidth"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
   <div
     class="input-div"
@@ -38,7 +40,7 @@
         >
           {{ getSelectedOption(optionValues).label || placeholder }}
         </div>
-        <i class="fa-solid fa-caret-down icon"></i>
+        <i [class]="'icon ' + caretDownIcon"></i>
       </button>
       <div
         #dropdownSection

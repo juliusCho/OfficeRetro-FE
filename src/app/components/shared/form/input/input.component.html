@@ -4,7 +4,9 @@
     [label]="label"
     [for]="name"
     [labelPosition]="labelPosition"
-    [labelWidth]="labelWidth"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
   >
     <app-length-text
       *ngIf="displayLength && lengthLabelPosition === 'left'"
@@ -28,10 +30,7 @@
       [placeholder]="isDisabled ? '' : placeholder"
       autocomplete="off"
     />
-    <div
-      #innerContent
-      *ngIf="!isDisabled && (type === 'password' || type === 'text')"
-    >
+    <div #innerContent *ngIf="type === 'password' || type === 'text'">
       <ng-content></ng-content>
     </div>
   </div>

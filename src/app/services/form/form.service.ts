@@ -28,8 +28,8 @@ import {
   valueToDateRange,
   valueToDateString,
 } from 'src/app/helpers/value-converters'
-import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/client-specs/form/constants'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/constants/form-constants'
 
 @Injectable()
 export class FormService implements OnDestroy {

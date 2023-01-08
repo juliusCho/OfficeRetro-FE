@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop'
 import { CommonModule } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
@@ -8,9 +9,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { ColorPickerModule } from 'ngx-color-picker'
-import { DATE_DISPLAY_FORMAT } from 'src/app/models/client-specs/form/constants'
+import { DATE_DISPLAY_FORMAT } from 'src/app/models/constants/form-constants'
 import { ButtonComponent } from '../button/button.component'
 import { TextLoadingComponent } from '../loading/text-loading/text-loading.component'
+import { PlusButtonComponent } from '../plus-button/plus-button.component'
 import { TextComponent } from '../text/text.component'
 import { TooltipComponent } from '../tooltip/tooltip.component'
 import { AreaInputComponent } from './area-input/area-input.component'
@@ -24,11 +26,11 @@ import { ColorPickerComponent } from './input/color-input/color-picker/color-pic
 import { InputComponent } from './input/input.component'
 import { PasswordInputComponent } from './input/password-input/password-input.component'
 import { PasswordResetButtonComponent } from './input/password-input/password-reset-button/password-reset-button.component'
+import { ListInputComponent } from './list-input/list-input.component'
 import { RadioInputComponent } from './radio-input/radio-input.component'
 import { AlertTextComponent } from './shared/alert-text/alert-text.component'
 import { BaseInputComponent } from './shared/base/base-input/base-input.component'
 import { BaseSelectComponent } from './shared/base/base-input/base-select-input/base-select.component'
-import { BaseListInputComponent } from './shared/base/base-list-input/base-list-input.component'
 import { BaseDateInputComponent } from './shared/base/bsae-date-input/base-date-input.component'
 import { SuperInputComponent } from './shared/base/super-input.component'
 import { InputLabelComponent } from './shared/input-label/input-label.component'
@@ -39,7 +41,6 @@ const declarations = [
   BaseInputComponent,
   FormComponent,
   BaseSelectComponent,
-  BaseListInputComponent,
   SuperInputComponent,
   InputComponent,
   AlertTextComponent,
@@ -59,6 +60,8 @@ const declarations = [
   BaseDateInputComponent,
   ColorInputComponent,
   ColorPickerComponent,
+  ListInputComponent,
+  PlusButtonComponent,
 ]
 
 @NgModule({
@@ -72,6 +75,7 @@ const declarations = [
     MatFormFieldModule,
     MatMomentDateModule,
     ColorPickerModule,
+    DragDropModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-NZ' },

@@ -1,5 +1,5 @@
 import * as moment from 'moment'
-import { DATE_DISPLAY_FORMAT } from '../models/client-specs/form/constants'
+import { DATE_DISPLAY_FORMAT } from '../models/constants/form-constants'
 import { isNumber } from './type-checkers'
 import { valueToDateRange } from './value-converters'
 
@@ -86,7 +86,7 @@ export const getBasicListInputValidationMsg = (arg: {
 
   if (maxLength === -1) {
     if (!!minLength && minLength > 0 && minLength > value.length) {
-      return `${lbl} should contain less than ${minLength} item(s)`
+      return `${lbl} must contain at least\n${minLength} item(s)`
     }
 
     return ''

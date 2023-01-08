@@ -7,8 +7,10 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core'
 import { BehaviorSubject, debounceTime, Subscription, tap } from 'rxjs'
@@ -16,7 +18,12 @@ import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubs
 import { isArray } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+import {
+  CssSize,
+  FontWeight,
+} from 'src/app/models/client-specs/shared/css-specs'
 import { FormService } from 'src/app/services/form/form.service'
+import { CssService } from 'src/app/services/shared/css.service'
 
 @AutoUnsubscribe()
 @Component({
@@ -26,7 +33,9 @@ import { FormService } from 'src/app/services/form/form.service'
   providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
+export class FormComponent
+  implements OnInit, OnChanges, AfterContentInit, AfterViewInit
+{
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
@@ -34,11 +43,12 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
   @Input() submitColor?: string
   @Input() cancelLabel?: string
   @Input() clearLabel?: string
-  @Input() width?: string = ''
+  @Input() width?: CssSize | string
   @Input() isValidationNeeded?: boolean = false // no input validation checks
   @Input() buttonAreaPosition?: 'bottom' | 'right' = 'bottom'
-  @Input() buttonAreaWidth?: string
-  @Input() labelWidth?: string // label width per each input
+  @Input() buttonAreaWidth?: CssSize
+  @Input() labelWidth?: CssSize // label width per each input
+  @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
   @Input() isConfirmed?: boolean = true
@@ -49,6 +59,7 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
   @ViewChild('submitInjectTag') submitInjectTag!: ElementRef
 
   showValidationMessage = false
+  isFormSubmitted = false
 
   private _injectedButtonOnClick$?: Subscription
 
@@ -57,26 +68,57 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
   }
 
   get doesWidthLayoutAdjust() {
-    return this.buttonAreaPosition !== 'right' || !this.buttonAreaWidth
+    return (
+      this.buttonAreaPosition !== 'right' ||
+      !this._cssService.getSize(this.buttonAreaWidth)
+    )
   }
 
   get inputSectionStyle() {
     return this.doesWidthLayoutAdjust
       ? {}
-      : { width: `calc(100% - ${this.buttonAreaWidth})` }
+      : {
+          width: `calc(100% - ${this._cssService.getSize(
+            this.buttonAreaWidth,
+          )})`,
+        }
   }
 
   get buttonSectionStyle() {
-    return this.doesWidthLayoutAdjust ? {} : { width: this.buttonAreaWidth }
+    return this.doesWidthLayoutAdjust
+      ? {}
+      : { width: this._cssService.getSize(this.buttonAreaWidth) }
+  }
+
+  get extraStyle() {
+    return {
+      width: this._cssService.getUntypedSize(this.width),
+      'button-side': this.buttonAreaPosition === 'right',
+    }
   }
 
   constructor(
+    private readonly _cssService: CssService,
     private readonly _formService: FormService,
     private readonly _changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this._formService.initialize(this.formInputSpecs)
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isConfirmed']?.previousValue === undefined) return
+
+    const { previousValue, currentValue } = changes['isConfirmed']
+    if (previousValue === currentValue || previousValue || !currentValue) return
+
+    if (this._formService.form.invalid) return
+
+    this._formService.reinitializeData()
+
+    this.setIsFormSubmitted(true)
+    this.setIsFormSubmitted(false)
   }
 
   ngAfterContentInit(): void {
@@ -184,17 +226,20 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
 
     if (this.isConfirmed && this._formService.form.valid) {
       this._formService.reinitializeData()
+
+      this.setIsFormSubmitted(true)
+      this.setIsFormSubmitted(false)
     }
   }
 
   readonly onCancel = () => {
-    this.initializeForm()
+    this._formService.reinitializeData()
 
     this.cancel.emit()
   }
 
   readonly onClear = () => {
-    this.initializeForm()
+    this._formService.reinitializeData()
   }
 
   private readonly submitAction = () => {
@@ -202,7 +247,14 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
     this._changeDetectorRef.detectChanges()
 
     if (this._formService.form.invalid) {
-      console.log('form invalid', this.form)
+      if (
+        this.formInputSpecs.some((fis) => !isArray(fis) && fis.key === 'input')
+      ) {
+        console.log('child form invalid', this.form)
+      } else {
+        console.log('form invalid', this.form)
+      }
+
       setTimeout(() => {
         this.showValidationMessage = true
         this._changeDetectorRef.markForCheck()
@@ -213,8 +265,8 @@ export class FormComponent implements OnInit, AfterContentInit, AfterViewInit {
     this.submit.emit(this._formService.form.value)
   }
 
-  private readonly initializeForm = () => {
-    this._formService.reinitializeData()
+  private readonly setIsFormSubmitted = (value: boolean) => {
+    this.isFormSubmitted = value
     this._changeDetectorRef.detectChanges()
   }
 }

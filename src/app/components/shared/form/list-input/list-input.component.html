@@ -1,0 +1,76 @@
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
+  <app-input-label
+    *ngIf="label"
+    [label]="label"
+    [for]="name"
+    [labelPosition]="labelPosition"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
+  >
+  </app-input-label>
+  <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
+    <div class="input-border-box">
+      <app-form
+        [formInputSpecs]="innerFormInputSpecs"
+        [isValidationNeeded]="true"
+        (submit)="addOption($event)"
+        [labelStyle]="{ labelSize: 'unit-5', labelWeight: 400 }"
+        lengthLabelPosition="left"
+        infoTextType="length"
+        buttonAreaPosition="right"
+        buttonAreaWidth="unit-17"
+        [isConfirmed]="innerFormSubmittable"
+      >
+        <app-plus-button [isDisabled]="isDisabled"></app-plus-button>
+      </app-form>
+      <div
+        class="list-section"
+        #listSection
+        cdkDropList
+        (cdkDropListDropped)="changeOrder($event)"
+      >
+        <div
+          class="item-row"
+          *ngFor="let optionValue of optionValues; let idx = index"
+          [ngStyle]="{ 'background-color': optionValue.color }"
+          cdkDrag
+          cdkDragBoundary=".list-section"
+          cdkDragLockAxis="y"
+          [cdkDragDisabled]="isDisabled"
+        >
+          <button
+            class="item-button handle"
+            type="button"
+            [disabled]="isDisabled"
+            cdkDragHandle
+          >
+            <i [class]="hamburgerIcon"></i>
+          </button>
+          <span class="item-label">
+            {{ optionValue.label }}
+          </span>
+          <button
+            class="item-button"
+            type="button"
+            (click)="deleteOption(optionValue)"
+            [disabled]="isDisabled"
+          >
+            <i [class]="crossIcon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-length-text
+  *ngIf="displayLength"
+  [length]="form.value[name]?.length ?? 0"
+  [maxLength]="maxLength"
+></app-length-text>
+<app-alert-text
+  *ngIf="displayAlert"
+  [text]="alertMessage"
+  [labelPosition]="labelPosition"
+  [labelWidth]="labelWidth"
+></app-alert-text>

@@ -3,7 +3,9 @@
     *ngIf="label"
     [label]="label"
     [labelPosition]="labelPosition"
-    [labelWidth]="labelWidth"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
   <mat-form-field
     [formGroup]="form"
@@ -21,7 +23,7 @@
       (keyup.enter)="onEnter()"
       autocomplete="off"
     />
-    <i class="icon fa-regular fa-calendar" (click)="picker.open()"></i>
+    <i [class]="'icon ' + calendarIcon" (click)="picker.open()"></i>
     <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>
   </mat-form-field>
 </div>

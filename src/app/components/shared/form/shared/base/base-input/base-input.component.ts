@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core'
@@ -28,12 +27,6 @@ export class BaseInputComponent
     return this.formInputSpec?.validMessageGenerator
   }
 
-  constructor(
-    protected override readonly changeDetectorRef: ChangeDetectorRef,
-  ) {
-    super(changeDetectorRef)
-  }
-
   ngOnInit(): void {
     if (this.isDisabled) {
       this.form?.get(this.name)?.disable()
@@ -55,6 +48,10 @@ export class BaseInputComponent
   }
 
   ngAfterViewInit(): void {
+    this.ngAfterViewInitSetup()
+  }
+
+  protected readonly ngAfterViewInitSetup = () => {
     this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
   }
 

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core'
+import { CssSize } from 'src/app/models/client-specs/shared/css-specs'
 import { CssService } from 'src/app/services/shared/css.service'
 
 @Component({
@@ -9,15 +10,15 @@ import { CssService } from 'src/app/services/shared/css.service'
 export class AlertTextComponent {
   @Input() text = ''
   @Input() labelPosition?: 'side' | 'top' = 'side'
-  @Input() labelWidth?: string
+  @Input() labelWidth?: CssSize
 
   get paddingStyle() {
     if (!this.labelWidth || this.labelPosition === 'top') return {}
 
     return {
-      'padding-left': `calc(${this.labelWidth} - ${this._cssService.getSize(
-        'unit-7',
-      )})`,
+      'padding-left': `calc(${this._cssService.getSize(
+        this.labelWidth,
+      )} - ${this._cssService.getSize('unit-7')})`,
     }
   }
 

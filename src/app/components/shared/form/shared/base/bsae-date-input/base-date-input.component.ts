@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Output,
@@ -31,12 +30,6 @@ export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
     return isDate(this.formInputSpec?.max)
       ? moment(this.formInputSpec.max).toDate()
       : undefined
-  }
-
-  constructor(
-    protected override readonly changeDetectorRef: ChangeDetectorRef,
-  ) {
-    super(changeDetectorRef)
   }
 
   protected readonly onPickerClose = () => {

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
+import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
 import { BaseSelectComponent } from '../shared/base/base-input/base-select-input/base-select.component'
@@ -28,9 +29,7 @@ export class RadioInputComponent extends BaseSelectComponent {
     return this._componentUniqueId
   }
 
-  readonly getItems = (
-    optionValues: Array<{ label: string; value: string }>,
-  ) => {
+  readonly getItems = (optionValues: FormInputOption[]) => {
     return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
   }
 }

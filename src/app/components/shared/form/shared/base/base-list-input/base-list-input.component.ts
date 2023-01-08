@@ -7,7 +7,9 @@ import {
 import { map, Observable, of, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicListInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
+import { CssService } from 'src/app/services/shared/css.service'
 import { SuperInputComponent } from '../super-input.component'
 
 @AutoUnsubscribe()
@@ -22,7 +24,7 @@ export class BaseListInputComponent
 {
   private _valueChangeSubscription$?: Subscription
 
-  protected optionValues$!: Observable<Array<{ label: string; value: string }>>
+  protected optionValues$!: Observable<FormInputOption[]>
 
   get validator() {
     return this.isValidationNeeded
@@ -37,13 +39,18 @@ export class BaseListInputComponent
   }
 
   constructor(
-    private readonly _requestService: HttpCommonService,
+    protected readonly requestService: HttpCommonService,
+    protected override readonly cssService: CssService,
     protected override readonly changeDetectorRef: ChangeDetectorRef,
   ) {
-    super(changeDetectorRef)
+    super(cssService, changeDetectorRef)
   }
 
   ngOnInit(): void {
+    this.ngOnInitSetup()
+  }
+
+  protected readonly ngOnInitSetup = () => {
     if (this.isDisabled) {
       this.form.get(this.name)?.disable()
       return
@@ -67,26 +74,9 @@ export class BaseListInputComponent
     this.setOptionValueObservable()
   }
 
-  protected readonly getSelectedOptions = (
-    optionValues: Array<{ label: string; value: string }>,
-  ) => {
-    const selected = this.form.value[this.name]
-
-    return !selected
-      ? []
-      : optionValues
-          .filter((option) => selected.includes(option.value))
-          .map((option) => option.value)
-  }
-
   private readonly setOptionValueObservable = () => {
     if (this.options && this.options.length > 0) {
-      this.optionValues$ = of(
-        this.options.map((o) => {
-          const [value, label] = Object.entries(o)[0]
-          return { value, label }
-        }),
-      )
+      this.optionValues$ = of(this.options)
 
       this.changeDetectorRef.detectChanges()
       return
@@ -104,11 +94,12 @@ export class BaseListInputComponent
   private readonly fetchOptions = () => {
     if (!this.optionsFetchUrl) return
 
-    this.optionValues$ = this._requestService
+    this.optionValues$ = this.requestService
       .getGeneralFetch(this.optionsFetchUrl)
       .pipe(
         map((data) =>
           data.map((d) => ({
+            ...d,
             label: d.name,
             value: String(d.id),
           })),
@@ -118,7 +109,7 @@ export class BaseListInputComponent
     this.changeDetectorRef.detectChanges()
   }
 
-  private readonly validate = (value?: string[]) => {
+  protected readonly validate = (value?: string[]) => {
     if (this.isDisabled || !this.isValidationNeeded) return ''
 
     const result = this.validator ? this.validator(value) : ''

@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/client-specs/form/constants'
+import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/constants/form-constants'
 
 @Component({
   selector: 'app-color-picker',
@@ -24,6 +24,8 @@ export class ColorPickerComponent {
   }
 
   readonly onSelect = (value: string) => {
+    if (this.isDisabled) return
+
     this.select.emit(value)
   }
 }

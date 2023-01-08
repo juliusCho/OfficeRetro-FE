@@ -8,6 +8,10 @@ export class BasePageComponent implements AfterContentInit {
   protected isLoading = true
 
   ngAfterContentInit(): void {
+    this.ngAfterContentInitSetup()
+  }
+
+  protected readonly ngAfterContentInitSetup = () => {
     this.isPageLoaded = true
   }
 }

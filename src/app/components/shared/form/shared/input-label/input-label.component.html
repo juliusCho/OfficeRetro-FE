@@ -3,7 +3,7 @@
   [for]="for"
   class="label"
   [ngClass]="{ 'label-top': labelPosition === 'top' }"
-  [ngStyle]="{ width: labelWidth }"
+  [ngStyle]="extraStyle"
   (click)="onClick()"
 >
   <ng-container *ngIf="doesLabelContainsLineBreak; else labelText">

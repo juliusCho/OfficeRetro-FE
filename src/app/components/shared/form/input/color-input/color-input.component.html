@@ -5,13 +5,14 @@
   [valueChange$]="textChange$"
   [isValidationNeeded]="isValidationNeeded"
   [labelWidth]="labelWidth"
+  [labelStyle]="labelStyle"
   [formInputSpec]="inputSpec"
   [lengthLabelPosition]="lengthLabelPosition"
   [infoTextType]="infoTextType"
 >
   <app-color-picker
     [color]="color"
-    [isDisabled]="inputSpec.disabled"
+    [isDisabled]="isDisabled"
     (select)="onSelectColor($event)"
   ></app-color-picker>
 </app-input>

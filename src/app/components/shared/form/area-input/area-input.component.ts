@@ -7,8 +7,4 @@ import { BaseInputComponent } from '../shared/base/base-input/base-input.compone
   styleUrls: ['./area-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AreaInputComponent extends BaseInputComponent {
-  get height() {
-    return this.formInputSpec?.height ?? ''
-  }
-}
+export class AreaInputComponent extends BaseInputComponent {}

@@ -3,7 +3,9 @@
     *ngIf="label"
     [label]="label"
     [labelPosition]="labelPosition"
-    [labelWidth]="labelWidth"
+    [width]="labelWidth"
+    [labelSize]="labelStyle?.labelSize"
+    [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div

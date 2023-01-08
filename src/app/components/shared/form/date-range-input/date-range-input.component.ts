@@ -4,6 +4,7 @@ import * as moment from 'moment'
 import { Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicDateRangeInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { ICONS } from 'src/app/models/constants/css-constants'
 import { BaseDateInputComponent } from '../shared/base/bsae-date-input/base-date-input.component'
 
 @AutoUnsubscribe()
@@ -18,6 +19,10 @@ export class DateRangeInputComponent
   implements OnInit
 {
   private _valueChangeSubscription$?: Subscription
+
+  get calendarIcon() {
+    return ICONS.CALENDAR
+  }
 
   ngOnInit(): void {
     if (this.isDisabled) {

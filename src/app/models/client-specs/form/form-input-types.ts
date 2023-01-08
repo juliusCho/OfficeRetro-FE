@@ -13,3 +13,12 @@ export type InputType =
   | 'list'
 
 export type InputUnderneathDisplay = 'none' | 'all' | 'alert' | 'length'
+
+export type FormInputOption = {
+  value: string
+  label: string
+  color?: string
+  order?: number
+}
+
+export interface FormListInputOption extends Required<FormInputOption> {}

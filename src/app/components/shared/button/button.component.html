@@ -3,8 +3,9 @@
   class="container"
   [disabled]="isDisabled"
   (click)="(click)"
-  [style]="'width:' + (width || 'fit-content') + ';' + style"
+  [style]="style"
   [ngClass]="getExtraCssClass()"
+  [ngStyle]="getExtraCssStyle()"
 >
   <ng-content></ng-content>
 </button>

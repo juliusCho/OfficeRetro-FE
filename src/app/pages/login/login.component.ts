@@ -9,7 +9,7 @@ import {
   listMinimumSelectValidator,
 } from 'src/app/helpers/form-validators'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
-import { CssService } from 'src/app/services/shared/css.service'
+import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/constants/form-constants'
 import { BasePageComponent } from '../base-page.component'
 
 @Component({
@@ -24,6 +24,30 @@ export default class LoginComponent extends BasePageComponent {
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   > = [
     {
+      key: 'list',
+      label: 'FILLIN',
+      listInputLabel: 'LIST',
+      labelPosition: 'top',
+      initValue: [],
+      inputType: 'list',
+      placeholder: 'PPPPPPPP',
+      formValidators: [
+        listMinimumSelectValidator(1),
+        listMaximumSelectValidator(7),
+      ],
+      min: '6',
+      max: '7',
+      required: true,
+      options: [
+        { value: '1', label: 'hey', color: COLOR_PICKER_DEFAULT_COLOR },
+        { value: '2', label: 'hello', color: COLOR_PICKER_DEFAULT_COLOR },
+        { value: '3', label: 'hhhh', color: COLOR_PICKER_DEFAULT_COLOR },
+        { value: '4', label: 'hola', color: COLOR_PICKER_DEFAULT_COLOR },
+        { value: '5', label: 'halo', color: COLOR_PICKER_DEFAULT_COLOR },
+      ],
+      height: 'unit-30',
+    },
+    {
       key: 'color',
       label: 'Color',
       initValue: ['', ''],
@@ -33,6 +57,7 @@ export default class LoginComponent extends BasePageComponent {
       required: true,
       min: '5',
       max: '50',
+      labelPosition: 'top',
     },
     [
       {
@@ -87,11 +112,11 @@ export default class LoginComponent extends BasePageComponent {
       required: true,
       labelPosition: 'top',
       options: [
-        { '1': 'hey' },
-        { '2': 'hello' },
-        { '3': 'hhhh' },
-        { '4': 'hola' },
-        { '5': 'halo' },
+        { value: '1', label: 'hey' },
+        { value: '2', label: 'hello' },
+        { value: '3', label: 'hhhh' },
+        { value: '4', label: 'hola' },
+        { value: '5', label: 'halo' },
       ],
     },
     {
@@ -103,11 +128,11 @@ export default class LoginComponent extends BasePageComponent {
       placeholder: 'Must Select',
       required: true,
       options: [
-        { '1': 'hey' },
-        { '2': 'hello' },
-        { '3': 'hhhh' },
-        { '4': 'hola' },
-        { '5': 'halo' },
+        { value: '1', label: 'hey' },
+        { value: '2', label: 'hello' },
+        { value: '3', label: 'hhhh' },
+        { value: '4', label: 'hola' },
+        { value: '5', label: 'halo' },
       ],
       columnCount: 2,
     },
@@ -123,11 +148,11 @@ export default class LoginComponent extends BasePageComponent {
       max: '2',
       required: true,
       options: [
-        { '1': 'hey' },
-        { '2': 'hello' },
-        { '3': 'hhhh' },
-        { '4': 'hola' },
-        { '5': 'halo' },
+        { value: '1', label: 'hey' },
+        { value: '2', label: 'hello' },
+        { value: '3', label: 'hhhh' },
+        { value: '4', label: 'hola' },
+        { value: '5', label: 'halo' },
       ],
       columnCount: 3,
     },
@@ -168,10 +193,6 @@ export default class LoginComponent extends BasePageComponent {
       labelPosition: 'top',
     },
   ]
-
-  constructor(public readonly _cssService: CssService) {
-    super()
-  }
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
     console.log('onSubmit', formValue)

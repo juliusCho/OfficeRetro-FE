@@ -10,6 +10,11 @@ import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubs
 import { isNumber } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+import {
+  CssSize,
+  FontWeight,
+} from 'src/app/models/client-specs/shared/css-specs'
+import { CssService } from 'src/app/services/shared/css.service'
 
 @AutoUnsubscribe()
 @Component({
@@ -19,7 +24,8 @@ import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 export class SuperInputComponent<T> {
   @Input() form!: FormGroup
   @Input() valueChange$!: BehaviorSubject<T>
-  @Input() labelWidth?: string
+  @Input() labelWidth?: CssSize
+  @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
   @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
   @Input() formInputSpec!: FormInputSpec<T>
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
@@ -41,6 +47,9 @@ export class SuperInputComponent<T> {
   }
   get width() {
     return this.formInputSpec?.width ?? ''
+  }
+  get height() {
+    return this.formInputSpec?.height ?? ''
   }
   get min() {
     return this.formInputSpec?.min ?? '0'
@@ -99,12 +108,29 @@ export class SuperInputComponent<T> {
   }
 
   get inputAreaStyle() {
-    return this.label && this.labelPosition !== 'top' && this.labelWidth
-      ? { width: `calc(100% - ${this.labelWidth})` }
-      : {}
+    const areaStyle = { height: this.cssService.getUntypedSize(this.height) }
+
+    if (this.label && this.labelPosition !== 'top') {
+      return this.labelWidth
+        ? {
+            ...areaStyle,
+            width: `calc(100% - ${
+              this.cssService.getSize(this.labelWidth) ?? '0px'
+            })`,
+          }
+        : {
+            ...areaStyle,
+            width: '100%',
+          }
+    }
+
+    return areaStyle
   }
 
-  constructor(protected readonly changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    protected readonly cssService: CssService,
+    protected readonly changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
   protected readonly onFocusOut = () => {
     if (!this.isValidationNeeded) return

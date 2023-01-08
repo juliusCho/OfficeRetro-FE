@@ -1,9 +1,10 @@
 import { ValidatorFn } from '@angular/forms'
-import { InputType } from './form-input-types'
+import { FormInputOption, InputType } from './form-input-types'
 
 export interface FormInputSpec<T> {
   key: string
   label?: string
+  listInputLabel?: string // for ListInputComponent
   labelPosition?: 'side' | 'top'
   initValue: T
   formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]]
@@ -14,7 +15,7 @@ export interface FormInputSpec<T> {
   max?: string // -1: infinite length
   required?: boolean
   disabled?: boolean
-  options?: Record<string, string>[]
+  options?: FormInputOption[]
   optionsFetchUrl?: string
   columnCount?: number
   width?: string
