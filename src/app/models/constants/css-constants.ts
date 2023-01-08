@@ -49,4 +49,5 @@ export const ICONS = {
   LOADING_COMPASS: 'fa-regular fa-compass',
   PLUS: 'fa-solid fa-plus',
   CROSS: 'fa-solid fa-xmark',
+  UP_DOWN: 'fa-solid fa-arrows-up-down',
 } as const
