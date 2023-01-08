@@ -1,9 +1,9 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core'
 import { BehaviorSubject, Subscription, tap } from 'rxjs'
@@ -20,7 +20,7 @@ import { SuperInputComponent } from '../inheritances/super-input.component'
 })
 export class ColorInputComponent
   extends SuperInputComponent<[string, string]>
-  implements OnInit
+  implements AfterContentInit
 {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
@@ -42,7 +42,7 @@ export class ColorInputComponent
     return this._colorChange$.value
   }
 
-  ngOnInit(): void {
+  ngAfterContentInit(): void {
     const colorKey = `${this.name}Color`
 
     if (this.isDisabled) {
