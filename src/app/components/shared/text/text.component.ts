@@ -1,8 +1,10 @@
-import { Component } from '@angular/core'
+import { Component, Input } from '@angular/core'
 
 @Component({
   selector: 'app-text',
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss'],
 })
-export class TextComponent {}
+export class TextComponent {
+  @Input() style?: Record<string, string>
+}

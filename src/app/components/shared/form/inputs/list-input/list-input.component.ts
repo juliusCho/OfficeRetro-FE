@@ -121,9 +121,9 @@ export class ListInputComponent
             v.map((option) => option.value),
           )
 
-          this.changeDetectorRef.markForCheck()
-
           this.form?.get(this.name)?.setValue(v.map((option) => option.value))
+
+          this.changeDetectorRef.markForCheck()
         }),
       )
       .subscribe()

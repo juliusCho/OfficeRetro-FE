@@ -3,7 +3,7 @@
     *ngIf="label"
     [label]="label"
     [labelPosition]="labelPosition"
-    [width]="labelWidth"
+    [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
     [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
@@ -27,9 +27,9 @@
     <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>
   </mat-form-field>
 </div>
-<app-alert-text
+<app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelWidth"
-></app-alert-text>
+  [labelWidth]="labelAreaWidth"
+></app-input-alert-text>

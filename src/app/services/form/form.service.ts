@@ -178,16 +178,7 @@ export class FormService implements OnDestroy {
         this.setTextColorToFormAndSubject(inputInfo, formGroup)
         break
       case 'date':
-        if (this.isFormValidatorPair(inputInfo.formValidators)) return
-
-        formGroup[inputInfo.key] = new FormControl(
-          inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
-          inputInfo.formValidators as ValidatorFn[],
-        )
-
-        this._formSubjects[inputInfo.key] = new BehaviorSubject(
-          valueToDateString(inputInfo.initValue) as unknown,
-        )
+        this.setDateToFormAndSubject(inputInfo, formGroup)
         break
       case 'date-range':
         this.setDateRangeToFormAndSubject(inputInfo, formGroup)
@@ -235,6 +226,22 @@ export class FormService implements OnDestroy {
 
     this._formSubjects[inputInfo.key] = new BehaviorSubject(
       inputInfo.initValue as unknown,
+    )
+  }
+
+  private readonly setDateToFormAndSubject = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (this.isFormValidatorPair(inputInfo.formValidators)) return
+
+    formGroup[inputInfo.key] = new FormControl(
+      inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
+      inputInfo.formValidators as ValidatorFn[],
+    )
+
+    this._formSubjects[inputInfo.key] = new BehaviorSubject(
+      valueToDateString(inputInfo.initValue) as unknown,
     )
   }
 

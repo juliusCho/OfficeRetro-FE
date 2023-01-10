@@ -3,6 +3,8 @@
 :host {
   position: relative;
   display: inline-block;
+  outline: none;
+  border: none;
 
   .tooltip {
     @extend %font-medium-no-ani;

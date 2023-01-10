@@ -4,7 +4,7 @@
     [label]="label"
     [for]="name"
     [labelPosition]="labelPosition"
-    [width]="labelWidth"
+    [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
     [labelWeight]="labelStyle?.labelWeight"
   >
@@ -15,11 +15,10 @@
         [formInputSpecs]="innerFormInputSpecs"
         [isValidationNeeded]="true"
         (submit)="addOption($event)"
-        [labelStyle]="{ labelSize: 'unit-5', labelWeight: 400 }"
-        lengthLabelPosition="left"
+        [labelArea]="{ labelSize: 'unit-5', labelWeight: 400 }"
         infoTextType="length"
-        buttonAreaPosition="right"
-        buttonAreaWidth="unit-17"
+        lengthLabelPosition="left"
+        [buttonArea]="{ position: 'right', width: 'unit-17' }"
         [isConfirmed]="innerFormSubmittable"
       >
         <app-plus-button [isDisabled]="isDisabled"></app-plus-button>
@@ -68,9 +67,9 @@
   [length]="form.value[name]?.length ?? 0"
   [maxLength]="maxLength"
 ></app-length-text>
-<app-alert-text
+<app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelWidth"
-></app-alert-text>
+  [labelWidth]="labelAreaWidth"
+></app-input-alert-text>

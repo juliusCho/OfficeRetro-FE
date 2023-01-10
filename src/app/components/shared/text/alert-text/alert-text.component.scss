@@ -1,0 +1,10 @@
+@import 'styles';
+
+:host {
+  ::ng-deep app-text {
+    .container {
+      color: $error;
+      @extend %font-5;
+    }
+  }
+}

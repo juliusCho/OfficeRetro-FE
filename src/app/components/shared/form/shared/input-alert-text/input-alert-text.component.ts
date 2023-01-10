@@ -3,11 +3,11 @@ import { CssSize } from 'src/app/models/client-specs/shared/css-specs'
 import { CssService } from 'src/app/services/shared/css.service'
 
 @Component({
-  selector: 'app-alert-text',
-  templateUrl: './alert-text.component.html',
-  styleUrls: ['./alert-text.component.scss'],
+  selector: 'app-input-alert-text',
+  templateUrl: './input-alert-text.component.html',
+  styleUrls: ['./input-alert-text.component.scss'],
 })
-export class AlertTextComponent {
+export class InputAlertTextComponent {
   @Input() text = ''
   @Input() labelPosition?: 'side' | 'top' = 'side'
   @Input() labelWidth?: CssSize

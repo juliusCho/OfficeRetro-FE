@@ -5,18 +5,21 @@
   - PlusButton
 - CenterTitle
 - Text
+  - InfoText
+  - LinkText
   - AlertText
 - Loading
   - TextLoading
 - Form
 
+  - InputAlertText
   - InputLabel
   - LengthText
+  - PasswordInput
+    - PasswordResetButton
+  - ColorInput
+    - ColorPicker
   - Input
-    - PasswordInput
-      - PasswordResetButton
-    - ColorInput
-      - ColorPicker
   - DropdownInput
   - AreaInput
   - RadioInput
@@ -27,8 +30,6 @@
 
 - ModalLoading
 - GridLoading
-- LinkText
-- InfoText
 - BackButton
 - SearchButton
 - ConfirmModal

@@ -1,13 +1,16 @@
 <form [formGroup]="form" class="container" [ngClass]="extraStyle">
   <app-button
-    *ngIf="buttonAreaPosition !== 'right' && clearLabel"
+    *ngIf="buttonArea?.position !== 'right' && buttonArea?.clearButton"
     (click)="onClear()"
-    color="clear"
-    >{{ clearLabel }}</app-button
+    [color]="buttonArea?.clearButton?.color ?? 'clear'"
+    >{{ buttonArea?.clearButton?.label }}</app-button
   >
   <div
     class="input-section"
-    [ngClass]="{ 'clear-exists': buttonAreaPosition !== 'right' && clearLabel }"
+    [ngClass]="{
+      'clear-exists':
+        buttonArea?.position !== 'right' && buttonArea?.clearButton?.label
+    }"
     [ngStyle]="inputSectionStyle"
   >
     <div *ngFor="let formInputSpecItem of formInputSpecs" class="input-row">
@@ -48,14 +51,19 @@
       <ng-content></ng-content>
     </div>
     <app-button
-      *ngIf="submitLabel && submitInjectTag.children.length === 0"
+      *ngIf="buttonArea?.submitButton && submitInjectTag.children.length === 0"
       (click)="onSubmit()"
-      color="primary"
-      >{{ submitLabel }}</app-button
+      [color]="buttonArea?.submitButton?.color ?? 'primary'"
     >
-    <app-button *ngIf="cancelLabel" (click)="onCancel()">{{
-      cancelLabel
-    }}</app-button>
+      {{ buttonArea?.submitButton?.label }}
+    </app-button>
+    <app-button
+      *ngIf="buttonArea?.cancelButton"
+      [color]="buttonArea?.cancelButton?.color ?? 'default'"
+      (click)="onCancel()"
+    >
+      {{ buttonArea?.cancelButton?.label }}
+    </app-button>
   </div>
 </form>
 
@@ -73,7 +81,7 @@
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
@@ -87,7 +95,7 @@
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
@@ -102,7 +110,7 @@
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
@@ -114,7 +122,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-area-input>
@@ -125,7 +133,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-dropdown-input>
@@ -136,7 +144,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-radio-input>
@@ -147,7 +155,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-checkbox-input>
@@ -159,7 +167,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-date-input>
@@ -171,7 +179,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
     ></app-date-range-input>
@@ -182,7 +190,7 @@
       [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
       [listInputLabel]="formInputSpec.listInputLabel"
@@ -196,7 +204,7 @@
       [showValidationMessage]="showValidationMessage"
       [form]="form"
       [isValidationNeeded]="isValidationNeeded"
-      [labelWidth]="labelWidth"
+      [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"

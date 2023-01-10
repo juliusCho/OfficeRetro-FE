@@ -24,7 +24,7 @@ import { CssService } from 'src/app/services/shared/css.service'
 export class SuperInputComponent<T> {
   @Input() form!: FormGroup
   @Input() valueChange$!: BehaviorSubject<T>
-  @Input() labelWidth?: CssSize
+  @Input() labelAreaWidth?: CssSize
   @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
   @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
   @Input() formInputSpec!: FormInputSpec<T>
@@ -111,11 +111,11 @@ export class SuperInputComponent<T> {
     const areaStyle = { height: this.cssService.getUntypedSize(this.height) }
 
     if (this.label && this.labelPosition !== 'top') {
-      return this.labelWidth
+      return this.labelAreaWidth
         ? {
             ...areaStyle,
             width: `calc(100% - ${
-              this.cssService.getSize(this.labelWidth) ?? '0px'
+              this.cssService.getSize(this.labelAreaWidth) ?? '0px'
             })`,
           }
         : {

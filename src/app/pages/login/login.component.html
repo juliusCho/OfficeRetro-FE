@@ -1,19 +1,13 @@
 <app-center-title>Office Retro</app-center-title>
 <div class="form" [ngClass]="{ loaded: isPageLoaded, layoutPlay }">
   <app-form
-    *ngIf="!layoutPlay; else play"
-    clearLabel="Clear"
-    cancelLabel="Cancel"
+    [buttonArea]="{ submitButton: { label: 'Login', color: 'default' } }"
     [formInputSpecs]="formInputSpecs"
     [isValidationNeeded]="true"
     (submit)="onSubmit($event)"
-    labelWidth="unit-20"
-    lengthLabelPosition="left"
-    infoTextType="all"
-    buttonAreaPosition="right"
-    buttonAreaWidth="unit-27"
+    infoTextType="alert"
+    [labelArea]="{ width: 'unit-18' }"
   >
-    <button type="button" style="cursor: pointer">Q$@#$@Q#$AQA#$Y</button>
   </app-form>
 </div>
 <app-button>Register</app-button>
@@ -23,16 +17,3 @@
 </div>
 
 <app-loading [loading]="!isPageLoaded"></app-loading>
-
-<ng-template #play>
-  <app-form
-    submitLabel="Login"
-    cancelLabel="Cancel"
-    [formInputSpecs]="formInputSpecs"
-    [isValidationNeeded]="true"
-    (submit)="onSubmit($event)"
-    labelWidth="unit-20"
-    buttonAreaPosition="right"
-    buttonAreaWidth="unit-27"
-  ></app-form>
-</ng-template>

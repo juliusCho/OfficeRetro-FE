@@ -1,0 +1,12 @@
+@import 'styles';
+
+.container {
+  li {
+    ::ng-deep app-text {
+      .container {
+        color: $main;
+        @extend %font-4;
+      }
+    }
+  }
+}

@@ -23,11 +23,11 @@ export class DropdownInputComponent extends BaseSelectComponent {
   isDropdownOpened = false
 
   get dropdownInputAreaStyle() {
-    if (this.label && this.labelPosition !== 'top' && this.labelWidth) {
+    if (this.label && this.labelPosition !== 'top' && this.labelAreaWidth) {
       return {
         width: `calc(calc(100% - ${
           this.isDisabled ? '0px' : this.cssService.getSize('unit-3')
-        }) - ${this.cssService.getSize(this.labelWidth)})`,
+        }) - ${this.cssService.getSize(this.labelAreaWidth)})`,
       }
     }
 

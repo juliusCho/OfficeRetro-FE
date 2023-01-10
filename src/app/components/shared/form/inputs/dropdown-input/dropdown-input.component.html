@@ -15,7 +15,7 @@
     [label]="label"
     (click)="toggleDropdown()"
     [labelPosition]="labelPosition"
-    [width]="labelWidth"
+    [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
     [labelWeight]="labelStyle?.labelWeight"
   ></app-input-label>
@@ -63,11 +63,11 @@
     </div>
   </div>
 </div>
-<app-alert-text
+<app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-></app-alert-text>
+></app-input-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

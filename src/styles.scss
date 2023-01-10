@@ -57,6 +57,10 @@ body {
     -webkit-user-select: none;
     user-select: none;
 
+    &:focus {
+      outline-color: $highlight;
+    }
+
     &::-webkit-scrollbar {
       width: $unit-8;
       height: $unit-8;

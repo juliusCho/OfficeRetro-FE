@@ -32,7 +32,7 @@ import { PasswordInputComponent } from './inputs/password-input/password-input.c
 import { PasswordResetButtonComponent } from './inputs/password-input/password-reset-button/password-reset-button.component'
 import { RadioInputComponent } from './inputs/radio-input/radio-input.component'
 import { TextInputComponent } from './inputs/text-input/text-input.component'
-import { AlertTextComponent } from './shared/alert-text/alert-text.component'
+import { InputAlertTextComponent } from './shared/input-alert-text/input-alert-text.component'
 import { InputLabelComponent } from './shared/input-label/input-label.component'
 import { LengthTextComponent } from './shared/length-text/length-text.component'
 
@@ -43,7 +43,7 @@ const declarations = [
   BaseSelectComponent,
   SuperInputComponent,
   TextInputComponent,
-  AlertTextComponent,
+  InputAlertTextComponent,
   LengthTextComponent,
   AreaInputComponent,
   DropdownInputComponent,

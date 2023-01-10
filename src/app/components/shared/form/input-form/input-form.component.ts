@@ -18,6 +18,7 @@ import { isArray } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import {
+  ButtonColor,
   CssSize,
   FontWeight,
 } from 'src/app/models/client-specs/shared/css-specs'
@@ -37,19 +38,23 @@ export class InputFormComponent
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
-  @Input() submitLabel?: string
-  @Input() submitColor?: string
-  @Input() cancelLabel?: string
-  @Input() clearLabel?: string
-  @Input() width?: CssSize | string
   @Input() isValidationNeeded?: boolean = false // no input validation checks
-  @Input() buttonAreaPosition?: 'bottom' | 'right' = 'bottom'
-  @Input() buttonAreaWidth?: CssSize
-  @Input() labelWidth?: CssSize // label width per each input
-  @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
-  @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
+  @Input() isConfirmed?: boolean = true // to check if parent component's submit action needs to be listened to
+  @Input() buttonArea?: {
+    position?: 'bottom' | 'right'
+    width?: CssSize
+    submitButton?: { label: string; color: ButtonColor }
+    cancelButton?: { label: string; color: ButtonColor }
+    clearButton?: { label: string; color: ButtonColor }
+  }
+  @Input() width?: CssSize | string
+  @Input() labelArea?: {
+    width?: CssSize // label width per each input
+    labelSize?: CssSize
+    labelWeight?: FontWeight
+  }
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
-  @Input() isConfirmed?: boolean = true
+  @Input() lengthLabelPosition?: 'left' | 'right' = 'right' // if length text displays, it's position
 
   @Output() submit = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
@@ -65,8 +70,8 @@ export class InputFormComponent
 
   get doesWidthLayoutAdjust() {
     return (
-      this.buttonAreaPosition !== 'right' ||
-      !this._cssService.getSize(this.buttonAreaWidth)
+      this.buttonArea?.position !== 'right' ||
+      !this._cssService.getSize(this.buttonArea?.width)
     )
   }
 
@@ -75,7 +80,7 @@ export class InputFormComponent
       ? {}
       : {
           width: `calc(100% - ${this._cssService.getSize(
-            this.buttonAreaWidth,
+            this.buttonArea?.width,
           )})`,
         }
   }
@@ -83,13 +88,22 @@ export class InputFormComponent
   get buttonSectionStyle() {
     return this.doesWidthLayoutAdjust
       ? {}
-      : { width: this._cssService.getSize(this.buttonAreaWidth) }
+      : { width: this._cssService.getSize(this.buttonArea?.width) }
+  }
+
+  get labelStyle() {
+    return this.labelArea
+      ? {
+          labelSize: this.labelArea.labelSize,
+          labelWeight: this.labelArea.labelWeight,
+        }
+      : {}
   }
 
   get extraStyle() {
     return {
       width: this._cssService.getUntypedSize(this.width),
-      'button-side': this.buttonAreaPosition === 'right',
+      'button-side': this.buttonArea?.position === 'right',
     }
   }
 
@@ -101,6 +115,8 @@ export class InputFormComponent
 
   ngOnInit(): void {
     this._formService.initialize(this.formInputSpecs)
+
+    this._changeDetectorRef.detectChanges()
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -124,10 +140,10 @@ export class InputFormComponent
   ngAfterViewInit(): void {
     if (
       this.submitInjectTag.nativeElement.children.length > 0 ||
-      this.submitLabel
+      this.buttonArea?.submitButton
     ) {
       this._formService.subscribeValueChanges()
-      this._changeDetectorRef.detectChanges()
+      this._changeDetectorRef.markForCheck()
       return
     }
 
@@ -141,7 +157,7 @@ export class InputFormComponent
       )
 
     this._formService.subscribeValueChanges()
-    this._changeDetectorRef.detectChanges()
+    this._changeDetectorRef.markForCheck()
   }
 
   readonly isSpecArray = (
