@@ -16,7 +16,7 @@ export class LoadingComponent {
   @Input() set loading(value: boolean) {
     if (value) {
       this._loading = value
-      this._changeDetectorRef.detectChanges()
+      this._changeDetectorRef.markForCheck()
 
       setTimeout(() => {
         this.isLoading = value
@@ -26,7 +26,7 @@ export class LoadingComponent {
     }
 
     this.isLoading = value
-    this._changeDetectorRef.detectChanges()
+    this._changeDetectorRef.markForCheck()
 
     setTimeout(() => {
       this._loading = value

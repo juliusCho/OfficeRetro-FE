@@ -107,6 +107,9 @@ export class ListInputComponent
     if (previousValue === currentValue || previousValue || !currentValue) return
 
     this.setOptionValueSubscription()
+    this.setInnerFormSubmittable(true)
+    this.setInnerFormSubmittable(false)
+    this.scrollListToTop()
   }
 
   ngAfterContentInit(): void {
@@ -126,6 +129,7 @@ export class ListInputComponent
       .subscribe()
 
     this.changeDetectorRef.detectChanges()
+    this.scrollListToTop()
   }
 
   readonly addOption = (formValue: Record<string, unknown>) => {
@@ -158,7 +162,7 @@ export class ListInputComponent
 
     this.setInnerFormSubmittable(false)
 
-    this.listSection.nativeElement.scrollTop = 0
+    this.scrollListToTop()
   }
 
   readonly deleteOption = (option: FormListInputOption) => {
@@ -166,11 +170,7 @@ export class ListInputComponent
 
     const existingOptions = this.optionValues
       .filter((o) => o.value !== option.value)
-      .map((o) =>
-        o.order > option.order
-          ? { ...o, order: o.order - 1 }
-          : { ...o, order: o.order + 1 },
-      )
+      .map((o) => (o.order > option.order ? { ...o, order: o.order - 1 } : o))
 
     this.optionValues$.next(existingOptions)
 
@@ -314,8 +314,13 @@ export class ListInputComponent
     )} should not contain more than ${this.max} item(s)`
     this.showValidationMessage = true
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
     return false
+  }
+
+  private readonly scrollListToTop = () => {
+    this.listSection.nativeElement.scrollTop = 0
+    this.changeDetectorRef.markForCheck()
   }
 }

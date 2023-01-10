@@ -53,6 +53,8 @@ export class BaseInputComponent
 
   protected readonly ngAfterViewInitSetup = () => {
     this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
+
+    this.changeDetectorRef.detectChanges()
   }
 
   protected readonly validate = (value?: string) => {

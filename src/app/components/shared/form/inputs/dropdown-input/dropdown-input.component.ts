@@ -45,11 +45,11 @@ export class DropdownInputComponent extends BaseSelectComponent {
   override readonly selectOption = (option: FormInputOption) => {
     if (this.isDisabled) return
 
-    this.form.get(this.name)?.setValue(option.value)
-
     this.isDropdownOpened = false
 
     this.changeDetectorRef.detectChanges()
+
+    this.form.get(this.name)?.setValue(option.value)
 
     this.onFocusOut()
   }
@@ -62,7 +62,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
       this.showValidationMessage = false
     }
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
   }
 
   @HostListener('document:mousedown', ['$event'])
@@ -74,7 +74,7 @@ export class DropdownInputComponent extends BaseSelectComponent {
 
     this.isDropdownOpened = false
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
     this.onFocusOut()
   }

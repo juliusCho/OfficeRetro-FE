@@ -133,6 +133,7 @@ export class CheckboxInputComponent
 
     if (!this.optionsFetchUrl) {
       this.optionValues$ = of([])
+
       this.changeDetectorRef.detectChanges()
       return
     }

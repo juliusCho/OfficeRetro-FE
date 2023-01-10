@@ -59,6 +59,8 @@ export class ColorInputComponent
         }),
       )
       .subscribe()
+
+    this.changeDetectorRef.detectChanges()
   }
 
   readonly onSelectColor = (value: string) => {

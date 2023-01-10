@@ -127,6 +127,7 @@ export class InputFormComponent
       this.submitLabel
     ) {
       this._formService.subscribeValueChanges()
+      this._changeDetectorRef.detectChanges()
       return
     }
 
@@ -135,13 +136,12 @@ export class InputFormComponent
         debounceTime(1000),
         tap(() => {
           this.submitAction()
-          this._changeDetectorRef.markForCheck()
+          this._changeDetectorRef.detectChanges()
         }),
       )
 
-    this._changeDetectorRef.detectChanges()
-
     this._formService.subscribeValueChanges()
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly isSpecArray = (
@@ -253,7 +253,7 @@ export class InputFormComponent
 
       setTimeout(() => {
         this.showValidationMessage = true
-        this._changeDetectorRef.markForCheck()
+        this._changeDetectorRef.detectChanges()
       }, 10)
       return
     }

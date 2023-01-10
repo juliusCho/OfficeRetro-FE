@@ -50,7 +50,7 @@ export class TextInputComponent extends BaseInputComponent {
   readonly onEnter = () => {
     this.showValidationMessage = true
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
     this.enter.emit()
   }

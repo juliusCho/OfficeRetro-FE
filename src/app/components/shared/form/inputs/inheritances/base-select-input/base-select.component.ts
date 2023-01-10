@@ -39,7 +39,7 @@ export class BaseSelectComponent
   ngAfterContentInit(): void {
     this.max = '-1'
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of([

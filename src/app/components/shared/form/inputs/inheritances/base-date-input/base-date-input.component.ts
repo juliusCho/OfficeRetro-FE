@@ -34,6 +34,7 @@ export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
 
   protected readonly onPickerClose = () => {
     if (this.isDisabled) return
+
     this.onFocusOut()
   }
 
@@ -47,13 +48,13 @@ export class BaseDateInputComponent<T> extends SuperInputComponent<T> {
       ' ',
     )} must be filled in correct format of "DD/MM/YYYY"`
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
   }
 
   protected readonly onEnter = () => {
     this.showValidationMessage = true
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
     this.enter.emit()
   }

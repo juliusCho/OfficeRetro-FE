@@ -59,7 +59,7 @@ export class SuperInputComponent<T> {
   }
   set max(value: string) {
     this._max = value
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
   }
   get maxLength() {
     return isNumber(this.max) ? Number(this.max) : -1
@@ -136,6 +136,6 @@ export class SuperInputComponent<T> {
     if (!this.isValidationNeeded) return
 
     this.showValidationMessage = true
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
   }
 }
