@@ -10,11 +10,7 @@ import { BasePageComponent } from '../base-page.component'
   styleUrls: ['./login.component.scss'],
 })
 export default class LoginComponent extends BasePageComponent {
-  layoutPlay = false
-
-  formInputSpecs: Array<
-    FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
-  > = [
+  formInputSpecs: FormInputSpec<unknown>[] = [
     // {
     //   key: 'list',
     //   label: 'FILLIN',

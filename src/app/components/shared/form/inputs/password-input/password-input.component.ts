@@ -5,6 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core'
+import { getBasicPasswordValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
 @Component({
@@ -37,16 +38,7 @@ export class PasswordInputComponent extends SuperInputComponent<string> {
         : ''
       if (result !== '') return result
 
-      if (!value) return ''
-
-      if (/ /g.test(value)) {
-        return `${(this.label ?? 'This field').replace(
-          /\n/g,
-          ' ',
-        )} should not contain blank space`
-      }
-
-      return ''
+      return getBasicPasswordValidationMsg(value, _this.label)
     }
   }
 

@@ -5,7 +5,7 @@ import {
   Input,
 } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { BehaviorSubject } from 'rxjs'
+import { Observable } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isNumber } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
@@ -23,7 +23,7 @@ import { CssService } from 'src/app/services/shared/css.service'
 })
 export class SuperInputComponent<T> {
   @Input() form!: FormGroup
-  @Input() valueChange$!: BehaviorSubject<T>
+  @Input() valueChange$!: Observable<T>
   @Input() labelAreaWidth?: CssSize
   @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
   @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
@@ -136,6 +136,7 @@ export class SuperInputComponent<T> {
     if (!this.isValidationNeeded) return
 
     this.showValidationMessage = true
+
     this.changeDetectorRef.markForCheck()
   }
 }

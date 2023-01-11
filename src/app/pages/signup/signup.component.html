@@ -1,1 +1,17 @@
-<p>signup works!</p>
+<app-center-title>Sign Up</app-center-title>
+<div class="form" [ngClass]="{ loaded: isPageLoaded }">
+  <app-form
+    [buttonArea]="{ submitButton: { label: 'Signup', color: 'default' } }"
+    [formInputSpecs]="formInputSpecs"
+    [isValidationNeeded]="true"
+    (submit)="onSubmit($event)"
+    infoTextType="alert"
+    [labelArea]="{ width: 'unit-18' }"
+  >
+  </app-form>
+</div>
+<app-button routerLink="/login" routerLinkActive="router-link-active"
+  >Login</app-button
+>
+
+<app-loading [loading]="!isPageLoaded"></app-loading>

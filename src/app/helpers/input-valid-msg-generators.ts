@@ -1,6 +1,7 @@
 import * as moment from 'moment'
 import { DATE_DISPLAY_FORMAT } from '../models/constants/form-constants'
-import { isNumber } from './type-checkers'
+import { isNumber, isString } from './type-checkers'
+import { isValidEmail } from './validators'
 import { valueToDateRange } from './value-converters'
 
 export const getBasicStringInputValidationMsg = (arg: {
@@ -50,6 +51,64 @@ export const getBasicStringInputValidationMsg = (arg: {
 
   if (!!maxLength && value.length > maxLength) {
     return `${lbl} should not contain more than ${maxLength} character(s)`
+  }
+
+  return ''
+}
+
+export const getBasicEmailValidationMsg = (value?: string) => {
+  if (!value || !isString(value)) return ''
+
+  if (/ /g.test(value)) {
+    return 'Email should not contain blank space'
+  }
+
+  if (!isValidEmail(value)) {
+    return 'Invalid email format'
+  }
+
+  return ''
+}
+
+export const getBasicPasswordValidationMsg = (
+  value?: string,
+  label?: string,
+) => {
+  const lbl = (label ?? 'This field').replace(/\\n/g, ' ')
+
+  if (!value) return ''
+
+  if (/ /g.test(value)) {
+    return `${lbl.replace(/\n/g, ' ')} should not contain blank space`
+  }
+
+  return ''
+}
+
+export const getBasicPasswordConfirmValidationMsg = (arg: {
+  password?: string
+  passwordConfirm?: string
+  min?: string
+  max?: string
+}) => {
+  const { password, passwordConfirm, min, max } = arg
+
+  const textMsg = getBasicStringInputValidationMsg({
+    value: password,
+    label: 'Password',
+    required: true,
+    min,
+    max,
+  })
+  if (textMsg !== '') return textMsg
+
+  const passwordMsg = getBasicPasswordValidationMsg(password, 'Password')
+  if (passwordMsg !== '') return passwordMsg
+
+  if (!passwordConfirm) return ''
+
+  if (password !== passwordConfirm) {
+    return 'Password does not match with Password Confirm'
   }
 
   return ''

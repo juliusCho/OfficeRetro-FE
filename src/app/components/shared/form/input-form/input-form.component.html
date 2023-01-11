@@ -196,6 +196,20 @@
       [listInputLabel]="formInputSpec.listInputLabel"
       [isFormSubmitted]="isFormSubmitted"
     ></app-list-input>
+    <app-password-confirm-input
+      *ngSwitchCase="'password-confirm'"
+      [valueChange$]="getValueObservableStringPair(formInputSpec.key)"
+      (enter)="onSubmit()"
+      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
+      [showValidationMessage]="showValidationMessage"
+      [form]="form"
+      [isValidationNeeded]="isValidationNeeded"
+      [labelAreaWidth]="labelArea?.width"
+      [lengthLabelPosition]="lengthLabelPosition"
+      [infoTextType]="infoTextType"
+      [labelStyle]="labelStyle"
+    >
+    </app-password-confirm-input>
     <app-password-input
       *ngSwitchDefault
       [valueChange$]="getValueObservableString(formInputSpec.key)"

@@ -17,6 +17,7 @@
   - LengthText
   - PasswordInput
     - PasswordResetButton
+  - PasswordConfirmInput
   - ColorInput
     - ColorPicker
   - Input

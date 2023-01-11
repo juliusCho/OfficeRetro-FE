@@ -35,7 +35,9 @@ export class TextInputComponent extends BaseInputComponent {
       return inputType
     }
 
-    return inputType === 'password-login' ? 'password' : 'text'
+    return inputType === 'password-login' || inputType === 'password-confirm'
+      ? 'password'
+      : 'text'
   }
 
   override ngAfterViewInit(): void {

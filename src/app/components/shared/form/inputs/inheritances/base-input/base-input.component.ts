@@ -6,9 +6,10 @@ import {
 } from '@angular/core'
 import { Observable, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { getBasicStringInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
-import { isString } from 'src/app/helpers/type-checkers'
-import { isValidEmail } from 'src/app/helpers/validators'
+import {
+  getBasicEmailValidationMsg,
+  getBasicStringInputValidationMsg,
+} from 'src/app/helpers/input-valid-msg-generators'
 import { SuperInputComponent } from '../super-input.component'
 
 @AutoUnsubscribe()
@@ -74,16 +75,6 @@ export class BaseInputComponent
 
     if (this.formInputSpec.inputType !== 'email') return ''
 
-    if (!value || !isString(value)) return ''
-
-    if (/ /g.test(value)) {
-      return 'Email should not contain blank space'
-    }
-
-    if (!isValidEmail(value)) {
-      return 'Invalid email format'
-    }
-
-    return ''
+    return getBasicEmailValidationMsg(value)
   }
 }

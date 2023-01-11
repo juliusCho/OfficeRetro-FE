@@ -102,6 +102,9 @@ export class FormService implements OnDestroy {
             case 'text-color':
               this.bindTextColorToSubject(inputInfo.key, v)
               break
+            case 'password-confirm':
+              this.bindPasswordConfirmToSubject(inputInfo.key, v)
+              break
             case 'date':
               this.bindDateToSubject(inputInfo.key, formValue)
               break
@@ -157,6 +160,9 @@ export class FormService implements OnDestroy {
         case 'text-color':
           this.setInitTextColor(inputInfo, formGroup)
           break
+        case 'password-confirm':
+          this.setInitPasswordConfirm(inputInfo, formGroup)
+          break
         case 'date-range':
           this.setInitDateRange(inputInfo, formGroup)
           break
@@ -176,6 +182,9 @@ export class FormService implements OnDestroy {
     switch (inputInfo.inputType) {
       case 'text-color':
         this.setTextColorToFormAndSubject(inputInfo, formGroup)
+        break
+      case 'password-confirm':
+        this.setPasswordConfirmToFormAndSubject(inputInfo, formGroup)
         break
       case 'date':
         this.setDateToFormAndSubject(inputInfo, formGroup)
@@ -222,6 +231,28 @@ export class FormService implements OnDestroy {
     )
     formGroup[`${inputInfo.key}Color`] = new FormControl(
       inputInfo.initValue[1] ?? COLOR_PICKER_DEFAULT_COLOR,
+    )
+
+    this._formSubjects[inputInfo.key] = new BehaviorSubject(
+      inputInfo.initValue as unknown,
+    )
+  }
+
+  private readonly setPasswordConfirmToFormAndSubject = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isStringArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+    if (this.isFormValidatorPair(inputInfo.formValidators)) return
+
+    formGroup[inputInfo.key] = new FormControl(
+      inputInfo.initValue[0] ?? '',
+      inputInfo.formValidators,
+    )
+    formGroup[`${inputInfo.key}Confirm`] = new FormControl(
+      inputInfo.initValue[1] ?? '',
+      inputInfo.formValidators,
     )
 
     this._formSubjects[inputInfo.key] = new BehaviorSubject(
@@ -285,6 +316,16 @@ export class FormService implements OnDestroy {
     this._formSubjects[key].next([textValue ?? '', colorValue ?? ''])
   }
 
+  private readonly bindPasswordConfirmToSubject = (
+    key: string,
+    form: { [key: string]: unknown },
+  ) => {
+    const password = form[key]
+    const passwordConfirm = form[`${key}Confirm`]
+
+    this._formSubjects[key].next([password ?? '', passwordConfirm ?? ''])
+  }
+
   private readonly bindDateToSubject = (key: string, formValue: unknown) => {
     this._formSubjects[key].next(momentToDateString(formValue) as unknown)
   }
@@ -310,6 +351,17 @@ export class FormService implements OnDestroy {
 
     formGroup[`${inputInfo.key}Text`] = inputInfo.initValue[0] ?? ''
     formGroup[`${inputInfo.key}Color`] = inputInfo.initValue[1] ?? ''
+  }
+
+  private readonly setInitPasswordConfirm = (
+    inputInfo: FormInputSpec<unknown>,
+    formGroup: Record<string, unknown>,
+  ) => {
+    if (!isStringArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
+      return
+
+    formGroup[inputInfo.key] = inputInfo.initValue[0] ?? ''
+    formGroup[`${inputInfo.key}Confirm`] = inputInfo.initValue[1] ?? ''
   }
 
   private readonly setInitDateRange = (

@@ -28,6 +28,7 @@ import { BaseInputComponent } from './inputs/inheritances/base-input/base-input.
 import { BaseSelectComponent } from './inputs/inheritances/base-select-input/base-select.component'
 import { SuperInputComponent } from './inputs/inheritances/super-input.component'
 import { ListInputComponent } from './inputs/list-input/list-input.component'
+import { PasswordConfirmInputComponent } from './inputs/password-confirm-input/password-confirm-input.component'
 import { PasswordInputComponent } from './inputs/password-input/password-input.component'
 import { PasswordResetButtonComponent } from './inputs/password-input/password-reset-button/password-reset-button.component'
 import { RadioInputComponent } from './inputs/radio-input/radio-input.component'
@@ -62,6 +63,7 @@ const declarations = [
   ColorPickerComponent,
   ListInputComponent,
   PlusButtonComponent,
+  PasswordConfirmInputComponent,
 ]
 
 @NgModule({

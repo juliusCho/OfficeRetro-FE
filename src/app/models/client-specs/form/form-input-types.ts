@@ -4,6 +4,7 @@ export type InputType =
   | 'email'
   | 'password'
   | 'password-login'
+  | 'password-confirm'
   | 'textarea'
   | 'select'
   | 'radio'

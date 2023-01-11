@@ -1,0 +1,21 @@
+@import 'styles';
+
+$login-contents-height: 760px;
+
+:host {
+  @extend %center-list;
+  @extend %scroll-area;
+  width: 100%;
+  height: fit-content;
+
+  .form {
+    margin: $unit-5 0 $unit-10 0;
+    width: calc($intro-form-width + $unit-9 + $unit-9);
+    @extend %swollen;
+    padding: $unit-9 $unit-8 $unit-6 $unit-9;
+  }
+
+  ::ng-deep app-button {
+    margin: $unit-4;
+  }
+}
