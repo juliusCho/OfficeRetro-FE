@@ -6,8 +6,7 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  ></app-input-label>
+    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <textarea
       [id]="name"
@@ -15,17 +14,14 @@
       [maxLength]="max"
       [formControlName]="name"
       (blur)="onFocusOut()"
-      [placeholder]="isDisabled ? '' : placeholder"
-    ></textarea>
+      [placeholder]="isDisabled ? '' : placeholder"></textarea>
   </div>
 </div>
 <app-length-text
   *ngIf="displayLength"
   [length]="form.value[name]?.length ?? 0"
-  [maxLength]="maxLength"
-></app-length-text>
+  [maxLength]="maxLength"></app-length-text>
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
-  [labelPosition]="labelPosition"
-></app-input-alert-text>
+  [labelPosition]="labelPosition"></app-input-alert-text>

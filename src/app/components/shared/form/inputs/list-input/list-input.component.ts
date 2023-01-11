@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core'
 import { Validators } from '@angular/forms'
-import { BehaviorSubject, Subscription, tap } from 'rxjs'
+import { BehaviorSubject, map, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicListInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { isNumber } from 'src/app/helpers/type-checkers'
@@ -55,8 +55,10 @@ export class ListInputComponent
   private _optionValuesObservable$ = this.optionValues$.asObservable()
   private _optionValuesSubscription$?: Subscription
 
-  get optionValues() {
-    return this.optionValues$.value.sort((a, b) => a.order - b.order)
+  get optionValuesObserve$() {
+    return this.optionValues$.pipe(
+      map((v) => v.sort((a, b) => a.order - b.order)),
+    )
   }
 
   get validator() {
@@ -146,7 +148,7 @@ export class ListInputComponent
         value: `${LIST_INPUT_NEW_ITEM_ALIAS}${uuid()}`,
         order: 1,
       },
-      ...this.optionValues.map((option) => ({
+      ...this.optionValues$.value.map((option) => ({
         ...option,
         order: option.order + 1,
       })),
@@ -168,7 +170,7 @@ export class ListInputComponent
   readonly deleteOption = (option: FormListInputOption) => {
     if (this.isDisabled) return
 
-    const existingOptions = this.optionValues
+    const existingOptions = this.optionValues$.value
       .filter((o) => o.value !== option.value)
       .map((o) => (o.order > option.order ? { ...o, order: o.order - 1 } : o))
 
@@ -181,13 +183,15 @@ export class ListInputComponent
     const { previousIndex, currentIndex } = event
     if (previousIndex === currentIndex) return
 
-    const target = this.optionValues.find((_, idx) => idx === previousIndex)
+    const target = this.optionValues$.value.find(
+      (_, idx) => idx === previousIndex,
+    )
     if (!target) return
 
     let newOptionList: FormListInputOption[] = []
 
     if (previousIndex - currentIndex < 0) {
-      newOptionList = this.optionValues.map((o, idx) =>
+      newOptionList = this.optionValues$.value.map((o, idx) =>
         idx > previousIndex && currentIndex >= idx
           ? { ...o, order: o.order - 1 }
           : idx === previousIndex
@@ -195,7 +199,7 @@ export class ListInputComponent
           : o,
       )
     } else {
-      newOptionList = this.optionValues.map((o, idx) =>
+      newOptionList = this.optionValues$.value.map((o, idx) =>
         idx < previousIndex && currentIndex <= idx
           ? { ...o, order: o.order + 1 }
           : idx === previousIndex

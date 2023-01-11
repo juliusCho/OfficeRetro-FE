@@ -4,8 +4,7 @@
       <option
         *ngFor="let option of optionValues"
         [value]="option.value"
-        [selected]="option.value === form.value[name]"
-      >
+        [selected]="option.value === form.value[name]">
         {{ option.label }}
       </option>
     </ng-container>
@@ -17,27 +16,22 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  ></app-input-label>
+    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
   <div
     class="input-div"
     [ngClass]="inputAreaClass"
-    [ngStyle]="dropdownInputAreaStyle"
-  >
+    [ngStyle]="dropdownInputAreaStyle">
     <div
       class="select-section"
-      *ngIf="optionValues$ | async as optionValues; else loading"
-    >
+      *ngIf="optionValues$ | async as optionValues; else loading">
       <button
         type="button"
         class="select-button"
         (click)="toggleDropdown()"
-        [disabled]="isDisabled"
-      >
+        [disabled]="isDisabled">
         <div
           class="select"
-          [ngClass]="{ placeholder: !getSelectedOption(optionValues).value }"
-        >
+          [ngClass]="{ placeholder: !getSelectedOption(optionValues).value }">
           {{ getSelectedOption(optionValues).label || placeholder }}
         </div>
         <i [class]="'icon ' + caretDownIcon"></i>
@@ -45,8 +39,7 @@
       <div
         #dropdownSection
         class="options"
-        [ngClass]="{ visible: isDropdownOpened }"
-      >
+        [ngClass]="{ visible: isDropdownOpened }">
         <button
           *ngFor="let option of optionValues"
           type="button"
@@ -55,8 +48,7 @@
             placeholder: option.value === '',
             selected: !!option.value && option.value === form.value[name]
           }"
-          (click)="selectOption(option)"
-        >
+          (click)="selectOption(option)">
           {{ option.label }}
         </button>
       </div>
@@ -66,8 +58,7 @@
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
-  [labelPosition]="labelPosition"
-></app-input-alert-text>
+  [labelPosition]="labelPosition"></app-input-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

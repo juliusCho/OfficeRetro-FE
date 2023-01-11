@@ -2,17 +2,16 @@
   <app-button
     *ngIf="buttonArea?.position !== 'right' && buttonArea?.clearButton"
     (click)="onClear()"
-    [color]="buttonArea?.clearButton?.color ?? 'clear'"
-    >{{ buttonArea?.clearButton?.label }}</app-button
-  >
+    [color]="buttonArea?.clearButton?.color ?? 'clear'">
+    {{ buttonArea?.clearButton?.label }}
+  </app-button>
   <div
     class="input-section"
     [ngClass]="{
       'clear-exists':
         buttonArea?.position !== 'right' && buttonArea?.clearButton?.label
     }"
-    [ngStyle]="inputSectionStyle"
-  >
+    [ngStyle]="inputSectionStyle">
     <div *ngFor="let formInputSpecItem of formInputSpecs" class="input-row">
       <ng-container
         [ngTemplateOutlet]="
@@ -21,16 +20,14 @@
         [ngTemplateOutletContext]="{
           formInputSpec: formInputSpecItem,
           formInputSpecList: formInputSpecItem
-        }"
-      >
+        }">
       </ng-container>
       <ng-template #wrappedInputItem let-formInputSpecList="formInputSpecList">
         <div class="line-wrapper">
           <div
             *ngFor="let fis of formInputSpecList; let idx = index"
             class="box"
-            [ngClass]="{ 'left-item': idx === 0 }"
-          >
+            [ngClass]="{ 'left-item': idx === 0 }">
             <ng-container
               [ngTemplateOutlet]="inputItem"
               [ngTemplateOutletContext]="{
@@ -39,8 +36,7 @@
                   idx,
                   formInputSpecList
                 )
-              }"
-            ></ng-container>
+              }"></ng-container>
           </div>
         </div>
       </ng-template>
@@ -53,15 +49,13 @@
     <app-button
       *ngIf="buttonArea?.submitButton && submitInjectTag.children.length === 0"
       (click)="onSubmit()"
-      [color]="buttonArea?.submitButton?.color ?? 'primary'"
-    >
+      [color]="buttonArea?.submitButton?.color ?? 'primary'">
       {{ buttonArea?.submitButton?.label }}
     </app-button>
     <app-button
       *ngIf="buttonArea?.cancelButton"
       [color]="buttonArea?.cancelButton?.color ?? 'default'"
-      (click)="onCancel()"
-    >
+      (click)="onCancel()">
       {{ buttonArea?.cancelButton?.label }}
     </app-button>
   </div>
@@ -70,8 +64,7 @@
 <ng-template
   #inputItem
   let-formInputSpec="formInputSpec"
-  let-labelPositionOverride="labelPositionOverride"
->
+  let-labelPositionOverride="labelPositionOverride">
   <ng-container [ngSwitch]="formInputSpec.inputType">
     <app-text-input
       *ngSwitchCase="'text'"
@@ -84,8 +77,7 @@
       [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    >
+      [labelStyle]="labelStyle">
     </app-text-input>
     <app-color-input
       *ngSwitchCase="'text-color'"
@@ -98,8 +90,7 @@
       [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    >
+      [labelStyle]="labelStyle">
     </app-color-input>
     <app-text-input
       *ngSwitchCase="'email'"
@@ -113,8 +104,7 @@
       [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-text-input>
+      [labelStyle]="labelStyle"></app-text-input>
     <app-area-input
       *ngSwitchCase="'textarea'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -124,8 +114,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-area-input>
+      [labelStyle]="labelStyle"></app-area-input>
     <app-dropdown-input
       *ngSwitchCase="'select'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -135,8 +124,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-dropdown-input>
+      [labelStyle]="labelStyle"></app-dropdown-input>
     <app-radio-input
       *ngSwitchCase="'radio'"
       [valueChange$]="getValueObservableString(formInputSpec.key)"
@@ -146,8 +134,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-radio-input>
+      [labelStyle]="labelStyle"></app-radio-input>
     <app-checkbox-input
       *ngSwitchCase="'checkbox'"
       [valueChange$]="getValueObservableArray(formInputSpec.key)"
@@ -157,8 +144,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-checkbox-input>
+      [labelStyle]="labelStyle"></app-checkbox-input>
     <app-date-input
       *ngSwitchCase="'date'"
       [valueChange$]="getValueObservableStringOrUndefined(formInputSpec.key)"
@@ -169,8 +155,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-date-input>
+      [labelStyle]="labelStyle"></app-date-input>
     <app-date-range-input
       *ngSwitchCase="'date-range'"
       [valueChange$]="getValueObservableDateRange(formInputSpec.key)"
@@ -181,8 +166,7 @@
       [isValidationNeeded]="isValidationNeeded"
       [labelAreaWidth]="labelArea?.width"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    ></app-date-range-input>
+      [labelStyle]="labelStyle"></app-date-range-input>
     <app-list-input
       *ngSwitchCase="'list'"
       [valueChange$]="getValueObservableArray(formInputSpec.key)"
@@ -194,8 +178,7 @@
       [infoTextType]="infoTextType"
       [labelStyle]="labelStyle"
       [listInputLabel]="formInputSpec.listInputLabel"
-      [isFormSubmitted]="isFormSubmitted"
-    ></app-list-input>
+      [isFormSubmitted]="isFormSubmitted"></app-list-input>
     <app-password-confirm-input
       *ngSwitchCase="'password-confirm'"
       [valueChange$]="getValueObservableStringPair(formInputSpec.key)"
@@ -207,8 +190,7 @@
       [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    >
+      [labelStyle]="labelStyle">
     </app-password-confirm-input>
     <app-password-input
       *ngSwitchDefault
@@ -221,11 +203,11 @@
       [labelAreaWidth]="labelArea?.width"
       [lengthLabelPosition]="lengthLabelPosition"
       [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
-    >
+      [labelStyle]="labelStyle">
       <app-password-reset-button
-        *ngIf="formInputSpec.inputType === 'password-login'"
-      ></app-password-reset-button>
+        *ngIf="
+          formInputSpec.inputType === 'password-login'
+        "></app-password-reset-button>
     </app-password-input>
   </ng-container>
 </ng-template>

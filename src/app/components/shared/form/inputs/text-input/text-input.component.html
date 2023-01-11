@@ -6,14 +6,12 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  >
+    [labelWeight]="labelStyle?.labelWeight">
     <app-length-text
       *ngIf="displayLength && lengthLabelPosition === 'left'"
       [length]="form.value[name]?.length ?? 0"
       [maxLength]="maxLength"
-      [flexStart]="true"
-    ></app-length-text>
+      [flexStart]="true"></app-length-text>
   </app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <input
@@ -28,8 +26,7 @@
       [email]="type === 'email'"
       (blur)="onFocusOut()"
       [placeholder]="isDisabled ? '' : placeholder"
-      autocomplete="off"
-    />
+      autocomplete="off" />
     <div #innerContent *ngIf="type === 'password' || type === 'text'">
       <ng-content></ng-content>
     </div>
@@ -38,11 +35,9 @@
 <app-length-text
   *ngIf="displayLength && lengthLabelPosition !== 'left'"
   [length]="form.value[name]?.length ?? 0"
-  [maxLength]="maxLength"
-></app-length-text>
+  [maxLength]="maxLength"></app-length-text>
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"
-></app-input-alert-text>
+  [labelWidth]="labelAreaWidth"></app-input-alert-text>

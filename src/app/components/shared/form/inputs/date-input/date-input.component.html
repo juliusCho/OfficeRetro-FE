@@ -5,13 +5,11 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  ></app-input-label>
+    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
   <mat-form-field
     [formGroup]="form"
     [ngClass]="inputAreaClass"
-    [ngStyle]="inputAreaStyle"
-  >
+    [ngStyle]="inputAreaStyle">
     <input
       matInput
       [matDatepicker]="picker"
@@ -21,8 +19,7 @@
       [min]="minDate"
       [max]="maxDate"
       (keyup.enter)="onEnter()"
-      autocomplete="off"
-    />
+      autocomplete="off" />
     <i [class]="'icon ' + calendarIcon" (click)="picker.open()"></i>
     <mat-datepicker #picker (closed)="onPickerClose()"></mat-datepicker>
   </mat-form-field>
@@ -31,5 +28,4 @@
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"
-></app-input-alert-text>
+  [labelWidth]="labelAreaWidth"></app-input-alert-text>

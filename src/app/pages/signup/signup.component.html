@@ -6,12 +6,11 @@
     [isValidationNeeded]="true"
     (submit)="onSubmit($event)"
     infoTextType="alert"
-    [labelArea]="{ width: 'unit-18' }"
-  >
+    [labelArea]="{ width: 'unit-18' }">
   </app-form>
 </div>
-<app-button routerLink="/login" routerLinkActive="router-link-active"
-  >Login</app-button
->
+<app-button routerLink="/login" routerLinkActive="router-link-active">
+  Login
+</app-button>
 
 <app-loading [loading]="!isPageLoaded"></app-loading>

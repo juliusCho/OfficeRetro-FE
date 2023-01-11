@@ -8,11 +8,9 @@
   [labelStyle]="labelStyle"
   [formInputSpec]="inputSpec"
   [lengthLabelPosition]="lengthLabelPosition"
-  [infoTextType]="infoTextType"
->
+  [infoTextType]="infoTextType">
   <app-color-picker
     [color]="color"
     [isDisabled]="isDisabled"
-    (select)="onSelectColor($event)"
-  ></app-color-picker>
+    (select)="onSelectColor($event)"></app-color-picker>
 </app-text-input>

@@ -3,21 +3,18 @@
     *ngIf="label"
     [label]="label"
     [labelPosition]="labelPosition"
-    [width]="labelAreaWidth"
-  ></app-input-label>
+    [width]="labelAreaWidth"></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       class="input-section"
       [ngClass]="inputAreaClass"
-      [ngStyle]="inputAreaStyle"
-    >
+      [ngStyle]="inputAreaStyle">
       <div *ngFor="let optionRows of getItems(optionValues)" class="row">
         <div
           *ngFor="let option of optionRows"
           class="column"
           [style]="'width:' + columnWidth"
-          (click)="selectOption(option.value)"
-        >
+          (click)="selectOption(option.value)">
           <label
             [for]="option.value"
             class="option-label"
@@ -26,9 +23,9 @@
                 getSelectedOptions(optionValues),
                 option.value
               )
-            }"
-            >{{ option.label }}</label
-          >
+            }">
+            {{ option.label }}
+          </label>
           <input
             [id]="componentUniqueId + option.value"
             [value]="option.value"
@@ -40,8 +37,7 @@
                 getSelectedOptions(optionValues),
                 option.value
               )
-            }"
-          />
+            }" />
         </div>
       </div>
     </div>
@@ -50,13 +46,11 @@
 <app-length-text
   *ngIf="displayLength"
   [length]="form.value[name]?.length ?? 0"
-  [maxLength]="maxLength"
-></app-length-text>
+  [maxLength]="maxLength"></app-length-text>
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
-  [labelPosition]="labelPosition"
-></app-input-alert-text>
+  [labelPosition]="labelPosition"></app-input-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

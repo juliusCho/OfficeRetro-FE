@@ -6,8 +6,7 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  >
+    [labelWeight]="labelStyle?.labelWeight">
   </app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <div class="input-border-box">
@@ -19,16 +18,15 @@
         infoTextType="length"
         lengthLabelPosition="left"
         [buttonArea]="{ position: 'right', width: 'unit-17' }"
-        [isConfirmed]="innerFormSubmittable"
-      >
+        [isConfirmed]="innerFormSubmittable">
         <app-plus-button [isDisabled]="isDisabled"></app-plus-button>
       </app-form>
       <div
+        *ngIf="optionValuesObserve$ | async as optionValues; else loading"
         class="list-section"
         #listSection
         cdkDropList
-        (cdkDropListDropped)="changeOrder($event)"
-      >
+        (cdkDropListDropped)="changeOrder($event)">
         <div
           class="item-row"
           *ngFor="let optionValue of optionValues; let idx = index"
@@ -36,14 +34,12 @@
           cdkDrag
           cdkDragBoundary=".list-section"
           cdkDragLockAxis="y"
-          [cdkDragDisabled]="isDisabled"
-        >
+          [cdkDragDisabled]="isDisabled">
           <button
             class="item-button handle"
             type="button"
             [disabled]="isDisabled"
-            cdkDragHandle
-          >
+            cdkDragHandle>
             <i [class]="upDownIcon"></i>
           </button>
           <span class="item-label">
@@ -53,8 +49,7 @@
             class="item-button"
             type="button"
             (click)="deleteOption(optionValue)"
-            [disabled]="isDisabled"
-          >
+            [disabled]="isDisabled">
             <i [class]="crossIcon"></i>
           </button>
         </div>
@@ -65,11 +60,13 @@
 <app-length-text
   *ngIf="displayLength"
   [length]="form.value[name]?.length ?? 0"
-  [maxLength]="maxLength"
-></app-length-text>
+  [maxLength]="maxLength"></app-length-text>
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"
-></app-input-alert-text>
+  [labelWidth]="labelAreaWidth"></app-input-alert-text>
+
+<ng-template #loading>
+  <app-text-loading></app-text-loading>
+</ng-template>

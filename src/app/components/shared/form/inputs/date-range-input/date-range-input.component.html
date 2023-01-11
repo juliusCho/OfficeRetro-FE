@@ -5,45 +5,38 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  ></app-input-label>
+    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
   <mat-form-field
     [formGroup]="form"
     [ngClass]="inputAreaClass"
-    [ngStyle]="inputAreaStyle"
-  >
+    [ngStyle]="inputAreaStyle">
     <mat-date-range-input
       [rangePicker]="picker"
       [min]="minDate"
-      [max]="maxDate"
-    >
+      [max]="maxDate">
       <input
         matStartDate
         [formControlName]="name + 'Start'"
         (dateChange)="selectDateRange('start', $event)"
         placeholder="DD/MM/YYYY"
         (keyup.enter)="onEnter()"
-        autocomplete="off"
-      />
+        autocomplete="off" />
       <input
         matEndDate
         [formControlName]="name + 'End'"
         (dateChange)="selectDateRange('end', $event)"
         placeholder="DD/MM/YYYY"
         (keyup.enter)="onEnter()"
-        autocomplete="off"
-      />
+        autocomplete="off" />
     </mat-date-range-input>
     <i [class]="'icon ' + calendarIcon" (click)="picker.open()"></i>
     <mat-date-range-picker
       #picker
-      (closed)="onPickerClose()"
-    ></mat-date-range-picker>
+      (closed)="onPickerClose()"></mat-date-range-picker>
   </mat-form-field>
 </div>
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"
-></app-input-alert-text>
+  [labelWidth]="labelAreaWidth"></app-input-alert-text>

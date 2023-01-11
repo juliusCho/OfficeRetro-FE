@@ -5,21 +5,18 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"
-  ></app-input-label>
+    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       class="input-section"
       [ngClass]="inputAreaClass"
-      [ngStyle]="inputAreaStyle"
-    >
+      [ngStyle]="inputAreaStyle">
       <div *ngFor="let optionRows of getItems(optionValues)" class="row">
         <div
           *ngFor="let option of optionRows"
           class="column"
           [style]="'width:' + columnWidth"
-          (click)="selectOption(option)"
-        >
+          (click)="selectOption(option)">
           <label
             [for]="componentUniqueId + option.value || 'empty'"
             class="option-label"
@@ -28,9 +25,9 @@
                 !!option.value &&
                 getSelectedOption(optionValues).value === option.value,
               placeholder: !option.value
-            }"
-            >{{ option.label }}</label
-          >
+            }">
+            {{ option.label }}
+          </label>
           <input
             [id]="componentUniqueId + option.value || 'empty'"
             [formControlName]="name"
@@ -40,8 +37,7 @@
             autocomplete="off"
             [ngClass]="{
               selected: getSelectedOption(optionValues).value === option.value
-            }"
-          />
+            }" />
         </div>
       </div>
     </div>
@@ -50,8 +46,7 @@
 <app-input-alert-text
   *ngIf="displayAlert"
   [text]="alertMessage"
-  [labelPosition]="labelPosition"
-></app-input-alert-text>
+  [labelPosition]="labelPosition"></app-input-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>
