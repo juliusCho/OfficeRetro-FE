@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -15,10 +14,7 @@ import { BaseInputComponent } from '../base-input/base-input.component'
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseSelectComponent
-  extends BaseInputComponent
-  implements AfterContentInit
-{
+export class BaseSelectComponent extends BaseInputComponent {
   protected optionValues$!: Observable<FormInputOption[]>
 
   get options() {
@@ -36,7 +32,9 @@ export class BaseSelectComponent
     super(cssService, changeDetectorRef)
   }
 
-  ngAfterContentInit(): void {
+  override ngAfterContentInit(): void {
+    this.ngAfterContentInitAction()
+
     this.max = '-1'
 
     this.changeDetectorRef.markForCheck()

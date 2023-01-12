@@ -5,7 +5,7 @@ import {
 } from '@angular/core'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
-import { Subscription, tap } from 'rxjs'
+import { Observable, of, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicDateInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { ICONS } from 'src/app/models/constants/css-constants'
@@ -26,6 +26,12 @@ export class DateInputComponent
 
   get calendarIcon() {
     return ICONS.CALENDAR
+  }
+
+  get valueChange$() {
+    return (this.form.get(this.name)?.valueChanges ?? of()) as Observable<
+      string | undefined
+    >
   }
 
   ngAfterContentInit(): void {

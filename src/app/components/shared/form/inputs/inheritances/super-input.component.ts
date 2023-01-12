@@ -3,9 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnInit,
 } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { Observable } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isNumber } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
@@ -21,14 +21,25 @@ import { CssService } from 'src/app/services/shared/css.service'
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SuperInputComponent<T> {
-  @Input() form!: FormGroup
-  @Input() valueChange$!: Observable<T>
-  @Input() labelAreaWidth?: CssSize
-  @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
-  @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
-  @Input() formInputSpec!: FormInputSpec<T>
-  @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
+export class SuperInputComponent<T> implements OnInit {
+  @Input() input!: {
+    form: FormGroup
+    labelArea?: {
+      width?: CssSize
+      labelSize?: CssSize
+      labelWeight?: FontWeight
+    }
+    isValidationNeeded?: boolean // each input's underneath will have blank space for validation message display if true
+    formInputSpec: FormInputSpec<T>
+    infoTextType?: InputUnderneathDisplay // text display underneath the input
+  }
+  // @Input() form!: FormGroup
+  // @Input() valueChange$!: Observable<T>
+  // @Input() labelAreaWidth?: CssSize
+  // @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
+  // @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
+  // @Input() formInputSpec!: FormInputSpec<T>
+  // @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
 
   @Input() set showValidationMessage(value: boolean) {
     this._showValidationMessage = value
@@ -39,6 +50,29 @@ export class SuperInputComponent<T> {
 
   protected validationMessage = ''
 
+  get form() {
+    return this.input.form
+  }
+  get labelAreaWidth() {
+    return this.input.labelArea?.width
+  }
+  get labelStyle() {
+    return this.input.labelArea
+      ? {
+          labelSize: this.input.labelArea?.labelSize,
+          labelWeight: this.input.labelArea?.labelWeight,
+        }
+      : {}
+  }
+  get isValidationNeeded() {
+    return this.input.isValidationNeeded ?? false
+  }
+  get formInputSpec() {
+    return this.input.formInputSpec
+  }
+  get infoTextType() {
+    return this.input.infoTextType ?? 'none'
+  }
   get label() {
     return this.formInputSpec?.label
   }
@@ -131,6 +165,22 @@ export class SuperInputComponent<T> {
     protected readonly cssService: CssService,
     protected readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
+
+  ngOnInit(): void {
+    this.ngOnInitAction()
+  }
+
+  protected readonly ngOnInitAction = () => {
+    this.validationMessage =
+      this.required && !this.formInputSpec.initValue
+        ? `${(this.label ?? 'This field').replace(
+            /\\n/g,
+            ' ',
+          )} is a required field`
+        : ''
+
+    this.changeDetectorRef.markForCheck()
+  }
 
   protected readonly onFocusOut = () => {
     if (!this.isValidationNeeded) return

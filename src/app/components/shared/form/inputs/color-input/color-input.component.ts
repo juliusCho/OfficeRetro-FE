@@ -6,7 +6,14 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { BehaviorSubject, Subscription, tap } from 'rxjs'
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+  Subscription,
+  tap,
+} from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { SuperInputComponent } from '../inheritances/super-input.component'
@@ -42,6 +49,23 @@ export class ColorInputComponent
     return this._colorChange$.value
   }
 
+  get inputParam() {
+    return {
+      ...this.input,
+      valueChange$: this.textChange$,
+      formInputSpec: this.inputSpec,
+    }
+  }
+
+  get valueChange$() {
+    const text$ = (this.form.get(this.name)?.valueChanges ??
+      of('')) as Observable<string>
+    const color$ = (this.form.get(`${this.name}Color`)?.valueChanges ??
+      of('')) as Observable<string>
+
+    return combineLatest([text$, color$])
+  }
+
   ngAfterContentInit(): void {
     const colorKey = `${this.name}Color`
 
@@ -53,9 +77,9 @@ export class ColorInputComponent
 
     this._valueChangeSubscription$ = this.valueChange$
       .pipe(
-        tap((v) => {
-          this.textChange$.next(v[0])
-          this._colorChange$.next(v[1])
+        tap(([text, color]) => {
+          this.textChange$.next(text)
+          this._colorChange$.next(color)
         }),
       )
       .subscribe()

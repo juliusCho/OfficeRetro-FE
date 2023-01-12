@@ -57,6 +57,12 @@ export class CheckboxInputComponent
     return this._componentUniqueId
   }
 
+  get valueChange$() {
+    return (this.form.get(this.name)?.valueChanges ?? of([])) as Observable<
+      string[]
+    >
+  }
+
   constructor(
     private readonly _requestService: HttpCommonService,
     protected override readonly cssService: CssService,

@@ -4,8 +4,8 @@
     [label]="label"
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
-    [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight"></app-input-label>
+    [labelSize]="labelStyle.labelSize"
+    [labelWeight]="labelStyle.labelWeight"></app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       class="input-section"

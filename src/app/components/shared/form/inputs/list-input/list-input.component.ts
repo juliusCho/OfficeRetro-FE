@@ -7,7 +7,6 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
   ViewChild,
 } from '@angular/core'
@@ -41,7 +40,7 @@ import { SuperInputComponent } from '../inheritances/super-input.component'
 })
 export class ListInputComponent
   extends SuperInputComponent<string[]>
-  implements OnInit, OnChanges, AfterContentInit
+  implements OnChanges, AfterContentInit
 {
   @Input() listInputLabel?: string = ''
   @Input() isFormSubmitted?: boolean = false // To check if the parent form has submitted
@@ -89,7 +88,7 @@ export class ListInputComponent
     super(cssService, changeDetectorRef)
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     this.setFormInputOption()
 
     if (this.isDisabled) {

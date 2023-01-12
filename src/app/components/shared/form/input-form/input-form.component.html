@@ -68,142 +68,78 @@
   <ng-container [ngSwitch]="formInputSpec.inputType">
     <app-text-input
       *ngSwitchCase="'text'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, '')"
       (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [lengthLabelPosition]="lengthLabelPosition"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle">
+      [lengthLabelPosition]="lengthLabelPosition">
     </app-text-input>
     <app-color-input
       *ngSwitchCase="'text-color'"
-      [valueChange$]="getValueObservableStringPair(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, ['', ''])"
       (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [lengthLabelPosition]="lengthLabelPosition"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle">
+      [lengthLabelPosition]="lengthLabelPosition">
     </app-color-input>
     <app-text-input
       *ngSwitchCase="'email'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, '')"
       type="email"
       (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [lengthLabelPosition]="lengthLabelPosition"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-text-input>
+      [lengthLabelPosition]="lengthLabelPosition">
+    </app-text-input>
     <app-area-input
       *ngSwitchCase="'textarea'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-area-input>
+      [input]="getInputParams(formInputSpec, '')"
+      [showValidationMessage]="showValidationMessage">
+    </app-area-input>
     <app-dropdown-input
       *ngSwitchCase="'select'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-dropdown-input>
+      [input]="getInputParams(formInputSpec, '')"
+      [showValidationMessage]="showValidationMessage">
+    </app-dropdown-input>
     <app-radio-input
       *ngSwitchCase="'radio'"
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-radio-input>
+      [input]="getInputParams(formInputSpec, '')"
+      [showValidationMessage]="showValidationMessage">
+    </app-radio-input>
     <app-checkbox-input
       *ngSwitchCase="'checkbox'"
-      [valueChange$]="getValueObservableArray(formInputSpec.key)"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-checkbox-input>
+      [input]="getInputParams(formInputSpec, [''])"
+      [showValidationMessage]="showValidationMessage">
+    </app-checkbox-input>
     <app-date-input
       *ngSwitchCase="'date'"
-      [valueChange$]="getValueObservableStringOrUndefined(formInputSpec.key)"
+      [input]="getInputParamsWithOrTypes(formInputSpec, '', undefined)"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-date-input>
+      [showValidationMessage]="showValidationMessage">
+    </app-date-input>
     <app-date-range-input
       *ngSwitchCase="'date-range'"
-      [valueChange$]="getValueObservableDateRange(formInputSpec.key)"
+      [input]="getInputParamsArrayWithOrTypes(formInputSpec, '', undefined)"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"></app-date-range-input>
+      [showValidationMessage]="showValidationMessage">
+    </app-date-range-input>
     <app-list-input
       *ngSwitchCase="'list'"
-      [valueChange$]="getValueObservableArray(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, [''])"
       [showValidationMessage]="showValidationMessage"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle"
       [listInputLabel]="formInputSpec.listInputLabel"
-      [isFormSubmitted]="isFormSubmitted"></app-list-input>
+      [isFormSubmitted]="isFormSubmitted">
+    </app-list-input>
     <app-password-confirm-input
       *ngSwitchCase="'password-confirm'"
-      [valueChange$]="getValueObservableStringPair(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, ['', ''])"
       (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [lengthLabelPosition]="lengthLabelPosition"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle">
+      [lengthLabelPosition]="lengthLabelPosition">
     </app-password-confirm-input>
     <app-password-input
       *ngSwitchDefault
-      [valueChange$]="getValueObservableString(formInputSpec.key)"
+      [input]="getInputParams(formInputSpec, '')"
       (enter)="onSubmit()"
-      [formInputSpec]="getFormInputSpec(formInputSpec, labelPositionOverride)"
       [showValidationMessage]="showValidationMessage"
-      [form]="form"
-      [isValidationNeeded]="isValidationNeeded"
-      [labelAreaWidth]="labelArea?.width"
-      [lengthLabelPosition]="lengthLabelPosition"
-      [infoTextType]="infoTextType"
-      [labelStyle]="labelStyle">
+      [lengthLabelPosition]="lengthLabelPosition">
       <app-password-reset-button
         *ngIf="
           formInputSpec.inputType === 'password-login'

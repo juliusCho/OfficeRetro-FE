@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -15,7 +16,10 @@ import { BaseInputComponent } from '../inheritances/base-input/base-input.compon
   styleUrls: ['./text-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextInputComponent extends BaseInputComponent {
+export class TextInputComponent
+  extends BaseInputComponent
+  implements AfterViewInit
+{
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
   @Output() enter = new EventEmitter<void>()
@@ -40,7 +44,7 @@ export class TextInputComponent extends BaseInputComponent {
       : 'text'
   }
 
-  override ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
 
     this.isInnerContentExist =

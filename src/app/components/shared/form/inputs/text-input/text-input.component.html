@@ -5,8 +5,8 @@
     [for]="name"
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
-    [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight">
+    [labelSize]="labelStyle.labelSize"
+    [labelWeight]="labelStyle.labelWeight">
     <app-length-text
       *ngIf="displayLength && lengthLabelPosition === 'left'"
       [length]="form.value[name]?.length ?? 0"

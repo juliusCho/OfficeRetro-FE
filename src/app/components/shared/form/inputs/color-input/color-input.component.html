@@ -1,14 +1,8 @@
 <app-text-input
   (enter)="onEnter()"
   [showValidationMessage]="showValidationMessage"
-  [form]="form"
-  [valueChange$]="textChange$"
-  [isValidationNeeded]="isValidationNeeded"
-  [labelAreaWidth]="labelAreaWidth"
-  [labelStyle]="labelStyle"
-  [formInputSpec]="inputSpec"
-  [lengthLabelPosition]="lengthLabelPosition"
-  [infoTextType]="infoTextType">
+  [input]="inputParam"
+  [lengthLabelPosition]="lengthLabelPosition">
   <app-color-picker
     [color]="color"
     [isDisabled]="isDisabled"

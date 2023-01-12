@@ -1,10 +1,9 @@
 import {
-  AfterViewInit,
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  OnInit,
 } from '@angular/core'
-import { Observable, Subscription, tap } from 'rxjs'
+import { Observable, of, Subscription } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import {
   getBasicEmailValidationMsg,
@@ -19,16 +18,22 @@ import { SuperInputComponent } from '../super-input.component'
 })
 export class BaseInputComponent
   extends SuperInputComponent<string>
-  implements OnInit, AfterViewInit
+  implements AfterContentInit
 {
   protected valueChangeObservable$?: Observable<string>
   protected valueChangeSubscription$?: Subscription
 
+  get valueChange$() {
+    return (this.form.get(this.name)?.valueChanges ??
+      of('')) as Observable<string>
+  }
   get validator() {
     return this.formInputSpec?.validMessageGenerator
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    this.ngOnInitAction()
+
     if (this.isDisabled) {
       this.form?.get(this.name)?.disable()
       return
@@ -36,26 +41,25 @@ export class BaseInputComponent
 
     this.form?.get(this.name)?.enable()
 
-    this.valueChangeObservable$ = this.valueChange$.pipe(
-      tap((v) => {
-        this.showValidationMessage = false
-        this.validationMessage = this.validate(v)
+    // this.valueChangeObservable$ = this.valueChange$.pipe(
+    //   shareReplay({ bufferSize: 1, refCount: true }),
+    //   tap((v) => {
+    //     this.showValidationMessage = false
+    //     this.validationMessage = this.validate(v)
 
-        this.changeDetectorRef.markForCheck()
-      }),
-    )
+    //     this.changeDetectorRef.markForCheck()
+    //   }),
+    // )
 
-    this.changeDetectorRef.detectChanges()
+    // this.changeDetectorRef.detectChanges()
   }
 
-  ngAfterViewInit(): void {
-    this.ngAfterViewInitSetup()
+  ngAfterContentInit(): void {
+    this.ngAfterContentInitAction()
   }
 
-  protected readonly ngAfterViewInitSetup = () => {
-    this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
-
-    this.changeDetectorRef.detectChanges()
+  protected readonly ngAfterContentInitAction = () => {
+    // this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
   }
 
   protected readonly validate = (value?: string) => {

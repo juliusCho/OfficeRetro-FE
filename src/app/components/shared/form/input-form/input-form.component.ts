@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -13,7 +12,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core'
-import { BehaviorSubject, debounceTime, tap } from 'rxjs'
+import { debounceTime, tap } from 'rxjs'
 import { isArray } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
@@ -32,9 +31,7 @@ import { CssService } from 'src/app/services/shared/css.service'
   providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputFormComponent
-  implements OnInit, OnChanges, AfterContentInit, AfterViewInit
-{
+export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
@@ -56,7 +53,7 @@ export class InputFormComponent
   @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right' // if length text displays, it's position
 
-  @Output() submit = new EventEmitter<Record<string, unknown>>()
+  @Output() submitAction = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
 
   @ViewChild('submitInjectTag') submitInjectTag!: ElementRef
@@ -125,7 +122,7 @@ export class InputFormComponent
     const { previousValue, currentValue } = changes['isConfirmed']
     if (previousValue === currentValue || previousValue || !currentValue) return
 
-    if (this._formService.form.invalid) return
+    if (this.form.invalid) return
 
     this._formService.reinitializeData()
 
@@ -134,16 +131,10 @@ export class InputFormComponent
   }
 
   ngAfterContentInit(): void {
-    this._formService.bindToValueChanges()
-  }
-
-  ngAfterViewInit(): void {
     if (
       this.submitInjectTag.nativeElement.children.length > 0 ||
       this.buttonArea?.submitButton
     ) {
-      this._formService.subscribeValueChanges()
-      this._changeDetectorRef.markForCheck()
       return
     }
 
@@ -151,12 +142,11 @@ export class InputFormComponent
       this._formService.formValueChange$.pipe(
         debounceTime(1000),
         tap(() => {
-          this.submitAction()
+          this.submitProceed()
           this._changeDetectorRef.detectChanges()
         }),
       )
 
-    this._formService.subscribeValueChanges()
     this._changeDetectorRef.markForCheck()
   }
 
@@ -180,42 +170,6 @@ export class InputFormComponent
     )
   }
 
-  readonly getValueObservableString = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<string>
-  }
-
-  readonly getValueObservableNumber = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<number>
-  }
-
-  readonly getValueObservableBoolean = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<boolean>
-  }
-
-  readonly getValueObservableArray = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<
-      string[]
-    >
-  }
-
-  readonly getValueObservableStringOrUndefined = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<
-      string | undefined
-    >
-  }
-
-  readonly getValueObservableDateRange = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<
-      [string | undefined, string | undefined]
-    >
-  }
-
-  readonly getValueObservableStringPair = (key: string) => {
-    return this._formService.getValueObservable(key) as BehaviorSubject<
-      [string, string]
-    >
-  }
-
   readonly getFormInputSpec = <T>(
     formInputSpec: FormInputSpec<T>,
     labelPosition?: 'top' | 'side',
@@ -233,15 +187,49 @@ export class InputFormComponent
       : undefined
   }
 
-  readonly onSubmit = () => {
-    this.submitAction()
+  readonly getInputParams = <T>(
+    formInputSpec: FormInputSpec<T>,
+    typeInferrer: T,
+  ) => {
+    return this.getInputParamsWithOrTypes(
+      formInputSpec,
+      typeInferrer,
+      typeInferrer,
+    )
+  }
 
-    if (this.isConfirmed && this._formService.form.valid) {
-      this._formService.reinitializeData()
+  readonly getInputParamsArrayWithOrTypes = <T, T2>(
+    formInputSpec: FormInputSpec<[T | T2, T | T2]>,
+    typeInferrer1: T,
+    typeInferrer2: T2,
+  ) => {
+    const arr: [T | T2, T | T2] = [typeInferrer1, typeInferrer2]
+    return this.getInputParams(formInputSpec, arr)
+  }
 
-      this.setIsFormSubmitted(true)
-      this.setIsFormSubmitted(false)
+  readonly getInputParamsWithOrTypes = <T, T2>(
+    formInputSpec: FormInputSpec<T | T2>,
+    _: T,
+    __: T2,
+  ) => {
+    return {
+      form: this.form,
+      labelArea: this.labelArea,
+      isValidationNeeded: this.isValidationNeeded,
+      formInputSpec,
+      infoTextType: this.infoTextType,
     }
+  }
+
+  readonly onSubmit = () => {
+    this.submitProceed()
+
+    if (!this.isConfirmed || this.form.invalid) return
+
+    this._formService.reinitializeData()
+
+    this.setIsFormSubmitted(true)
+    this.setIsFormSubmitted(false)
   }
 
   readonly onCancel = () => {
@@ -254,11 +242,12 @@ export class InputFormComponent
     this._formService.reinitializeData()
   }
 
-  private readonly submitAction = () => {
+  private readonly submitProceed = () => {
     this.showValidationMessage = false
-    this._changeDetectorRef.detectChanges()
 
-    if (this._formService.form.invalid) {
+    console.log('submit!!!!', this.form)
+
+    if (this.form.invalid) {
       if (
         this.formInputSpecs.some((fis) => !isArray(fis) && fis.key === 'input')
       ) {
@@ -267,14 +256,16 @@ export class InputFormComponent
         console.log('form invalid', this.form)
       }
 
-      setTimeout(() => {
-        this.showValidationMessage = true
-        this._changeDetectorRef.detectChanges()
-      }, 10)
+      this.showValidationMessage = true
+      this._changeDetectorRef.detectChanges()
+
+      console.log('A?A?WA?A')
       return
     }
 
-    this.submit.emit(this._formService.form.value)
+    this.submitAction.emit(this.form.value)
+
+    this._changeDetectorRef.detectChanges()
   }
 
   private readonly setIsFormSubmitted = (value: boolean) => {

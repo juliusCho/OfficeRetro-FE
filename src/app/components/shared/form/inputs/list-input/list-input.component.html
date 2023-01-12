@@ -5,15 +5,15 @@
     [for]="name"
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
-    [labelSize]="labelStyle?.labelSize"
-    [labelWeight]="labelStyle?.labelWeight">
+    [labelSize]="labelStyle.labelSize"
+    [labelWeight]="labelStyle.labelWeight">
   </app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <div class="input-border-box">
       <app-form
         [formInputSpecs]="innerFormInputSpecs"
         [isValidationNeeded]="true"
-        (submit)="addOption($event)"
+        (submitAction)="addOption($event)"
         [labelArea]="{ labelSize: 'unit-5', labelWeight: 400 }"
         infoTextType="length"
         lengthLabelPosition="left"

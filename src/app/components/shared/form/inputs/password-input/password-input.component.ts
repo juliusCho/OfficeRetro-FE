@@ -19,11 +19,14 @@ export class PasswordInputComponent extends SuperInputComponent<string> {
 
   @Output() enter = new EventEmitter<void>()
 
-  get inputSpec() {
+  get inputParam() {
     return {
-      ...this.formInputSpec,
-      type: 'password',
-      validMessageGenerator: this.validate,
+      ...this.input,
+      formInputSpec: {
+        ...this.formInputSpec,
+        type: 'password',
+        validMessageGenerator: this.validate,
+      },
     }
   }
 

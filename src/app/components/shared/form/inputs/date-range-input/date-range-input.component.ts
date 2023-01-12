@@ -5,7 +5,7 @@ import {
 } from '@angular/core'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
-import { Subscription, tap } from 'rxjs'
+import { combineLatest, Observable, of, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { getBasicDateRangeInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { ICONS } from 'src/app/models/constants/css-constants'
@@ -26,6 +26,15 @@ export class DateRangeInputComponent
 
   get calendarIcon() {
     return ICONS.CALENDAR
+  }
+
+  get valueChange$() {
+    const start$ = (this.form.get(`${this.name}Start`)?.valueChanges ??
+      of('')) as Observable<string | undefined>
+    const end$ = (this.form.get(`${this.name}End`)?.valueChanges ??
+      of('')) as Observable<string | undefined>
+
+    return combineLatest([start$, end$])
   }
 
   ngAfterContentInit(): void {

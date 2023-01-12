@@ -6,7 +6,14 @@ import {
   Input,
   Output,
 } from '@angular/core'
-import { BehaviorSubject, Subscription, tap } from 'rxjs'
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+  Subscription,
+  tap,
+} from 'rxjs'
 import { getBasicPasswordConfirmValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { SuperInputComponent } from '../inheritances/super-input.component'
@@ -29,6 +36,15 @@ export class PasswordConfirmInputComponent
 
   private _valueChangeSubscription$!: Subscription
 
+  get valueChange$() {
+    const passwordChange$ = (this.form.get(this.name)?.valueChanges ??
+      of('')) as Observable<string>
+    const passwordConfirmChange$ = (this.form.get(`${this.name}Confirm`)
+      ?.valueChanges ?? of('')) as Observable<string>
+
+    return combineLatest([passwordChange$, passwordConfirmChange$])
+  }
+
   ngAfterContentInit(): void {
     if (this.isDisabled) {
       this.form?.get(this.name)?.disable()
@@ -37,11 +53,11 @@ export class PasswordConfirmInputComponent
 
     this._valueChangeSubscription$ = this.valueChange$
       .pipe(
-        tap((v) => {
-          this.passwordChange$.next(v[0])
-          this.passwordConfirmChange$.next(v[1])
+        tap(([password, passwordConfirm]) => {
+          this.passwordChange$.next(password)
+          this.passwordConfirmChange$.next(passwordConfirm)
 
-          this.setFormValidator(v)
+          this.setFormValidator([password, passwordConfirm])
         }),
       )
       .subscribe()
@@ -57,6 +73,17 @@ export class PasswordConfirmInputComponent
       validMessageGenerator: isPasswordConfirm ? this.validate() : undefined,
       required: true,
     } as unknown as FormInputSpec<string>
+  }
+
+  readonly getInput = (isPasswordConfirm?: boolean) => {
+    return {
+      ...this.input,
+      formInputSpec: this.getInputSpec(isPasswordConfirm),
+      valueChange$: isPasswordConfirm
+        ? this.passwordConfirmChange$
+        : this.passwordChange$,
+      infoTextType: isPasswordConfirm ? this.input.infoTextType : 'none',
+    }
   }
 
   readonly onEnter = () => {
