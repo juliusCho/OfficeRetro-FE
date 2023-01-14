@@ -32,4 +32,8 @@ export class RadioInputComponent extends BaseSelectInputComponent {
   readonly getItems = (optionValues: FormInputOption[]) => {
     return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
   }
+
+  readonly trackByIndex = (index: number) => {
+    return index
+  }
 }

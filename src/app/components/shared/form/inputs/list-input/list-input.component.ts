@@ -92,7 +92,7 @@ export class ListInputComponent
     }))
 
     const newOption = {
-      label: formValue.inputText,
+      label: formValue.input,
       color: formValue.inputColor || COLOR_PICKER_DEFAULT_COLOR,
     }
 
@@ -183,8 +183,8 @@ export class ListInputComponent
 
   private readonly isFormInputOption = (
     value: Record<string, unknown>,
-  ): value is { inputText: string; inputColor: string } => {
-    return 'inputText' in value && 'inputColor' in value
+  ): value is { input: string; inputColor: string } => {
+    return 'input' in value && 'inputColor' in value
   }
 
   private readonly setInnerFormSubmittable = (value: boolean) => {

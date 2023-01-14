@@ -1,16 +1,20 @@
-<div class="container" [ngClass]="containerClass">
+<div class="container" [formGroup]="form" [ngClass]="containerClass">
   <app-input-label
     *ngIf="label"
     [label]="label"
     [labelPosition]="labelPosition"
-    [width]="labelAreaWidth">
+    [width]="labelAreaWidth"
+    [labelSize]="labelStyle.labelSize"
+    [labelWeight]="labelStyle.labelWeight">
   </app-input-label>
   <ng-container *ngIf="optionValues$ | async as optionValues; else loading">
     <div
       class="input-section"
       [ngClass]="inputAreaClass"
       [ngStyle]="inputAreaStyle">
-      <div *ngFor="let optionRows of getItems(optionValues)" class="row">
+      <div
+        *ngFor="let optionRows of getItems(optionValues); trackBy: trackByIndex"
+        class="row">
         <div
           *ngFor="let option of optionRows"
           class="column"
@@ -32,7 +36,7 @@
             [value]="option.value"
             type="checkbox"
             class="option-input"
-            autocomplete="off"
+            [disabled]="isDisabled"
             [ngClass]="{
               selected: isSelectedOption(
                 getSelectedOptions(optionValues),

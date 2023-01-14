@@ -3,10 +3,8 @@ import { AbstractControl } from '@angular/forms'
 import { Observable, of, shareReplay, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { CustomValidator } from 'src/app/helpers/custom-form-validator'
-import {
-  CustomValidationErrors,
-  InputUnderneathDisplay,
-} from 'src/app/models/client-specs/form/form-input-types'
+import { isArray, isNumber } from 'src/app/helpers/type-checkers'
+import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
 @AutoUnsubscribe()
@@ -22,9 +20,6 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
 
   private _passwordChange$!: Subscription
   private _passwordConfirmChange$!: Subscription
-  private _equalToValidator?: (
-    control: AbstractControl,
-  ) => CustomValidationErrors | null
 
   get length(): number {
     if (!this.displayLength) return 0
@@ -46,101 +41,57 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
     return this.label ? `${this.label} & Confirm` : undefined
   }
 
+  get passwordValidators() {
+    if (this.isDisabled) return []
+
+    let preset = [CustomValidator.noBlank]
+
+    if (this.max !== '0' && isNumber(this.max)) {
+      preset.unshift(CustomValidator.maxLength(Number(this.max)))
+    }
+
+    if (this.formInputSpec.required) {
+      if (this.min !== '0' && isNumber(this.min)) {
+        preset.unshift(CustomValidator.minLength(Number(this.min)))
+      }
+
+      preset.push(CustomValidator.required)
+    }
+
+    const formValidators = this.formInputSpec.formValidators
+    if (
+      formValidators &&
+      isArray(formValidators) &&
+      formValidators.length > 0 &&
+      isArray(formValidators[0])
+    ) {
+      preset = [...formValidators[0], ...preset]
+    }
+
+    return preset
+  }
+
   override ngOnInit(): void {
     super.ngOnInit()
 
-    const confirmControl = this.getControlByName(`${this.name}Confirm`)
+    const controlObservable$ = (this.control?.valueChanges ??
+      of('')) as Observable<string>
 
-    this._passwordChange$ = (
-      (this.control?.valueChanges ?? of('')) as Observable<string>
-    )
+    const confirmControlObservable$ = (this.getControlByName(
+      `${this.name}Confirm`,
+    )?.valueChanges ?? of('')) as Observable<string>
+
+    this._passwordChange$ = controlObservable$
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true }),
-        tap((v) => {
-          if (!this.control || this.control.invalid || !confirmControl) return
-          if (!confirmControl.hasError('equalTo')) return
-
-          if (v === confirmControl.value) {
-            let { errors } = confirmControl
-            if (
-              confirmControl.hasError('equalTo') &&
-              errors &&
-              'equalTo' in errors
-            ) {
-              delete errors['equalTo']
-              confirmControl.setErrors({ ...errors })
-            } else {
-              confirmControl.setErrors(errors ?? null)
-            }
-
-            if (this._equalToValidator) {
-              confirmControl.removeValidators(this._equalToValidator)
-
-              this._equalToValidator = undefined
-
-              this.changeDetectorRef.detectChanges()
-            }
-
-            confirmControl.updateValueAndValidity({ onlySelf: true })
-            this.form.updateValueAndValidity()
-          } else if (!confirmControl.hasError('equalTo')) {
-            const equalToValidator = CustomValidator.equalTo(v)
-            confirmControl.addValidators(equalToValidator)
-
-            confirmControl.updateValueAndValidity({ onlySelf: true })
-            this.form.updateValueAndValidity()
-
-            this._equalToValidator = equalToValidator
-            this.changeDetectorRef.detectChanges()
-          }
-        }),
+        tap(this.setDynamicEqualToValidator),
       )
       .subscribe()
 
-    this._passwordConfirmChange$ = (
-      (this.getControlByName(`${this.name}Confirm`)?.valueChanges ??
-        of('')) as Observable<string>
-    )
+    this._passwordConfirmChange$ = confirmControlObservable$
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true }),
-        tap((v) => {
-          if (!confirmControl || !this.control || this.control.invalid) return
-          if (!confirmControl.hasError('equalTo')) return
-
-          if (v === this.control.value) {
-            let { errors } = confirmControl
-            if (
-              confirmControl.hasError('equalTo') &&
-              errors &&
-              'equalTo' in errors
-            ) {
-              delete errors['equalTo']
-              confirmControl.setErrors({ ...errors })
-            } else {
-              confirmControl.setErrors(errors ?? null)
-            }
-
-            if (this._equalToValidator) {
-              confirmControl.removeValidators(this._equalToValidator)
-
-              this._equalToValidator = undefined
-
-              this.changeDetectorRef.detectChanges()
-            }
-
-            confirmControl.updateValueAndValidity({ onlySelf: true })
-            this.form.updateValueAndValidity()
-          } else if (!confirmControl.hasError('equalTo')) {
-            const equalToValidator = CustomValidator.equalTo(this.control.value)
-            confirmControl.addValidators(equalToValidator)
-
-            confirmControl.updateValueAndValidity({ onlySelf: true })
-            this.form.updateValueAndValidity()
-
-            this._equalToValidator = equalToValidator
-            this.changeDetectorRef.detectChanges()
-          }
-        }),
+        tap((_) => this.setDynamicEqualToValidator(this.control?.value ?? '')),
       )
       .subscribe()
 
@@ -163,6 +114,33 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
       },
       infoTextType: 'none' as InputUnderneathDisplay,
       isValidationDisplaying: false,
+    }
+  }
+
+  private readonly setDynamicEqualToValidator = (targetValue: string) => {
+    const confirmControl = this.getControlByName(`${this.name}Confirm`)
+
+    if (!this.control || this.control.invalid || !confirmControl) return
+    if (confirmControl.invalid && !confirmControl.hasError('equalTo')) return
+
+    if (targetValue === confirmControl.value) {
+      let { errors } = confirmControl
+      if (confirmControl.hasError('equalTo') && errors && 'equalTo' in errors) {
+        delete errors['equalTo']
+        confirmControl.setErrors({ ...errors })
+        confirmControl.setValidators(this.passwordValidators)
+
+        confirmControl.updateValueAndValidity({ onlySelf: true })
+      } else {
+        confirmControl.setErrors(errors ?? null)
+      }
+    } else if (!confirmControl.hasError('equalTo')) {
+      confirmControl.setValidators([
+        ...this.passwordValidators,
+        CustomValidator.equalTo(targetValue),
+      ])
+
+      confirmControl.updateValueAndValidity({ onlySelf: true })
     }
   }
 }

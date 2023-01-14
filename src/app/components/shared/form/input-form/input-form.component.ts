@@ -233,7 +233,6 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
     Object.keys(this.form.controls).forEach((key) => {
       this.form.get(key)?.markAsDirty()
     })
-    console.log('submit!!!!', this.form)
 
     if (this.form.invalid) {
       if (

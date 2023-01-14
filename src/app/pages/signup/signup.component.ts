@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { Validators } from '@angular/forms'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { BasePageComponent } from '../base-page.component'
 
@@ -14,11 +13,6 @@ export class SignupComponent extends BasePageComponent {
       key: 'email',
       label: 'Email',
       initValue: '',
-      formValidators: [
-        Validators.required,
-        Validators.min(5),
-        Validators.max(50),
-      ],
       inputType: 'email',
       placeholder: 'example@domain.com',
       min: '5',
@@ -29,11 +23,6 @@ export class SignupComponent extends BasePageComponent {
       key: 'password',
       label: 'Password',
       initValue: ['', ''],
-      formValidators: [
-        Validators.required,
-        Validators.min(8),
-        Validators.max(50),
-      ],
       inputType: 'password-confirm',
       min: '8',
       max: '50',

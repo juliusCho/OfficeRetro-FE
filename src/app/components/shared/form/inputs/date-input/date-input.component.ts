@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
-import { isConvertibleToMoment } from 'src/app/helpers/type-checkers'
 import { ICONS } from 'src/app/models/constants/css-constants'
 import { DATE_DISPLAY_FORMAT } from 'src/app/models/constants/form-constants'
 import { SuperInputComponent } from '../inheritances/super-input.component'
@@ -25,7 +24,7 @@ export class DateInputComponent extends SuperInputComponent<
 
   readonly onTypeDate = (event: MatDatepickerInputEvent<moment.Moment>) => {
     if (this.isDisabled) return
-    if (isConvertibleToMoment(event.value)) return
+    if (moment(event.value).isValid()) return
 
     this.control?.setValue(undefined)
     this.control?.markAsDirty()

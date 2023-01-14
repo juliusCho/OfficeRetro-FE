@@ -12,7 +12,9 @@
       class="input-section"
       [ngClass]="inputAreaClass"
       [ngStyle]="inputAreaStyle">
-      <div *ngFor="let optionRows of getItems(optionValues)" class="row">
+      <div
+        *ngFor="let optionRows of getItems(optionValues); trackBy: trackByIndex"
+        class="row">
         <div
           *ngFor="let option of optionRows"
           class="column"
@@ -35,7 +37,6 @@
             [value]="option.value"
             type="radio"
             class="option-input"
-            autocomplete="off"
             [ngClass]="{
               selected: getSelectedOption(optionValues).value === option.value
             }" />

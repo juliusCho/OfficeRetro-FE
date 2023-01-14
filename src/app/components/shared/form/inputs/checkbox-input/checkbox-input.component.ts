@@ -77,6 +77,10 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
     return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
   }
 
+  readonly trackByIndex = (index: number) => {
+    return index
+  }
+
   readonly isSelectedOption = (selectedOptions: string[], option: string) => {
     return selectedOptions.includes(option)
   }

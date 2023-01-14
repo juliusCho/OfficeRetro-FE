@@ -22,7 +22,6 @@ export class InputAlertTextComponent {
 
   get errorMessage() {
     if (!this.control || !this.control.dirty) return ''
-    if (this.label === 'Password') console.log('WHAT')
 
     return this.getControlErrorMessage(this.control.errors)
   }

@@ -4,16 +4,16 @@
   @extend %font-bold;
   @extend %font-5;
 
+  &:disabled {
+    @extend %button-disabled;
+  }
+
   &.pale-color {
     color: $font-inactive-color;
   }
 
   &.enabled {
     @extend %button;
-  }
-
-  &.disabled {
-    @extend %button-disabled;
   }
 
   &.large-font {
