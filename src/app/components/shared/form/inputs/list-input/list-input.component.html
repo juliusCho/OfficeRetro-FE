@@ -12,7 +12,7 @@
     <div class="input-border-box">
       <app-form
         [formInputSpecs]="innerFormInputSpecs"
-        [isValidationNeeded]="true"
+        [isValidationDisplaying]="false"
         (submitAction)="addOption($event)"
         [labelArea]="{ labelSize: 'unit-5', labelWeight: 400 }"
         infoTextType="length"
@@ -22,7 +22,6 @@
         <app-plus-button [isDisabled]="isDisabled"></app-plus-button>
       </app-form>
       <div
-        *ngIf="optionValuesObserve$ | async as optionValues; else loading"
         class="list-section"
         #listSection
         cdkDropList
@@ -59,14 +58,13 @@
 </div>
 <app-length-text
   *ngIf="displayLength"
-  [length]="form.value[name]?.length ?? 0"
-  [maxLength]="maxLength"></app-length-text>
+  [length]="control?.value.length ?? 0"
+  [maxLength]="maxLength">
+</app-length-text>
 <app-input-alert-text
   *ngIf="displayAlert"
-  [text]="alertMessage"
+  [label]="label"
+  [control]="control"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"></app-input-alert-text>
-
-<ng-template #loading>
-  <app-text-loading></app-text-loading>
-</ng-template>
+  [labelWidth]="labelAreaWidth">
+</app-input-alert-text>

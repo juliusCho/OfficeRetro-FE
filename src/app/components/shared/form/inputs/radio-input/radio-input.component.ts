@@ -3,7 +3,7 @@ import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
 import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
-import { BaseSelectComponent } from '../inheritances/base-select-input/base-select.component'
+import { BaseSelectInputComponent } from '../inheritances/base-select-input/base-select-input.component'
 
 @Component({
   selector: 'app-radio-input',
@@ -14,7 +14,7 @@ import { BaseSelectComponent } from '../inheritances/base-select-input/base-sele
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RadioInputComponent extends BaseSelectComponent {
+export class RadioInputComponent extends BaseSelectInputComponent {
   private readonly _componentUniqueId = uuid()
 
   get columnCount() {

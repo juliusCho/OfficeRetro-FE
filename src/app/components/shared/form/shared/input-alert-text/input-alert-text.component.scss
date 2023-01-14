@@ -7,7 +7,7 @@
   .container {
     height: $unit-3;
     margin: 0;
-    padding-left: calc($form-input-label-width + $unit-7);
+    padding-left: $form-input-label-width;
 
     &.label-top {
       padding-left: $unit-7;

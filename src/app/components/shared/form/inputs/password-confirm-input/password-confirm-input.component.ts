@@ -1,127 +1,168 @@
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { AbstractControl } from '@angular/forms'
+import { Observable, of, shareReplay, Subscription, tap } from 'rxjs'
+import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
+import { CustomValidator } from 'src/app/helpers/custom-form-validator'
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core'
-import {
-  BehaviorSubject,
-  combineLatest,
-  Observable,
-  of,
-  Subscription,
-  tap,
-} from 'rxjs'
-import { getBasicPasswordConfirmValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
-import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+  CustomValidationErrors,
+  InputUnderneathDisplay,
+} from 'src/app/models/client-specs/form/form-input-types'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
+@AutoUnsubscribe()
 @Component({
   selector: 'app-password-confirm-input',
   templateUrl: './password-confirm-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PasswordConfirmInputComponent
-  extends SuperInputComponent<[string, string]>
-  implements AfterContentInit
-{
+export class PasswordConfirmInputComponent extends SuperInputComponent<
+  [string, string]
+> {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
-  @Output() enter = new EventEmitter<void>()
+  private _passwordChange$!: Subscription
+  private _passwordConfirmChange$!: Subscription
+  private _equalToValidator?: (
+    control: AbstractControl,
+  ) => CustomValidationErrors | null
 
-  passwordChange$ = new BehaviorSubject<string>('')
-  passwordConfirmChange$ = new BehaviorSubject<string>('')
+  get length(): number {
+    if (!this.displayLength) return 0
 
-  private _valueChangeSubscription$!: Subscription
+    const passwordLength = this.control?.value.length ?? 0
+    const passwordConfirmLength =
+      this.getControlByName(`${this.name}Confirm`)?.value.length ?? 0
 
-  get valueChange$() {
-    const passwordChange$ = (this.form.get(this.name)?.valueChanges ??
-      of('')) as Observable<string>
-    const passwordConfirmChange$ = (this.form.get(`${this.name}Confirm`)
-      ?.valueChanges ?? of('')) as Observable<string>
-
-    return combineLatest([passwordChange$, passwordConfirmChange$])
+    return passwordLength > passwordConfirmLength
+      ? passwordLength
+      : passwordConfirmLength
   }
 
-  ngAfterContentInit(): void {
-    if (this.isDisabled) {
-      this.form?.get(this.name)?.disable()
-      return
-    }
+  get alertableControls(): [AbstractControl | null, AbstractControl | null] {
+    return [this.control, this.getControlByName(`${this.name}Confirm`)]
+  }
 
-    this._valueChangeSubscription$ = this.valueChange$
+  get confirmLabel() {
+    return this.label ? `${this.label} & Confirm` : undefined
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit()
+
+    const confirmControl = this.getControlByName(`${this.name}Confirm`)
+
+    this._passwordChange$ = (
+      (this.control?.valueChanges ?? of('')) as Observable<string>
+    )
       .pipe(
-        tap(([password, passwordConfirm]) => {
-          this.passwordChange$.next(password)
-          this.passwordConfirmChange$.next(passwordConfirm)
+        shareReplay({ bufferSize: 1, refCount: true }),
+        tap((v) => {
+          if (!this.control || this.control.invalid || !confirmControl) return
+          if (!confirmControl.hasError('equalTo')) return
 
-          this.setFormValidator([password, passwordConfirm])
+          if (v === confirmControl.value) {
+            let { errors } = confirmControl
+            if (
+              confirmControl.hasError('equalTo') &&
+              errors &&
+              'equalTo' in errors
+            ) {
+              delete errors['equalTo']
+              confirmControl.setErrors({ ...errors })
+            } else {
+              confirmControl.setErrors(errors ?? null)
+            }
+
+            if (this._equalToValidator) {
+              confirmControl.removeValidators(this._equalToValidator)
+
+              this._equalToValidator = undefined
+
+              this.changeDetectorRef.detectChanges()
+            }
+
+            confirmControl.updateValueAndValidity({ onlySelf: true })
+            this.form.updateValueAndValidity()
+          } else if (!confirmControl.hasError('equalTo')) {
+            const equalToValidator = CustomValidator.equalTo(v)
+            confirmControl.addValidators(equalToValidator)
+
+            confirmControl.updateValueAndValidity({ onlySelf: true })
+            this.form.updateValueAndValidity()
+
+            this._equalToValidator = equalToValidator
+            this.changeDetectorRef.detectChanges()
+          }
         }),
       )
       .subscribe()
 
-    this.changeDetectorRef.detectChanges()
-  }
+    this._passwordConfirmChange$ = (
+      (this.getControlByName(`${this.name}Confirm`)?.valueChanges ??
+        of('')) as Observable<string>
+    )
+      .pipe(
+        shareReplay({ bufferSize: 1, refCount: true }),
+        tap((v) => {
+          if (!confirmControl || !this.control || this.control.invalid) return
+          if (!confirmControl.hasError('equalTo')) return
 
-  readonly getInputSpec = (isPasswordConfirm?: boolean) => {
-    return {
-      ...this.formInputSpec,
-      key: isPasswordConfirm ? `${this.name}Confirm` : this.name,
-      label: isPasswordConfirm ? 'Confirm' : 'Password',
-      validMessageGenerator: isPasswordConfirm ? this.validate() : undefined,
-      required: true,
-    } as unknown as FormInputSpec<string>
+          if (v === this.control.value) {
+            let { errors } = confirmControl
+            if (
+              confirmControl.hasError('equalTo') &&
+              errors &&
+              'equalTo' in errors
+            ) {
+              delete errors['equalTo']
+              confirmControl.setErrors({ ...errors })
+            } else {
+              confirmControl.setErrors(errors ?? null)
+            }
+
+            if (this._equalToValidator) {
+              confirmControl.removeValidators(this._equalToValidator)
+
+              this._equalToValidator = undefined
+
+              this.changeDetectorRef.detectChanges()
+            }
+
+            confirmControl.updateValueAndValidity({ onlySelf: true })
+            this.form.updateValueAndValidity()
+          } else if (!confirmControl.hasError('equalTo')) {
+            const equalToValidator = CustomValidator.equalTo(this.control.value)
+            confirmControl.addValidators(equalToValidator)
+
+            confirmControl.updateValueAndValidity({ onlySelf: true })
+            this.form.updateValueAndValidity()
+
+            this._equalToValidator = equalToValidator
+            this.changeDetectorRef.detectChanges()
+          }
+        }),
+      )
+      .subscribe()
+
+    this.changeDetectorRef.markForCheck()
   }
 
   readonly getInput = (isPasswordConfirm?: boolean) => {
     return {
       ...this.input,
-      formInputSpec: this.getInputSpec(isPasswordConfirm),
-      valueChange$: isPasswordConfirm
-        ? this.passwordConfirmChange$
-        : this.passwordChange$,
-      infoTextType: isPasswordConfirm ? this.input.infoTextType : 'none',
+      formInputSpec: {
+        ...this.input.formInputSpec,
+        key: isPasswordConfirm ? `${this.name}Confirm` : this.name,
+        name: isPasswordConfirm ? `${this.name}Confirm` : this.name,
+        label: isPasswordConfirm
+          ? this.label
+            ? 'Confirm'
+            : undefined
+          : this.label,
+        initValue: this.formInputSpec.initValue[isPasswordConfirm ? 1 : 0],
+      },
+      infoTextType: 'none' as InputUnderneathDisplay,
+      isValidationDisplaying: false,
     }
-  }
-
-  readonly onEnter = () => {
-    this.enter.emit()
-  }
-
-  private readonly validate = () => {
-    if (this.isDisabled || !this.isValidationNeeded) return
-
-    const _this = this
-
-    return (value?: string) => {
-      const result = _this.formInputSpec.validMessageGenerator
-        ? _this.formInputSpec.validMessageGenerator([
-            _this.passwordChange$.value,
-            value ?? '',
-          ])
-        : ''
-      if (result !== '') return result
-
-      return getBasicPasswordConfirmValidationMsg({
-        password: _this.passwordChange$.value,
-        passwordConfirm: value,
-        min: _this.min,
-        max: _this.max,
-      })
-    }
-  }
-
-  private readonly setFormValidator = (value: [string, string]) => {
-    if (value[0] !== value[1]) {
-      this.form?.get(this.name)?.setErrors({ incorrect: true })
-      this.form?.get(`${this.name}Confirm`)?.setErrors({ incorrect: true })
-    } else if (!this.validationMessage) {
-      this.form?.get(this.name)?.setErrors(null)
-      this.form?.get(`${this.name}Confirm`)?.setErrors(null)
-    }
-
-    this.changeDetectorRef.detectChanges()
   }
 }

@@ -1,10 +1,10 @@
 <app-text-input
   (enter)="onEnter()"
-  [showValidationMessage]="showValidationMessage"
   [input]="inputParam"
   [lengthLabelPosition]="lengthLabelPosition">
   <app-color-picker
     [color]="color"
     [isDisabled]="isDisabled"
-    (select)="onSelectColor($event)"></app-color-picker>
+    (select)="onSelectColor($event)">
+  </app-color-picker>
 </app-text-input>

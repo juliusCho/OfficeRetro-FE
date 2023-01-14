@@ -1,93 +1,55 @@
-import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { AbstractControl } from '@angular/forms'
 import { MatDatepickerInputEvent } from '@angular/material/datepicker'
 import * as moment from 'moment'
-import { combineLatest, Observable, of, Subscription, tap } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { getBasicDateRangeInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { isConvertibleToMoment } from 'src/app/helpers/type-checkers'
 import { ICONS } from 'src/app/models/constants/css-constants'
-import { BaseDateInputComponent } from '../inheritances/base-date-input/base-date-input.component'
+import { DATE_DISPLAY_FORMAT } from 'src/app/models/constants/form-constants'
+import { SuperInputComponent } from '../inheritances/super-input.component'
 
-@AutoUnsubscribe()
 @Component({
   selector: 'app-date-range-input',
   templateUrl: './date-range-input.component.html',
   styleUrls: ['./date-range-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DateRangeInputComponent
-  extends BaseDateInputComponent<[string | undefined, string | undefined]>
-  implements AfterContentInit
-{
-  private _valueChangeSubscription$?: Subscription
-
+export class DateRangeInputComponent extends SuperInputComponent<
+  [string | undefined, string | undefined]
+> {
   get calendarIcon() {
     return ICONS.CALENDAR
   }
 
-  get valueChange$() {
-    const start$ = (this.form.get(`${this.name}Start`)?.valueChanges ??
-      of('')) as Observable<string | undefined>
-    const end$ = (this.form.get(`${this.name}End`)?.valueChanges ??
-      of('')) as Observable<string | undefined>
-
-    return combineLatest([start$, end$])
+  get defaultDateFormat() {
+    return DATE_DISPLAY_FORMAT
   }
 
-  ngAfterContentInit(): void {
-    if (this.isDisabled) {
-      this.form?.get(`${this.name}Start`)?.disable()
-      this.form?.get(`${this.name}End`)?.disable()
-      return
-    }
-
-    this.form?.get(`${this.name}Start`)?.enable()
-    this.form?.get(`${this.name}End`)?.enable()
-
-    this._valueChangeSubscription$ = this.valueChange$
-      .pipe(
-        tap((v) => {
-          this.showValidationMessage = false
-          this.validationMessage = this.validate(v)
-
-          this.changeDetectorRef.markForCheck()
-        }),
-      )
-      .subscribe()
-
-    this.changeDetectorRef.detectChanges()
+  get alertableControls(): [AbstractControl | null, AbstractControl | null] {
+    return [
+      this.getControlByName(`${this.name}Start`),
+      this.getControlByName(`${this.name}End`),
+    ]
   }
 
-  readonly selectDateRange = (
+  readonly onTypeDate = (
     type: 'start' | 'end',
     event: MatDatepickerInputEvent<moment.Moment>,
   ) => {
     if (this.isDisabled) return
+    if (isConvertibleToMoment(event.value)) return
 
-    if (!moment(event.value).isValid()) {
-      this.setFormValueAndShowMessage(
-        `${this.name}${type === 'start' ? 'Start' : 'End'}`,
-      )
+    if (type === 'start') {
+      this.getControlByName(`${this.name}Start`)?.setValue(undefined)
+      this.getControlByName(`${this.name}Start`)?.markAsDirty()
+      return
     }
 
-    this.onFocusOut()
+    this.getControlByName(`${this.name}End`)?.setValue(undefined)
+    this.getControlByName(`${this.name}End`)?.markAsDirty()
   }
 
-  readonly validate = (value?: [string | undefined, string | undefined]) => {
-    if (this.isDisabled || !this.isValidationNeeded) return ''
-
-    const result = this.validator ? this.validator(value) : ''
-    if (result !== '') return result
-
-    return getBasicDateRangeInputValidationMsg({
-      value,
-      label: this.label,
-      required: this.required,
-      max: this.max,
-      min: this.min,
-    })
+  readonly onPickerClose = () => {
+    this.getControlByName(`${this.name}Start`)?.markAsDirty()
+    this.getControlByName(`${this.name}End`)?.markAsDirty()
   }
 }

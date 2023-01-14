@@ -10,9 +10,9 @@ $login-contents-height: 760px;
 
   .form {
     margin: $unit-5 0 $unit-10 0;
-    width: calc($intro-form-width + $unit-9 + $unit-9);
+    width: calc($intro-form-width + $unit-7 + $unit-9);
     @extend %swollen;
-    padding: $unit-9 $unit-8 $unit-6 $unit-9;
+    padding: $unit-9 $unit-7 $unit-6 $unit-9;
   }
 
   ::ng-deep app-button {

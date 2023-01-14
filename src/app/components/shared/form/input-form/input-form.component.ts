@@ -35,7 +35,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
-  @Input() isValidationNeeded?: boolean = false // no input validation checks
+  @Input() isValidationDisplaying?: boolean = false // no input validation checks
   @Input() isConfirmed?: boolean = true // to check if parent component's submit action needs to be listened to
   @Input() buttonArea?: {
     position?: 'bottom' | 'right'
@@ -143,11 +143,10 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
         debounceTime(1000),
         tap(() => {
           this.submitProceed()
-          this._changeDetectorRef.detectChanges()
         }),
       )
 
-    this._changeDetectorRef.markForCheck()
+    this._formService.subscribeValueChange()
   }
 
   readonly isSpecArray = (
@@ -156,18 +155,6 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       | [FormInputSpec<unknown>, FormInputSpec<unknown>],
   ) => {
     return isArray(formInputSpec)
-  }
-
-  readonly isFormSpec = (
-    formInputSpec: unknown,
-  ): formInputSpec is FormInputSpec<unknown> => {
-    if (!formInputSpec || typeof formInputSpec !== 'object') return false
-
-    return (
-      'key' in formInputSpec &&
-      'iniValue' in formInputSpec &&
-      'inputType' in formInputSpec
-    )
   }
 
   readonly getFormInputSpec = <T>(
@@ -215,7 +202,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
     return {
       form: this.form,
       labelArea: this.labelArea,
-      isValidationNeeded: this.isValidationNeeded,
+      isValidationDisplaying: this.isValidationDisplaying,
       formInputSpec,
       infoTextType: this.infoTextType,
     }
@@ -243,8 +230,9 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   private readonly submitProceed = () => {
-    this.showValidationMessage = false
-
+    Object.keys(this.form.controls).forEach((key) => {
+      this.form.get(key)?.markAsDirty()
+    })
     console.log('submit!!!!', this.form)
 
     if (this.form.invalid) {
@@ -256,16 +244,10 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
         console.log('form invalid', this.form)
       }
 
-      this.showValidationMessage = true
-      this._changeDetectorRef.detectChanges()
-
-      console.log('A?A?WA?A')
       return
     }
 
     this.submitAction.emit(this.form.value)
-
-    this._changeDetectorRef.detectChanges()
   }
 
   private readonly setIsFormSubmitted = (value: boolean) => {

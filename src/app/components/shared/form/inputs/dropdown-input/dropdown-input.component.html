@@ -4,7 +4,7 @@
       <option
         *ngFor="let option of optionValues"
         [value]="option.value"
-        [selected]="option.value === form.value[name]">
+        [selected]="option.value === control?.value">
         {{ option.label }}
       </option>
     </ng-container>
@@ -16,7 +16,8 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle.labelSize"
-    [labelWeight]="labelStyle.labelWeight"></app-input-label>
+    [labelWeight]="labelStyle.labelWeight">
+  </app-input-label>
   <div
     class="input-div"
     [ngClass]="inputAreaClass"
@@ -46,7 +47,7 @@
           class="option"
           [ngClass]="{
             placeholder: option.value === '',
-            selected: !!option.value && option.value === form.value[name]
+            selected: !!option.value && option.value === control?.value
           }"
           (click)="selectOption(option)">
           {{ option.label }}
@@ -57,8 +58,11 @@
 </div>
 <app-input-alert-text
   *ngIf="displayAlert"
-  [text]="alertMessage"
-  [labelPosition]="labelPosition"></app-input-alert-text>
+  [label]="label"
+  [control]="control"
+  [labelPosition]="labelPosition"
+  [labelWidth]="labelAreaWidth">
+</app-input-alert-text>
 
 <ng-template #loading>
   <app-text-loading></app-text-loading>

@@ -8,7 +8,6 @@ export interface FormInputSpec<T> {
   labelPosition?: 'side' | 'top'
   initValue: T
   formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]]
-  validMessageGenerator?: (value?: T) => string
   inputType: InputType
   placeholder?: string
   min?: string

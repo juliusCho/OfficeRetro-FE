@@ -1,10 +1,12 @@
+import { ValidationErrors } from '@angular/forms'
+
 export type InputType =
   | 'text'
   | 'text-color'
   | 'email'
   | 'password'
-  | 'password-login'
-  | 'password-confirm'
+  | 'password-login' // password input with reset page routing
+  | 'password-confirm' // password input with confirm input
   | 'textarea'
   | 'select'
   | 'radio'
@@ -23,3 +25,7 @@ export type FormInputOption = {
 }
 
 export interface FormListInputOption extends Required<FormInputOption> {}
+
+export interface CustomValidationErrors extends ValidationErrors {
+  [key: string]: { message: string; priority: number }
+}

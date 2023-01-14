@@ -7,21 +7,21 @@ import { map, Observable, of } from 'rxjs'
 import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { CssService } from 'src/app/services/shared/css.service'
-import { BaseInputComponent } from '../base-input/base-input.component'
+import { SuperInputComponent } from '../super-input.component'
 
 @Component({
   template: '',
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BaseSelectComponent extends BaseInputComponent {
+export class BaseSelectInputComponent extends SuperInputComponent<string> {
   protected optionValues$!: Observable<FormInputOption[]>
 
   get options() {
-    return this.formInputSpec?.options
+    return this.formInputSpec.options
   }
   get optionsFetchUrl() {
-    return this.formInputSpec?.optionsFetchUrl
+    return this.formInputSpec.optionsFetchUrl
   }
 
   constructor(
@@ -32,12 +32,8 @@ export class BaseSelectComponent extends BaseInputComponent {
     super(cssService, changeDetectorRef)
   }
 
-  override ngAfterContentInit(): void {
-    this.ngAfterContentInitAction()
-
-    this.max = '-1'
-
-    this.changeDetectorRef.markForCheck()
+  override ngOnInit(): void {
+    super.ngOnInit()
 
     if (this.options && this.options.length > 0) {
       this.optionValues$ = of([
@@ -45,13 +41,13 @@ export class BaseSelectComponent extends BaseInputComponent {
         ...this.options,
       ])
 
-      this.changeDetectorRef.detectChanges()
+      this.changeDetectorRef.markForCheck()
       return
     }
 
     if (!this.optionsFetchUrl) {
       this.optionValues$ = of([])
-      this.changeDetectorRef.detectChanges()
+      this.changeDetectorRef.markForCheck()
       return
     }
 
@@ -61,13 +57,12 @@ export class BaseSelectComponent extends BaseInputComponent {
   protected readonly selectOption = (option: FormInputOption) => {
     if (this.isDisabled) return
 
-    this.form.get(this.name)?.setValue(option.value)
-
-    this.onFocusOut()
+    this.control?.setValue(option.value)
+    this.control?.markAsDirty()
   }
 
   protected readonly getSelectedOption = (optionValues: FormInputOption[]) => {
-    const selected = this.form.value[this.name]
+    const selected = this.control?.value
     const initValue = { label: this.placeholder ?? '', value: '' }
 
     if (!selected) return initValue
@@ -93,6 +88,6 @@ export class BaseSelectComponent extends BaseInputComponent {
         ]),
       )
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
   }
 }

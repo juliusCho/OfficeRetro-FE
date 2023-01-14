@@ -1,11 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core'
-import { getBasicPasswordValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { InputType } from 'src/app/models/client-specs/form/form-input-types'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
 @Component({
@@ -17,35 +11,13 @@ import { SuperInputComponent } from '../inheritances/super-input.component'
 export class PasswordInputComponent extends SuperInputComponent<string> {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
-  @Output() enter = new EventEmitter<void>()
-
   get inputParam() {
     return {
       ...this.input,
       formInputSpec: {
         ...this.formInputSpec,
-        type: 'password',
-        validMessageGenerator: this.validate,
+        inputType: 'password' as InputType,
       },
     }
-  }
-
-  get validate(): ((value?: string) => string) | undefined {
-    if (this.isDisabled || !this.isValidationNeeded) return
-
-    const _this = this
-
-    return (value?: string) => {
-      const result = _this.formInputSpec.validMessageGenerator
-        ? _this.formInputSpec.validMessageGenerator(value)
-        : ''
-      if (result !== '') return result
-
-      return getBasicPasswordValidationMsg(value, _this.label)
-    }
-  }
-
-  readonly onEnter = () => {
-    this.enter.emit()
   }
 }

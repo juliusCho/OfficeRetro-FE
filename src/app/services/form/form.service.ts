@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, OnDestroy } from '@angular/core'
 import {
   FormBuilder,
   FormControl,
@@ -6,7 +6,7 @@ import {
   ValidatorFn,
 } from '@angular/forms'
 import * as moment from 'moment'
-import { Observable, of } from 'rxjs'
+import { Observable, of, shareReplay, Subscription } from 'rxjs'
 import {
   isArray,
   isDateArray,
@@ -16,10 +16,11 @@ import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { COLOR_PICKER_DEFAULT_COLOR } from 'src/app/models/constants/form-constants'
 
 @Injectable()
-export class FormService {
+export class FormService implements OnDestroy {
   private _initialized = false
   private _form!: FormGroup
   private _formValueChanges$!: Observable<unknown>
+  private _formValueChangeSubscription$?: Subscription
   private _inputInfos!: FormInputSpec<unknown>[]
 
   get form() {
@@ -39,6 +40,10 @@ export class FormService {
 
   constructor(private readonly _formBuilder: FormBuilder) {}
 
+  ngOnDestroy(): void {
+    this._formValueChangeSubscription$?.unsubscribe()
+  }
+
   readonly initialize = (
     inputInfos: Array<
       FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
@@ -51,67 +56,76 @@ export class FormService {
     const formGroup: Record<string, FormControl> = {}
 
     this._inputInfos.forEach((inputInfo) => {
-      this.setFormGroupAndSubject(inputInfo, formGroup)
+      this.setFormGroup(inputInfo, formGroup)
     })
 
     this._form = this._formBuilder.group(formGroup)
-    this._formValueChanges$ = this._form.valueChanges
+    this._formValueChanges$ = this._form.valueChanges.pipe(
+      shareReplay({ bufferSize: 1, refCount: true }),
+    )
 
     this._initialized = true
+  }
+
+  readonly subscribeValueChange = () => {
+    this.ngOnDestroy()
+
+    this._formValueChangeSubscription$ = this._formValueChanges$.subscribe()
   }
 
   readonly reinitializeData = () => {
     if (!this._initialized) return
 
-    const formGroup: Record<string, unknown> = {}
+    const formValue: Record<string, unknown> = {}
 
     this._inputInfos.forEach((inputInfo) => {
       switch (inputInfo.inputType) {
         case 'text-color':
-          this.setInitPair(inputInfo.inputType, inputInfo, formGroup)
+          this.setInitPair(inputInfo.inputType, inputInfo, formValue)
           break
         case 'password-confirm':
-          this.setInitPair(inputInfo.inputType, inputInfo, formGroup)
+          this.setInitPair(inputInfo.inputType, inputInfo, formValue)
           break
         case 'date-range':
-          this.setInitDateRange(inputInfo, formGroup)
+          this.setInitDateRange(inputInfo, formValue)
           break
         default:
-          formGroup[inputInfo.key] = inputInfo.initValue ?? null
+          formValue[inputInfo.key] = inputInfo.initValue ?? null
           break
       }
     })
 
-    this._form.setValue(formGroup)
+    this._form.setValue(formValue)
+    this._form.markAsPristine()
   }
 
   readonly getFormValue$ = <T>(key: string) => {
     return this._form.get(key) as FormControl<T>
   }
 
-  private readonly setFormGroupAndSubject = (
+  private readonly setFormGroup = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, FormControl>,
   ) => {
     switch (inputInfo.inputType) {
       case 'text-color':
-        this.setPairToFormAndSubject(inputInfo.inputType, inputInfo, formGroup)
+        this.setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
         break
       case 'password-confirm':
-        this.setPairToFormAndSubject(inputInfo.inputType, inputInfo, formGroup)
+        this.setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
         break
       case 'date':
-        this.setDateToFormAndSubject(inputInfo, formGroup)
+        this.setDateToFormControl(inputInfo, formGroup)
         break
       case 'date-range':
-        this.setDateRangeToFormAndSubject(inputInfo, formGroup)
+        this.setDateRangeToFormControl(inputInfo, formGroup)
         break
       default:
         if (this.isFormValidatorPair(inputInfo.formValidators)) return
 
         formGroup[inputInfo.key] = new FormControl(
           inputInfo.initValue,
-          inputInfo.formValidators as ValidatorFn[],
+          inputInfo.formValidators,
         )
         break
     }
@@ -127,7 +141,7 @@ export class FormService {
     )
   }
 
-  private readonly setPairToFormAndSubject = (
+  private readonly setPairToFormControl = (
     type: 'text-color' | 'password-confirm',
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
@@ -154,7 +168,7 @@ export class FormService {
     )
   }
 
-  private readonly setDateToFormAndSubject = (
+  private readonly setDateToFormControl = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {
@@ -162,11 +176,11 @@ export class FormService {
 
     formGroup[inputInfo.key] = new FormControl(
       inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
-      inputInfo.formValidators as ValidatorFn[],
+      inputInfo.formValidators,
     )
   }
 
-  private readonly setDateRangeToFormAndSubject = (
+  private readonly setDateRangeToFormControl = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {

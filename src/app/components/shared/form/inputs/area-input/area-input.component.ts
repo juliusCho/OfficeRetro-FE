@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { BaseInputComponent } from '../inheritances/base-input/base-input.component'
+import { SuperInputComponent } from '../inheritances/super-input.component'
 
 @Component({
   selector: 'app-area-input',
@@ -7,4 +7,4 @@ import { BaseInputComponent } from '../inheritances/base-input/base-input.compon
   styleUrls: ['./area-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AreaInputComponent extends BaseInputComponent {}
+export class AreaInputComponent extends SuperInputComponent<string> {}

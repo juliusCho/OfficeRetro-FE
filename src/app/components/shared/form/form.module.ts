@@ -23,9 +23,7 @@ import { ColorPickerComponent } from './inputs/color-input/color-picker/color-pi
 import { DateInputComponent } from './inputs/date-input/date-input.component'
 import { DateRangeInputComponent } from './inputs/date-range-input/date-range-input.component'
 import { DropdownInputComponent } from './inputs/dropdown-input/dropdown-input.component'
-import { BaseDateInputComponent } from './inputs/inheritances/base-date-input/base-date-input.component'
-import { BaseInputComponent } from './inputs/inheritances/base-input/base-input.component'
-import { BaseSelectComponent } from './inputs/inheritances/base-select-input/base-select.component'
+import { BaseSelectInputComponent } from './inputs/inheritances/base-select-input/base-select-input.component'
 import { SuperInputComponent } from './inputs/inheritances/super-input.component'
 import { ListInputComponent } from './inputs/list-input/list-input.component'
 import { PasswordConfirmInputComponent } from './inputs/password-confirm-input/password-confirm-input.component'
@@ -40,8 +38,7 @@ import { LengthTextComponent } from './shared/length-text/length-text.component'
 const declarations = [
   InputFormComponent,
   TextComponent,
-  BaseInputComponent,
-  BaseSelectComponent,
+  BaseSelectInputComponent,
   SuperInputComponent,
   TextInputComponent,
   InputAlertTextComponent,
@@ -58,7 +55,6 @@ const declarations = [
   InputLabelComponent,
   DateRangeInputComponent,
   DateInputComponent,
-  BaseDateInputComponent,
   ColorInputComponent,
   ColorPickerComponent,
   ListInputComponent,

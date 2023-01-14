@@ -2,12 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
 } from '@angular/core'
 import { FormGroup } from '@angular/forms'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { isNumber } from 'src/app/helpers/type-checkers'
+import * as moment from 'moment'
+import { CustomValidator } from 'src/app/helpers/custom-form-validator'
+import { isConvertibleToMoment, isNumber } from 'src/app/helpers/type-checkers'
 import { InputUnderneathDisplay } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import {
@@ -16,7 +19,6 @@ import {
 } from 'src/app/models/client-specs/shared/css-specs'
 import { CssService } from 'src/app/services/shared/css.service'
 
-@AutoUnsubscribe()
 @Component({
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,29 +31,70 @@ export class SuperInputComponent<T> implements OnInit {
       labelSize?: CssSize
       labelWeight?: FontWeight
     }
-    isValidationNeeded?: boolean // each input's underneath will have blank space for validation message display if true
+    isValidationDisplaying?: boolean // each input's underneath will have blank space for validation message display if true
     formInputSpec: FormInputSpec<T>
     infoTextType?: InputUnderneathDisplay // text display underneath the input
   }
-  // @Input() form!: FormGroup
-  // @Input() valueChange$!: Observable<T>
-  // @Input() labelAreaWidth?: CssSize
-  // @Input() labelStyle?: { labelSize?: CssSize; labelWeight?: FontWeight }
-  // @Input() isValidationNeeded?: boolean = false // each input's underneath will have blank space for validation message display if true
-  // @Input() formInputSpec!: FormInputSpec<T>
-  // @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
 
-  @Input() set showValidationMessage(value: boolean) {
-    this._showValidationMessage = value
-  }
+  @Output() enter = new EventEmitter<void>()
 
-  private _showValidationMessage = false
-  private _max?: string
-
-  protected validationMessage = ''
+  protected isDisabled = false
 
   get form() {
     return this.input.form
+  }
+  get formInputSpec() {
+    return this.input.formInputSpec
+  }
+  get name() {
+    return this.formInputSpec.key
+  }
+  get control() {
+    return this.form.get(this.name)
+  }
+  get label() {
+    return this.formInputSpec.label
+  }
+  get min() {
+    // for string value's length
+    return this.formInputSpec.min ?? '0'
+  }
+  get max() {
+    // for string value's length
+    return this.formInputSpec.max ?? '0'
+  }
+  get maxLength() {
+    // for string value's length
+    return isNumber(this.max) ? Number(this.max) : -1
+  }
+  get minDate() {
+    return isConvertibleToMoment(this.min) ? moment(this.min) : undefined
+  }
+  get maxDate() {
+    return isConvertibleToMoment(this.max)
+      ? moment(this.max).toDate()
+      : undefined
+  }
+  get isValidationDisplaying() {
+    return this.input.isValidationDisplaying ?? false
+  }
+  get infoTextType() {
+    return this.input.infoTextType ?? 'none'
+  }
+  get displayLength() {
+    return this.infoTextType === 'all' || this.infoTextType === 'length'
+  }
+  get displayAlert() {
+    return (
+      this.isValidationDisplaying &&
+      (this.infoTextType === 'all' || this.infoTextType === 'alert')
+    )
+  }
+  get width() {
+    return this.formInputSpec.width ?? ''
+  }
+  get height() {
+    return this.formInputSpec.height ?? ''
   }
   get labelAreaWidth() {
     return this.input.labelArea?.width
@@ -64,83 +107,21 @@ export class SuperInputComponent<T> implements OnInit {
         }
       : {}
   }
-  get isValidationNeeded() {
-    return this.input.isValidationNeeded ?? false
-  }
-  get formInputSpec() {
-    return this.input.formInputSpec
-  }
-  get infoTextType() {
-    return this.input.infoTextType ?? 'none'
-  }
-  get label() {
-    return this.formInputSpec?.label
-  }
-  get name() {
-    return this.formInputSpec?.key
-  }
-  get width() {
-    return this.formInputSpec?.width ?? ''
-  }
-  get height() {
-    return this.formInputSpec?.height ?? ''
-  }
-  get min() {
-    return this.formInputSpec?.min ?? '0'
-  }
-  get max() {
-    return this._max ?? this.formInputSpec?.max ?? '0'
-  }
-  set max(value: string) {
-    this._max = value
-    this.changeDetectorRef.markForCheck()
-  }
-  get maxLength() {
-    return isNumber(this.max) ? Number(this.max) : -1
-  }
-  get isDisabled() {
-    return this.formInputSpec?.disabled ?? false
-  }
-  get required() {
-    return this.formInputSpec?.required ?? false
-  }
   get placeholder() {
     return this.formInputSpec?.placeholder ?? ''
   }
   get labelPosition() {
     return this.formInputSpec?.labelPosition ?? 'side'
   }
-
-  get showValidationMessage() {
-    return this._showValidationMessage
-  }
-
-  get displayLength() {
-    return this.infoTextType === 'all' || this.infoTextType === 'length'
-  }
-
-  get displayAlert() {
-    return (
-      this.isValidationNeeded &&
-      (this.infoTextType === 'all' || this.infoTextType === 'alert')
-    )
-  }
-
-  get alertMessage() {
-    return this._showValidationMessage ? this.validationMessage : ''
-  }
-
   get containerClass() {
     return { 'label-top': this.labelPosition === 'top' }
   }
-
   get inputAreaClass() {
     return {
       disabled: this.isDisabled,
       'no-label': !this.label || this.labelPosition === 'top',
     }
   }
-
   get inputAreaStyle() {
     const areaStyle = { height: this.cssService.getUntypedSize(this.height) }
 
@@ -167,26 +148,229 @@ export class SuperInputComponent<T> implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.ngOnInitAction()
+    if (this.formInputSpec.disabled) {
+      this.setDisabled()
+      return
+    }
+
+    if (this.max !== '0' && isNumber(this.max)) {
+      this.setMaxValidator()
+    }
+
+    if (this.min !== '0') {
+      this.setMinValidator()
+    }
+
+    this.setExtraValidator()
+
+    if (this.formInputSpec.required) {
+      this.setRequired()
+    }
   }
 
-  protected readonly ngOnInitAction = () => {
-    this.validationMessage =
-      this.required && !this.formInputSpec.initValue
-        ? `${(this.label ?? 'This field').replace(
-            /\\n/g,
-            ' ',
-          )} is a required field`
-        : ''
+  protected readonly getControlByName = (name: string) => {
+    return this.form.get(name)
+  }
+
+  protected readonly onEnter = () => {
+    this.enter.emit()
+  }
+
+  private readonly setDisabled = () => {
+    switch (this.formInputSpec.inputType) {
+      case 'date-range':
+        this.getControlByName(`${this.name}Start`)?.disable()
+        this.getControlByName(`${this.name}End`)?.disable()
+        break
+      case 'password-confirm':
+        this.control?.disable()
+        this.getControlByName(`${this.name}Confirm`)?.disable()
+        break
+      case 'text-color':
+        this.control?.disable()
+        this.getControlByName(`${this.name}Color`)?.disable()
+        break
+      default:
+        this.control?.disable()
+        break
+    }
+
+    this.isDisabled = true
 
     this.changeDetectorRef.markForCheck()
   }
 
-  protected readonly onFocusOut = () => {
-    if (!this.isValidationNeeded) return
+  private readonly setRequired = () => {
+    switch (this.formInputSpec.inputType) {
+      case 'date-range':
+        this.getControlByName(`${this.name}Start`)?.addValidators(
+          CustomValidator.required,
+        )
+        this.getControlByName(`${this.name}Start`)?.updateValueAndValidity()
+        this.getControlByName(`${this.name}End`)?.addValidators(
+          CustomValidator.required,
+        )
+        this.getControlByName(`${this.name}End`)?.updateValueAndValidity()
+        break
+      case 'password-confirm':
+        this.control?.addValidators(CustomValidator.required)
+        this.control?.updateValueAndValidity()
+        this.getControlByName(`${this.name}Confirm`)?.addValidators(
+          CustomValidator.required,
+        )
+        this.getControlByName(`${this.name}Confirm`)?.updateValueAndValidity()
+        break
+      default:
+        this.control?.addValidators(CustomValidator.required)
+        this.control?.updateValueAndValidity()
+        break
+    }
+  }
 
-    this.showValidationMessage = true
+  private readonly setMinValidator = () => {
+    if (this.formInputSpec.inputType === 'select') return
 
-    this.changeDetectorRef.markForCheck()
+    if (isNumber(this.min)) {
+      const min = Number(this.min)
+
+      switch (this.formInputSpec.inputType) {
+        case 'checkbox':
+        case 'list':
+          this.control?.addValidators(CustomValidator.listMin(min))
+          this.control?.updateValueAndValidity()
+          break
+        case 'date':
+          break
+        case 'date-range':
+          break
+        case 'password-confirm':
+          if (this.formInputSpec.required) {
+            this.control?.addValidators(CustomValidator.minLength(min))
+            this.control?.updateValueAndValidity()
+            this.getControlByName(`${this.name}Confirm`)?.addValidators(
+              CustomValidator.minLength(min),
+            )
+            this.getControlByName(
+              `${this.name}Confirm`,
+            )?.updateValueAndValidity()
+          }
+          break
+        default:
+          if (this.formInputSpec.required) {
+            this.control?.addValidators(CustomValidator.minLength(min))
+            this.control?.updateValueAndValidity()
+          }
+          break
+      }
+    } else if (isConvertibleToMoment(this.min)) {
+      switch (this.formInputSpec.inputType) {
+        case 'date':
+          this.control?.addValidators(CustomValidator.dateMin(moment(this.min)))
+          this.control?.updateValueAndValidity()
+          break
+        case 'date-range':
+          this.getControlByName(`${this.name}Start`)?.addValidators(
+            CustomValidator.dateMin(moment(this.min)),
+          )
+          this.getControlByName(`${this.name}Start`)?.updateValueAndValidity()
+          this.getControlByName(`${this.name}End`)?.addValidators(
+            CustomValidator.dateMin(moment(this.min)),
+          )
+          this.getControlByName(`${this.name}End`)?.updateValueAndValidity()
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  private readonly setMaxValidator = () => {
+    if (this.formInputSpec.inputType === 'select') return
+
+    if (isNumber(this.max)) {
+      const max = Number(this.max)
+
+      switch (this.formInputSpec.inputType) {
+        case 'checkbox':
+        case 'list':
+          this.control?.addValidators(CustomValidator.listMax(max))
+          this.control?.updateValueAndValidity()
+          break
+        case 'date':
+          break
+        case 'date-range':
+          break
+        case 'password-confirm':
+          this.control?.addValidators(CustomValidator.maxLength(max))
+          this.control?.updateValueAndValidity()
+          this.getControlByName(`${this.name}Confirm`)?.addValidators(
+            CustomValidator.maxLength(max),
+          )
+          this.getControlByName(`${this.name}Confirm`)?.updateValueAndValidity()
+          break
+        default:
+          this.control?.addValidators(CustomValidator.maxLength(max))
+          this.control?.updateValueAndValidity()
+          break
+      }
+    } else if (moment(this.max).isValid()) {
+      switch (this.formInputSpec.inputType) {
+        case 'date':
+          this.control?.addValidators(CustomValidator.dateMax(moment(this.max)))
+          this.control?.updateValueAndValidity()
+          break
+        case 'date-range':
+          this.getControlByName(`${this.name}Start`)?.addValidators(
+            CustomValidator.dateMax(moment(this.max)),
+          )
+          this.getControlByName(`${this.name}Start`)?.updateValueAndValidity()
+          this.getControlByName(`${this.name}End`)?.addValidators(
+            CustomValidator.dateMax(moment(this.max)),
+          )
+          this.getControlByName(`${this.name}End`)?.updateValueAndValidity()
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  private readonly setExtraValidator = () => {
+    switch (this.formInputSpec.inputType) {
+      case 'email':
+        this.control?.addValidators(CustomValidator.email)
+        this.control?.addValidators(CustomValidator.noBlank)
+        this.control?.updateValueAndValidity()
+        break
+      case 'password':
+      case 'password-login':
+        this.control?.addValidators(CustomValidator.noBlank)
+        this.control?.updateValueAndValidity()
+        break
+      case 'password-confirm':
+        this.control?.addValidators(CustomValidator.noBlank)
+        this.control?.updateValueAndValidity()
+        this.getControlByName(`${this.name}Confirm`)?.addValidators(
+          CustomValidator.noBlank,
+        )
+        this.getControlByName(`${this.name}Confirm`)?.updateValueAndValidity()
+        break
+      case 'date':
+        this.control?.addValidators(CustomValidator.date)
+        this.control?.updateValueAndValidity()
+        break
+      case 'date-range':
+        this.getControlByName(`${this.name}Start`)?.addValidators(
+          CustomValidator.date,
+        )
+        this.getControlByName(`${this.name}Start`)?.updateValueAndValidity()
+        this.getControlByName(`${this.name}End`)?.addValidators(
+          CustomValidator.date,
+        )
+        this.getControlByName(`${this.name}End`)?.updateValueAndValidity()
+        break
+      default:
+        break
+    }
   }
 }

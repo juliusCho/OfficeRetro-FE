@@ -1,5 +1,7 @@
-<ul class="container" [ngClass]="{ 'label-top': labelPosition === 'top' }">
-  <li *ngIf="text">
-    <app-text>{{ text }}</app-text>
+<ul
+  class="container"
+  [ngClass]="{ 'label-top': labelPosition === 'top' || !label }">
+  <li *ngIf="isError">
+    <app-text>{{ errorMessage || errorMessageWithControls }}</app-text>
   </li>
 </ul>

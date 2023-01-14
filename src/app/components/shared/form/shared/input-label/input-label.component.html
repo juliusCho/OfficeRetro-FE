@@ -12,8 +12,9 @@
       <br *ngIf="idx === 0" />
     </ng-container>
   </ng-container>
-  <ng-template #labelText>
-    {{ label }}
-  </ng-template>
   <ng-content></ng-content>
 </label>
+
+<ng-template #labelText>
+  {{ label }}
+</ng-template>

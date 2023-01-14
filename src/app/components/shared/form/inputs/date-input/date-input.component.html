@@ -5,7 +5,8 @@
     [labelPosition]="labelPosition"
     [width]="labelAreaWidth"
     [labelSize]="labelStyle.labelSize"
-    [labelWeight]="labelStyle.labelWeight"></app-input-label>
+    [labelWeight]="labelStyle.labelWeight">
+  </app-input-label>
   <mat-form-field
     [formGroup]="form"
     [ngClass]="inputAreaClass"
@@ -14,8 +15,8 @@
       matInput
       [matDatepicker]="picker"
       [formControlName]="name"
-      (dateChange)="selectDate($event)"
-      placeholder="DD/MM/YYYY"
+      (dateChange)="onTypeDate($event)"
+      [placeholder]="defaultDateFormat"
       [min]="minDate"
       [max]="maxDate"
       (keyup.enter)="onEnter()"
@@ -26,6 +27,8 @@
 </div>
 <app-input-alert-text
   *ngIf="displayAlert"
-  [text]="alertMessage"
+  [label]="label"
+  [control]="control"
   [labelPosition]="labelPosition"
-  [labelWidth]="labelAreaWidth"></app-input-alert-text>
+  [labelWidth]="labelAreaWidth">
+</app-input-alert-text>

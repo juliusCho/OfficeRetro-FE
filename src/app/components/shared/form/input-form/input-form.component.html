@@ -22,24 +22,6 @@
           formInputSpecList: formInputSpecItem
         }">
       </ng-container>
-      <ng-template #wrappedInputItem let-formInputSpecList="formInputSpecList">
-        <div class="line-wrapper">
-          <div
-            *ngFor="let fis of formInputSpecList; let idx = index"
-            class="box"
-            [ngClass]="{ 'left-item': idx === 0 }">
-            <ng-container
-              [ngTemplateOutlet]="inputItem"
-              [ngTemplateOutletContext]="{
-                formInputSpec: fis,
-                labelPositionOverride: getArrayFormInputSpecLabelPosition(
-                  idx,
-                  formInputSpecList
-                )
-              }"></ng-container>
-          </div>
-        </div>
-      </ng-template>
     </div>
   </div>
   <div class="button-section" [ngStyle]="buttonSectionStyle">
@@ -61,6 +43,26 @@
   </div>
 </form>
 
+<ng-template #wrappedInputItem let-formInputSpecList="formInputSpecList">
+  <div class="line-wrapper">
+    <div
+      *ngFor="let fis of formInputSpecList; let idx = index"
+      class="box"
+      [ngClass]="{ 'left-item': idx === 0 }">
+      <ng-container
+        [ngTemplateOutlet]="inputItem"
+        [ngTemplateOutletContext]="{
+          formInputSpec: fis,
+          labelPositionOverride: getArrayFormInputSpecLabelPosition(
+            idx,
+            formInputSpecList
+          )
+        }">
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template
   #inputItem
   let-formInputSpec="formInputSpec"
@@ -70,14 +72,12 @@
       *ngSwitchCase="'text'"
       [input]="getInputParams(formInputSpec, '')"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
       [lengthLabelPosition]="lengthLabelPosition">
     </app-text-input>
     <app-color-input
       *ngSwitchCase="'text-color'"
       [input]="getInputParams(formInputSpec, ['', ''])"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
       [lengthLabelPosition]="lengthLabelPosition">
     </app-color-input>
     <app-text-input
@@ -85,45 +85,37 @@
       [input]="getInputParams(formInputSpec, '')"
       type="email"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
       [lengthLabelPosition]="lengthLabelPosition">
     </app-text-input>
     <app-area-input
       *ngSwitchCase="'textarea'"
-      [input]="getInputParams(formInputSpec, '')"
-      [showValidationMessage]="showValidationMessage">
+      [input]="getInputParams(formInputSpec, '')">
     </app-area-input>
     <app-dropdown-input
       *ngSwitchCase="'select'"
-      [input]="getInputParams(formInputSpec, '')"
-      [showValidationMessage]="showValidationMessage">
+      [input]="getInputParams(formInputSpec, '')">
     </app-dropdown-input>
     <app-radio-input
       *ngSwitchCase="'radio'"
-      [input]="getInputParams(formInputSpec, '')"
-      [showValidationMessage]="showValidationMessage">
+      [input]="getInputParams(formInputSpec, '')">
     </app-radio-input>
     <app-checkbox-input
       *ngSwitchCase="'checkbox'"
-      [input]="getInputParams(formInputSpec, [''])"
-      [showValidationMessage]="showValidationMessage">
+      [input]="getInputParams(formInputSpec, [])">
     </app-checkbox-input>
     <app-date-input
       *ngSwitchCase="'date'"
       [input]="getInputParamsWithOrTypes(formInputSpec, '', undefined)"
-      (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage">
+      (enter)="onSubmit()">
     </app-date-input>
     <app-date-range-input
       *ngSwitchCase="'date-range'"
       [input]="getInputParamsArrayWithOrTypes(formInputSpec, '', undefined)"
-      (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage">
+      (enter)="onSubmit()">
     </app-date-range-input>
     <app-list-input
       *ngSwitchCase="'list'"
-      [input]="getInputParams(formInputSpec, [''])"
-      [showValidationMessage]="showValidationMessage"
+      [input]="getInputParams(formInputSpec, [])"
       [listInputLabel]="formInputSpec.listInputLabel"
       [isFormSubmitted]="isFormSubmitted">
     </app-list-input>
@@ -131,19 +123,16 @@
       *ngSwitchCase="'password-confirm'"
       [input]="getInputParams(formInputSpec, ['', ''])"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
       [lengthLabelPosition]="lengthLabelPosition">
     </app-password-confirm-input>
     <app-password-input
       *ngSwitchDefault
       [input]="getInputParams(formInputSpec, '')"
       (enter)="onSubmit()"
-      [showValidationMessage]="showValidationMessage"
       [lengthLabelPosition]="lengthLabelPosition">
       <app-password-reset-button
-        *ngIf="
-          formInputSpec.inputType === 'password-login'
-        "></app-password-reset-button>
+        *ngIf="formInputSpec.inputType === 'password-login'">
+      </app-password-reset-button>
     </app-password-input>
   </ng-container>
 </ng-template>

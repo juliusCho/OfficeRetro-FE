@@ -1,12 +1,10 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
 } from '@angular/core'
-import { map, Observable, of, Subscription, tap } from 'rxjs'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
-import { getBasicListInputValidationMsg } from 'src/app/helpers/input-valid-msg-generators'
+import { map, Observable, of } from 'rxjs'
+import { isArray } from 'src/app/helpers/type-checkers'
 import { convertToColumnizedArray } from 'src/app/helpers/value-converters'
 import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
@@ -14,7 +12,6 @@ import { CssService } from 'src/app/services/shared/css.service'
 import { v4 as uuid } from 'uuid'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
-@AutoUnsubscribe()
 @Component({
   selector: 'app-checkbox-input',
   templateUrl: './checkbox-input.component.html',
@@ -24,29 +21,20 @@ import { SuperInputComponent } from '../inheritances/super-input.component'
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckboxInputComponent
-  extends SuperInputComponent<string[]>
-  implements AfterContentInit
-{
+export class CheckboxInputComponent extends SuperInputComponent<string[]> {
   private readonly _componentUniqueId = uuid()
-  private _valueChangeSubscription$?: Subscription
 
   protected optionValues$!: Observable<FormInputOption[]>
 
-  get validator() {
-    return this.isValidationNeeded
-      ? undefined
-      : this.formInputSpec?.validMessageGenerator
-  }
   get options() {
-    return this.formInputSpec?.options
+    return this.formInputSpec.options
   }
   get optionsFetchUrl() {
-    return this.formInputSpec?.optionsFetchUrl
+    return this.formInputSpec.optionsFetchUrl
   }
 
   get columnCount() {
-    return this.formInputSpec?.columnCount ?? 2
+    return this.formInputSpec.columnCount ?? 2
   }
 
   get columnWidth() {
@@ -57,12 +45,6 @@ export class CheckboxInputComponent
     return this._componentUniqueId
   }
 
-  get valueChange$() {
-    return (this.form.get(this.name)?.valueChanges ?? of([])) as Observable<
-      string[]
-    >
-  }
-
   constructor(
     private readonly _requestService: HttpCommonService,
     protected override readonly cssService: CssService,
@@ -71,28 +53,24 @@ export class CheckboxInputComponent
     super(cssService, changeDetectorRef)
   }
 
-  ngAfterContentInit(): void {
-    if (this.isDisabled) {
-      this.form.get(this.name)?.disable()
+  override ngOnInit(): void {
+    super.ngOnInit()
+
+    if (this.options && this.options.length > 0) {
+      this.optionValues$ = of(this.options)
+
+      this.changeDetectorRef.markForCheck()
       return
     }
 
-    this.form.get(this.name)?.enable()
+    if (!this.optionsFetchUrl) {
+      this.optionValues$ = of([])
 
-    this._valueChangeSubscription$ = this.valueChange$
-      .pipe(
-        tap((v) => {
-          this.showValidationMessage = false
-          this.validationMessage = this.validate(v)
+      this.changeDetectorRef.markForCheck()
+      return
+    }
 
-          this.changeDetectorRef.markForCheck()
-        }),
-      )
-      .subscribe()
-
-    this.changeDetectorRef.detectChanges()
-
-    this.setOptionValueObservable()
+    this.fetchOptions()
   }
 
   readonly getItems = (optionValues: FormInputOption[]) => {
@@ -104,7 +82,8 @@ export class CheckboxInputComponent
   }
 
   readonly getSelectedOptions = (optionValues: FormInputOption[]) => {
-    const selected = this.form.value[this.name]
+    const selected = this.control?.value
+    if (!isArray(selected)) return []
 
     return !selected
       ? []
@@ -116,7 +95,7 @@ export class CheckboxInputComponent
   readonly selectOption = (value: string) => {
     if (this.isDisabled) return
 
-    let formValues: string[] = [...(this.form.value[this.name] ?? [])]
+    let formValues: string[] = [...(this.control?.value ?? [])]
 
     if (formValues.includes(value)) {
       formValues = formValues.filter((v) => v !== value)
@@ -124,27 +103,8 @@ export class CheckboxInputComponent
       formValues.push(value)
     }
 
-    this.form.get(this.name)?.setValue(formValues)
-
-    this.onFocusOut()
-  }
-
-  private readonly setOptionValueObservable = () => {
-    if (this.options && this.options.length > 0) {
-      this.optionValues$ = of(this.options)
-
-      this.changeDetectorRef.detectChanges()
-      return
-    }
-
-    if (!this.optionsFetchUrl) {
-      this.optionValues$ = of([])
-
-      this.changeDetectorRef.detectChanges()
-      return
-    }
-
-    this.fetchOptions()
+    this.control?.setValue(formValues)
+    this.control?.markAsDirty()
   }
 
   private readonly fetchOptions = () => {
@@ -162,21 +122,6 @@ export class CheckboxInputComponent
         ),
       )
 
-    this.changeDetectorRef.detectChanges()
-  }
-
-  private readonly validate = (value?: string[]) => {
-    if (this.isDisabled || !this.isValidationNeeded) return ''
-
-    const result = this.validator ? this.validator(value) : ''
-    if (result !== '') return result
-
-    return getBasicListInputValidationMsg({
-      value,
-      label: this.label,
-      required: this.required,
-      min: this.min,
-      max: this.max,
-    })
+    this.changeDetectorRef.markForCheck()
   }
 }

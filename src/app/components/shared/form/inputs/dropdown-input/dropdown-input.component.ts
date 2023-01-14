@@ -8,7 +8,7 @@ import {
 import { FormInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { ICONS } from 'src/app/models/constants/css-constants'
 import { HttpCommonService } from 'src/app/services/https/http-common.service'
-import { BaseSelectComponent } from '../inheritances/base-select-input/base-select.component'
+import { BaseSelectInputComponent } from '../inheritances/base-select-input/base-select-input.component'
 
 @Component({
   selector: 'app-dropdown-input',
@@ -17,7 +17,7 @@ import { BaseSelectComponent } from '../inheritances/base-select-input/base-sele
   providers: [HttpCommonService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DropdownInputComponent extends BaseSelectComponent {
+export class DropdownInputComponent extends BaseSelectInputComponent {
   @ViewChild('dropdownSection') dropdownSection!: ElementRef
 
   isDropdownOpened = false
@@ -47,20 +47,16 @@ export class DropdownInputComponent extends BaseSelectComponent {
 
     this.isDropdownOpened = false
 
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.markForCheck()
 
-    this.form.get(this.name)?.setValue(option.value)
-
-    this.onFocusOut()
+    this.control?.setValue(option.value)
+    this.control?.markAsDirty()
   }
 
   readonly toggleDropdown = () => {
     if (this.isDisabled) return
 
     this.isDropdownOpened = !this.isDropdownOpened
-    if (this.isDropdownOpened) {
-      this.showValidationMessage = false
-    }
 
     this.changeDetectorRef.markForCheck()
   }
@@ -75,7 +71,5 @@ export class DropdownInputComponent extends BaseSelectComponent {
     this.isDropdownOpened = false
 
     this.changeDetectorRef.markForCheck()
-
-    this.onFocusOut()
   }
 }

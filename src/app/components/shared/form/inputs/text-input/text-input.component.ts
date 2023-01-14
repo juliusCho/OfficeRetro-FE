@@ -3,12 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
-  Output,
   ViewChild,
 } from '@angular/core'
-import { BaseInputComponent } from '../inheritances/base-input/base-input.component'
+import { SuperInputComponent } from '../inheritances/super-input.component'
 
 @Component({
   selector: 'app-text-input',
@@ -17,12 +15,10 @@ import { BaseInputComponent } from '../inheritances/base-input/base-input.compon
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextInputComponent
-  extends BaseInputComponent
+  extends SuperInputComponent<string>
   implements AfterViewInit
 {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
-
-  @Output() enter = new EventEmitter<void>()
 
   @ViewChild('innerContent') innerContentRef!: ElementRef
 
@@ -45,19 +41,9 @@ export class TextInputComponent
   }
 
   ngAfterViewInit(): void {
-    this.valueChangeSubscription$ = this.valueChangeObservable$?.subscribe()
-
     this.isInnerContentExist =
       (this.innerContentRef?.nativeElement.children.length ?? 0) > 0
 
     this.changeDetectorRef.detectChanges()
-  }
-
-  readonly onEnter = () => {
-    this.showValidationMessage = true
-
-    this.changeDetectorRef.markForCheck()
-
-    this.enter.emit()
   }
 }
