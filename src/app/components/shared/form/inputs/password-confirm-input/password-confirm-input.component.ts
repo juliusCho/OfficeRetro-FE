@@ -41,7 +41,7 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
     return this.label ? `${this.label} & Confirm` : undefined
   }
 
-  get passwordValidators() {
+  get _passwordValidators() {
     if (this.isDisabled) return []
 
     let preset = [CustomValidator.noBlank]
@@ -128,7 +128,7 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
       if (confirmControl.hasError('equalTo') && errors && 'equalTo' in errors) {
         delete errors['equalTo']
         confirmControl.setErrors({ ...errors })
-        confirmControl.setValidators(this.passwordValidators)
+        confirmControl.setValidators(this._passwordValidators)
 
         confirmControl.updateValueAndValidity({ onlySelf: true })
       } else {
@@ -136,7 +136,7 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
       }
     } else if (!confirmControl.hasError('equalTo')) {
       confirmControl.setValidators([
-        ...this.passwordValidators,
+        ...this._passwordValidators,
         CustomValidator.equalTo(targetValue),
       ])
 

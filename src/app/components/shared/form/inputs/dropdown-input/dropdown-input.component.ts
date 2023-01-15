@@ -18,7 +18,7 @@ import { BaseSelectInputComponent } from '../inheritances/base-select-input/base
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropdownInputComponent extends BaseSelectInputComponent {
-  @ViewChild('dropdownSection') dropdownSection!: ElementRef
+  @ViewChild('dropdownSection') _dropdownSection!: ElementRef
 
   isDropdownOpened = false
 
@@ -43,14 +43,13 @@ export class DropdownInputComponent extends BaseSelectInputComponent {
   }
 
   override readonly selectOption = (option: FormInputOption) => {
+    super.selectOption(option)
+
     if (this.isDisabled) return
 
     this.isDropdownOpened = false
 
     this.changeDetectorRef.markForCheck()
-
-    this.control?.setValue(option.value)
-    this.control?.markAsDirty()
   }
 
   readonly toggleDropdown = () => {
@@ -64,7 +63,7 @@ export class DropdownInputComponent extends BaseSelectInputComponent {
   @HostListener('document:mousedown', ['$event'])
   private readonly _onGlobalClick = (event: MouseEvent) => {
     if (this.isDisabled || !this.isDropdownOpened) return
-    if (this.dropdownSection.nativeElement.contains(event.target)) {
+    if (this._dropdownSection.nativeElement.contains(event.target)) {
       return
     }
 

@@ -16,10 +16,6 @@ export class InputAlertTextComponent {
   @Input() labelPosition?: 'side' | 'top' = 'side'
   @Input() labelWidth?: CssSize
 
-  get labelParsed() {
-    return (this.label ?? 'This field').replace(/\\n/g, ' ')
-  }
-
   get errorMessage() {
     if (!this.control || !this.control.dirty) return ''
 
@@ -66,6 +62,10 @@ export class InputAlertTextComponent {
     }
   }
 
+  get _labelParsed() {
+    return (this.label ?? 'This field').replace(/\\n/g, ' ')
+  }
+
   constructor(private readonly _cssService: CssService) {}
 
   private readonly _getControlErrorMessage = (
@@ -78,6 +78,6 @@ export class InputAlertTextComponent {
       .sort((a, b) => a.priority - b.priority)
     if (errList.length === 0) return ''
 
-    return `${this.labelParsed} ${errList[0].message}`
+    return `${this._labelParsed} ${errList[0].message}`
   }
 }

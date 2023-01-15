@@ -26,23 +26,24 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
 
   protected optionValues$!: Observable<FormInputOption[]>
 
-  get options() {
-    return this.formInputSpec.options
-  }
-  get optionsFetchUrl() {
-    return this.formInputSpec.optionsFetchUrl
-  }
-
-  get columnCount() {
-    return this.formInputSpec.columnCount ?? 2
-  }
-
   get columnWidth() {
-    return `calc(100% / ${this.columnCount})`
+    return { width: `calc(100% / ${this._columnCount})` }
   }
 
   get componentUniqueId() {
     return this._COMPONENT_UNIQUE_ID
+  }
+
+  get _options() {
+    return this.formInputSpec.options
+  }
+
+  get _optionsFetchUrl() {
+    return this.formInputSpec.optionsFetchUrl
+  }
+
+  get _columnCount() {
+    return this.formInputSpec.columnCount ?? 2
   }
 
   constructor(
@@ -56,14 +57,14 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
   override ngOnInit(): void {
     super.ngOnInit()
 
-    if (this.options && this.options.length > 0) {
-      this.optionValues$ = of(this.options)
+    if (this._options && this._options.length > 0) {
+      this.optionValues$ = of(this._options)
 
       this.changeDetectorRef.markForCheck()
       return
     }
 
-    if (!this.optionsFetchUrl) {
+    if (!this._optionsFetchUrl) {
       this.optionValues$ = of([])
 
       this.changeDetectorRef.markForCheck()
@@ -74,7 +75,7 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
   }
 
   readonly getItems = (optionValues: FormInputOption[]) => {
-    return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
+    return convertToColumnizedArray(optionValues, this._columnCount ?? 0)
   }
 
   readonly trackByIndex = (index: number) => {
@@ -112,10 +113,10 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
   }
 
   private readonly _fetchOptions = () => {
-    if (!this.optionsFetchUrl) return
+    if (!this._optionsFetchUrl) return
 
     this.optionValues$ = this._requestService
-      .getGeneralFetch(this.optionsFetchUrl)
+      .getGeneralFetch(this._optionsFetchUrl)
       .pipe(
         map((data) =>
           data.map((d) => ({

@@ -1,5 +1,5 @@
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -31,7 +31,7 @@ import { CssService } from 'src/app/services/shared/css.service'
   providers: [FormService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
+export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
@@ -56,24 +56,16 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   @Output() submitAction = new EventEmitter<Record<string, unknown>>()
   @Output() cancel = new EventEmitter<void>()
 
-  @ViewChild('submitInjectTag') submitInjectTag!: ElementRef
+  @ViewChild('submitInjectTag') _submitInjectTag!: ElementRef
 
-  showValidationMessage = false
-  isFormSubmitted = false
+  isFormSubmitted = false // for list-input component's form to be re-initialized
 
   get form() {
     return this._formService.form
   }
 
-  get doesWidthLayoutAdjust() {
-    return (
-      this.buttonArea?.position !== 'right' ||
-      !this._cssService.getSize(this.buttonArea?.width)
-    )
-  }
-
   get inputSectionStyle() {
-    return this.doesWidthLayoutAdjust
+    return this._doesWidthLayoutAdjust
       ? {}
       : {
           width: `calc(100% - ${this._cssService.getSize(
@@ -83,7 +75,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   get buttonSectionStyle() {
-    return this.doesWidthLayoutAdjust
+    return this._doesWidthLayoutAdjust
       ? {}
       : { width: this._cssService.getSize(this.buttonArea?.width) }
   }
@@ -102,6 +94,13 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       width: this._cssService.getUntypedSize(this.width),
       'button-side': this.buttonArea?.position === 'right',
     }
+  }
+
+  get _doesWidthLayoutAdjust() {
+    return (
+      this.buttonArea?.position !== 'right' ||
+      !this._cssService.getSize(this.buttonArea?.width)
+    )
   }
 
   constructor(
@@ -130,9 +129,9 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
     this._setIsFormSubmitted(false)
   }
 
-  ngAfterContentInit(): void {
+  ngAfterViewInit(): void {
     if (
-      this.submitInjectTag.nativeElement.children.length > 0 ||
+      this._submitInjectTag.nativeElement.children.length > 0 ||
       this.buttonArea?.submitButton
     ) {
       return
@@ -147,6 +146,8 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       )
 
     this._formService.subscribeValueChange()
+
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly isSpecArray = (
@@ -155,14 +156,6 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       | [FormInputSpec<unknown>, FormInputSpec<unknown>],
   ) => {
     return isArray(formInputSpec)
-  }
-
-  readonly getFormInputSpec = <T>(
-    formInputSpec: FormInputSpec<T>,
-    labelPosition?: 'top' | 'side',
-  ) => {
-    if (!labelPosition) return formInputSpec
-    return { ...formInputSpec, labelPosition }
   }
 
   readonly getArrayFormInputSpecLabelPosition = (

@@ -18,7 +18,7 @@
         <div
           *ngFor="let option of optionRows"
           class="column"
-          [style]="'width:' + columnWidth"
+          [ngStyle]="columnWidth"
           (click)="selectOption(option)">
           <label
             [for]="componentUniqueId + option.value || 'empty'"

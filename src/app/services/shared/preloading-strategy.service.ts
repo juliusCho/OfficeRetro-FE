@@ -38,9 +38,7 @@ export class PreloadingStrategyService implements PreloadingStrategy {
   ): nav is Navigator & {
     connection: { saveData: boolean; effectiveType: string }
   } => {
-    if ('connection' in nav) return true
-
-    return false
+    return 'connection' in nav
   }
 
   private readonly _loadRoute = (

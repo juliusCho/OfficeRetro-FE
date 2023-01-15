@@ -17,20 +17,20 @@ import { BaseSelectInputComponent } from '../inheritances/base-select-input/base
 export class RadioInputComponent extends BaseSelectInputComponent {
   private readonly _COMPONENT_UNIQUE_ID = uuid()
 
-  get columnCount() {
-    return this.formInputSpec?.columnCount ?? 2
-  }
-
   get columnWidth() {
-    return `calc(100% / ${this.columnCount})`
+    return { width: `calc(100% / ${this._columnCount})` }
   }
 
   get componentUniqueId() {
     return this._COMPONENT_UNIQUE_ID
   }
 
+  get _columnCount() {
+    return this.formInputSpec?.columnCount ?? 2
+  }
+
   readonly getItems = (optionValues: FormInputOption[]) => {
-    return convertToColumnizedArray(optionValues, this.columnCount ?? 0)
+    return convertToColumnizedArray(optionValues, this._columnCount ?? 0)
   }
 
   readonly trackByIndex = (index: number) => {

@@ -37,7 +37,7 @@ export class ListInputComponent
   @Input() listInputLabel?: string = ''
   @Input() isFormSubmitted?: boolean = false // To check if the parent form has submitted
 
-  @ViewChild('listSection') listSection!: ElementRef
+  @ViewChild('listSection') _listSection!: ElementRef
 
   innerFormInputSpecs: FormInputSpec<unknown>[] = []
   innerFormSubmittable = false
@@ -193,9 +193,9 @@ export class ListInputComponent
   }
 
   private readonly _scrollListToTop = () => {
-    if (!this.listSection) return
+    if (!this._listSection) return
 
-    this.listSection.nativeElement.scrollTop = 0
+    this._listSection.nativeElement.scrollTop = 0
     this.changeDetectorRef.markForCheck()
   }
 }
