@@ -234,17 +234,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       this.form.get(key)?.markAsDirty()
     })
 
-    if (this.form.invalid) {
-      if (
-        this.formInputSpecs.some((fis) => !isArray(fis) && fis.key === 'input')
-      ) {
-        console.log('child form invalid', this.form)
-      } else {
-        console.log('form invalid', this.form)
-      }
-
-      return
-    }
+    if (this.form.invalid) return
 
     this.submitAction.emit(this.form.value)
   }

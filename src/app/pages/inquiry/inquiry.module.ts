@@ -3,20 +3,21 @@ import { NgModule } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { FormModule } from 'src/app/components/shared/form/form.module'
 import { SharedModule } from 'src/app/components/shared/shared.module'
-import { BasePageModule } from '../base-page.module'
-import { LoginRouterModule } from './login-routing.module'
-import LoginComponent from './login.component'
+import { InquiryListComponent } from './inquiry-list/inquiry-list.component'
+import { InquiryRouterModule } from './inquiry-routing.module'
+
+export const declarations = [InquiryListComponent]
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations,
   imports: [
     SharedModule,
-    LoginRouterModule,
     CommonModule,
     ReactiveFormsModule,
     FormModule,
-    BasePageModule,
+    InquiryRouterModule,
   ],
-  exports: [LoginComponent],
+  providers: [],
+  exports: declarations,
 })
-export class LoginModule {}
+export class InquiryModule {}

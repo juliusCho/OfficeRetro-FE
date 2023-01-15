@@ -1,0 +1,32 @@
+@import 'styles';
+
+%host-simple {
+  @extend %center-list;
+  @extend %scroll-area;
+  width: 100%;
+  height: fit-content;
+  padding-bottom: $unit-5;
+
+  .container {
+    @extend %swollen;
+    margin: $unit-5 0 $unit-15 0;
+    max-width: calc($intro-form-width + $unit-30);
+    padding: $unit-6 $unit-7 $unit-6 $unit-9;
+
+    p {
+      margin-bottom: $unit-10;
+    }
+  }
+}
+
+%host-form {
+  @extend %host-simple;
+  padding-bottom: unset;
+
+  .form {
+    @extend %swollen;
+    margin: $unit-5 0 $unit-10 0;
+    width: calc($intro-form-width + $unit-7 + $unit-9);
+    padding: $unit-9 $unit-7 $unit-6 $unit-9;
+  }
+}

@@ -1,5 +1,5 @@
 <app-center-title>Sign Up</app-center-title>
-<div class="form" [ngClass]="{ loaded: isPageLoaded }">
+<div class="form">
   <app-form
     [buttonArea]="{ submitButton: { label: 'Signup', color: 'default' } }"
     [formInputSpecs]="formInputSpecs"
@@ -12,5 +12,3 @@
 <app-button routerLink="/login" routerLinkActive="router-link-active">
   Login
 </app-button>
-
-<app-loading [loading]="!isPageLoaded"></app-loading>

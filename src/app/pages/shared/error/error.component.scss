@@ -1,0 +1,9 @@
+@import '../../../styles/etc-extensions/init-page-extensions';
+
+:host {
+  @extend %host-simple;
+
+  .container {
+    padding: $unit-6 $unit-8 $unit-10 $unit-9;
+  }
+}

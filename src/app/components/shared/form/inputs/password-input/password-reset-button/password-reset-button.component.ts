@@ -15,6 +15,6 @@ export class PasswordResetButtonComponent {
   constructor(private readonly _router: Router) {}
 
   readonly onClick = () => {
-    console.log('onClick')
+    this._router.navigateByUrl('pw-reset')
   }
 }

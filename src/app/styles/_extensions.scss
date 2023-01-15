@@ -66,6 +66,11 @@
   }
 }
 
+%button-highlight {
+  @extend %button;
+  @extend %swollen-highlight;
+}
+
 %button-disabled {
   border-radius: 35px;
   height: $unit-11;

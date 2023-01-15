@@ -3,6 +3,7 @@
 - Tooltip
 - Button
   - PlusButton
+  - BackButton
 - CenterTitle
 - Text
   - InfoText
@@ -29,9 +30,10 @@
   - DateRangeInput
   - ListInput
 
+- TopAlert
+
 - ModalLoading
 - GridLoading
-- BackButton
 - SearchButton
 - ConfirmModal
 - AlertModal
@@ -59,7 +61,6 @@
 ## Workspace
 
 - WorkspaceLoading
-- TopAlert
 - SelectedProfile
 - MenuToggle
 - CreateFolder

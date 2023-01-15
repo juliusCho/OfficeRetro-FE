@@ -1,0 +1,53 @@
+@import 'styles';
+
+:host {
+  z-index: 20;
+  position: fixed;
+  top: $unit-5;
+  left: $unit-5;
+  display: flex;
+  justify-content: center;
+  width: calc(100% - $unit-5 - $unit-5);
+
+  .container {
+    .top-alert {
+      background-color: $input-color;
+      padding: $unit-5 $unit-7 $unit-7 $unit-7;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      border-radius: 15px;
+      transition: opacity 0.5s;
+      box-shadow: $float-box-shadow;
+      opacity: 0;
+      @include call-onetime-ani(ani-rollup, 0.2s);
+
+      &.show {
+        opacity: 1;
+        transition: opacity 0.5s;
+        @include call-onetime-ani(ani-dropdown, 0.2s);
+      }
+
+      &.alert {
+        background-color: $highlight-pale;
+      }
+
+      .close {
+        @extend %button;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: $unit-5;
+        height: $unit-7 !important;
+        padding: revert !important;
+        width: $unit-7;
+
+        &.alert {
+          @extend %button-highlight;
+          background-color: $button-disabled-color;
+        }
+      }
+    }
+  }
+}

@@ -49,3 +49,9 @@
   --unit-39: #{$unit-39};
   --unit-40: #{$unit-40};
 }
+
+.css-color {
+  --main: #{$main};
+  --highlight: #{$highlight};
+  --error: #{$error};
+}

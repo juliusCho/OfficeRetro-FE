@@ -1,5 +1,5 @@
 <app-center-title>Office Retro</app-center-title>
-<div class="form" [ngClass]="{ loaded: isPageLoaded }">
+<div class="form">
   <app-form
     [buttonArea]="{ submitButton: { label: 'Login', color: 'default' } }"
     [formInputSpecs]="formInputSpecs"
@@ -13,10 +13,10 @@
   Sign Up
 </app-button>
 <div class="other-buttons">
-  <app-button [isPale]="true" width="unit-24" [isDisabled]="true"
-    >Inquiry Page</app-button
-  >
-  <app-button [isPale]="true" width="unit-24">About Office Retro</app-button>
+  <app-button [isPale]="true" width="unit-24" routerLink="/inquiries">
+    Inquiry Page
+  </app-button>
+  <app-button [isPale]="true" width="unit-24" routerLink="/about">
+    About Office Retro
+  </app-button>
 </div>
-
-<app-loading [loading]="!isPageLoaded"></app-loading>

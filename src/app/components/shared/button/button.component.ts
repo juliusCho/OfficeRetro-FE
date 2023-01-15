@@ -16,7 +16,7 @@ export class ButtonComponent {
   @Input() isLargeFont?: boolean = false
   @Input() width?: CssSize
   @Input() height?: CssSize
-  @Input() style?: string = ''
+  @Input() style?: Record<string, string>
   @Input() color?: ButtonColor = 'default'
 
   @Output() click = new EventEmitter<void>()
@@ -35,9 +35,11 @@ export class ButtonComponent {
   }
 
   readonly getExtraCssStyle = () => {
-    return {
+    const style = {
       width: this._cssService.getSize(this.width) || 'fit-content',
       height: this._cssService.getSize(this.height) || '',
     }
+
+    return this.style ? { ...style, ...this.style } : style
   }
 }

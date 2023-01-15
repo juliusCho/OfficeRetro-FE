@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this._cssService.loadSizes()
+    this._cssService.loadColors()
   }
 
   readonly onActivate = () => {

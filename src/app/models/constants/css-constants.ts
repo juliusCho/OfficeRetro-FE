@@ -41,6 +41,8 @@ export const SIZE_LIST = [
   'unit-40',
 ] as const
 
+export const COLOR_LIST = ['main', 'highlight', 'error'] as const
+
 export const ICONS = {
   CALENDAR: 'fa-regular fa-calendar',
   CARET_DOWN: 'fa-solid fa-caret-down',
@@ -50,4 +52,5 @@ export const ICONS = {
   PLUS: 'fa-solid fa-plus',
   CROSS: 'fa-solid fa-xmark',
   UP_DOWN: 'fa-solid fa-arrows-up-down',
+  ARROW_LEFT: 'fa-solid fa-arrow-left',
 } as const

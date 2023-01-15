@@ -1,0 +1,24 @@
+@import '../../../styles/etc-extensions/init-page-extensions';
+
+:host {
+  @extend %host-form;
+
+  ::ng-deep app-button {
+    margin: $unit-4;
+  }
+
+  .other-buttons {
+    @extend %center-list;
+    @extend %engraved;
+    padding: $unit-10;
+    margin: $unit-18 0 $unit-10 0;
+
+    ::ng-deep {
+      app-button {
+        button {
+          width: $unit-22;
+        }
+      }
+    }
+  }
+}

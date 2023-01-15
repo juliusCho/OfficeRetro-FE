@@ -16,7 +16,7 @@ export class PlusButtonComponent {
   @Input() isDisabled?: boolean = false
   @Input() size?: CssSize = 'unit-11'
   @Input() iconSize?: CssSize = 'unit-5'
-  @Input() style?: string = ''
+  @Input() style?: Record<string, string>
   @Input() color?: ButtonColor = 'default'
 
   @Output() click = new EventEmitter<void>()
@@ -30,12 +30,15 @@ export class PlusButtonComponent {
   }
 
   get plusStyle() {
-    if (this.style?.includes('padding')) return this.style
+    if (this.style && Object.keys(this.style).some((k) => k === 'padding'))
+      return this.style
 
     const size = this._cssService.getSize(this.size ?? 'unit-11') ?? ''
     const iconSize = this.cssIconSize ?? ''
 
-    return `padding:${this.getCalculatedPadding(size, iconSize)};${this.style}`
+    const style = { padding: this.getCalculatedPadding(size, iconSize) }
+
+    return this.style ? { ...style, ...this.style } : style
   }
 
   constructor(private readonly _cssService: CssService) {}

@@ -37,7 +37,6 @@ import { LengthTextComponent } from './shared/length-text/length-text.component'
 
 const declarations = [
   InputFormComponent,
-  TextComponent,
   BaseSelectInputComponent,
   SuperInputComponent,
   TextInputComponent,
@@ -60,6 +59,7 @@ const declarations = [
   ListInputComponent,
   PlusButtonComponent,
   PasswordConfirmInputComponent,
+  TextComponent,
 ]
 
 @NgModule({
