@@ -15,7 +15,7 @@ import { BaseSelectInputComponent } from '../inheritances/base-select-input/base
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioInputComponent extends BaseSelectInputComponent {
-  private readonly _componentUniqueId = uuid()
+  private readonly _COMPONENT_UNIQUE_ID = uuid()
 
   get columnCount() {
     return this.formInputSpec?.columnCount ?? 2
@@ -26,7 +26,7 @@ export class RadioInputComponent extends BaseSelectInputComponent {
   }
 
   get componentUniqueId() {
-    return this._componentUniqueId
+    return this._COMPONENT_UNIQUE_ID
   }
 
   readonly getItems = (optionValues: FormInputOption[]) => {

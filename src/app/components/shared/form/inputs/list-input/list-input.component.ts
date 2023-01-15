@@ -59,7 +59,7 @@ export class ListInputComponent
   override ngOnInit(): void {
     super.ngOnInit()
 
-    this.setFormInputOption()
+    this._setFormInputOption()
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -68,19 +68,19 @@ export class ListInputComponent
     const { previousValue, currentValue } = changes['isFormSubmitted']
     if (previousValue === currentValue || previousValue || !currentValue) return
 
-    this.setInnerFormSubmittable(true)
-    this.setInnerFormSubmittable(false)
-    this.scrollListToTop()
+    this._setInnerFormSubmittable(true)
+    this._setInnerFormSubmittable(false)
+    this._scrollListToTop()
   }
 
   ngAfterViewInit(): void {
-    this.scrollListToTop()
+    this._scrollListToTop()
   }
 
   readonly addOption = (formValue: Record<string, unknown>) => {
     if (
       this.isDisabled ||
-      !this.isFormInputOption(formValue) ||
+      !this._isFormInputOption(formValue) ||
       !this.control ||
       !isArray(this.control.value)
     )
@@ -105,14 +105,14 @@ export class ListInputComponent
       ...existingList,
     ]
 
-    this.setInnerFormSubmittable(true)
+    this._setInnerFormSubmittable(true)
 
     this.control.setValue(newOptionList)
     this.control.markAsDirty()
 
-    this.setInnerFormSubmittable(false)
+    this._setInnerFormSubmittable(false)
 
-    this.scrollListToTop()
+    this._scrollListToTop()
   }
 
   readonly deleteOption = (option: FormListInputOption) => {
@@ -164,7 +164,7 @@ export class ListInputComponent
     this.control.markAsDirty()
   }
 
-  private readonly setFormInputOption = () => {
+  private readonly _setFormInputOption = () => {
     this.innerFormInputSpecs = [
       {
         key: 'input',
@@ -181,18 +181,18 @@ export class ListInputComponent
     this.changeDetectorRef.detectChanges()
   }
 
-  private readonly isFormInputOption = (
+  private readonly _isFormInputOption = (
     value: Record<string, unknown>,
   ): value is { input: string; inputColor: string } => {
     return 'input' in value && 'inputColor' in value
   }
 
-  private readonly setInnerFormSubmittable = (value: boolean) => {
+  private readonly _setInnerFormSubmittable = (value: boolean) => {
     this.innerFormSubmittable = value
     this.changeDetectorRef.detectChanges()
   }
 
-  private readonly scrollListToTop = () => {
+  private readonly _scrollListToTop = () => {
     if (!this.listSection) return
 
     this.listSection.nativeElement.scrollTop = 0

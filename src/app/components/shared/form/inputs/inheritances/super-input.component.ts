@@ -149,22 +149,22 @@ export class SuperInputComponent<T> implements OnInit {
 
   ngOnInit(): void {
     if (this.formInputSpec.disabled) {
-      this.setDisabled()
+      this._setDisabled()
       return
     }
 
     if (this.max !== '0' && isNumber(this.max)) {
-      this.setMaxValidator()
+      this._setMaxValidator()
     }
 
     if (this.min !== '0') {
-      this.setMinValidator()
+      this._setMinValidator()
     }
 
-    this.setExtraValidator()
+    this._setExtraValidator()
 
     if (this.formInputSpec.required) {
-      this.setRequired()
+      this._setRequired()
     }
   }
 
@@ -176,7 +176,7 @@ export class SuperInputComponent<T> implements OnInit {
     this.enter.emit()
   }
 
-  private readonly setDisabled = () => {
+  private readonly _setDisabled = () => {
     switch (this.formInputSpec.inputType) {
       case 'date-range':
         this.getControlByName(`${this.name}Start`)?.disable()
@@ -200,7 +200,7 @@ export class SuperInputComponent<T> implements OnInit {
     this.changeDetectorRef.markForCheck()
   }
 
-  private readonly setRequired = () => {
+  private readonly _setRequired = () => {
     switch (this.formInputSpec.inputType) {
       case 'date-range':
         this.getControlByName(`${this.name}Start`)?.addValidators(
@@ -227,7 +227,7 @@ export class SuperInputComponent<T> implements OnInit {
     }
   }
 
-  private readonly setMinValidator = () => {
+  private readonly _setMinValidator = () => {
     if (this.formInputSpec.inputType === 'select') return
 
     if (isNumber(this.min)) {
@@ -284,7 +284,7 @@ export class SuperInputComponent<T> implements OnInit {
     }
   }
 
-  private readonly setMaxValidator = () => {
+  private readonly _setMaxValidator = () => {
     if (this.formInputSpec.inputType === 'select') return
 
     if (isNumber(this.max)) {
@@ -335,7 +335,7 @@ export class SuperInputComponent<T> implements OnInit {
     }
   }
 
-  private readonly setExtraValidator = () => {
+  private readonly _setExtraValidator = () => {
     switch (this.formInputSpec.inputType) {
       case 'email':
         this.control?.addValidators(CustomValidator.email)

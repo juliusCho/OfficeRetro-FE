@@ -56,7 +56,7 @@ export class FormService implements OnDestroy {
     const formGroup: Record<string, FormControl> = {}
 
     this._inputInfos.forEach((inputInfo) => {
-      this.setFormGroup(inputInfo, formGroup)
+      this._setFormGroup(inputInfo, formGroup)
     })
 
     this._form = this._formBuilder.group(formGroup)
@@ -81,13 +81,13 @@ export class FormService implements OnDestroy {
     this._inputInfos.forEach((inputInfo) => {
       switch (inputInfo.inputType) {
         case 'text-color':
-          this.setInitPair(inputInfo.inputType, inputInfo, formValue)
+          this._setInitPair(inputInfo.inputType, inputInfo, formValue)
           break
         case 'password-confirm':
-          this.setInitPair(inputInfo.inputType, inputInfo, formValue)
+          this._setInitPair(inputInfo.inputType, inputInfo, formValue)
           break
         case 'date-range':
-          this.setInitDateRange(inputInfo, formValue)
+          this._setInitDateRange(inputInfo, formValue)
           break
         default:
           formValue[inputInfo.key] = inputInfo.initValue ?? null
@@ -103,25 +103,25 @@ export class FormService implements OnDestroy {
     return this._form.get(key) as FormControl<T>
   }
 
-  private readonly setFormGroup = (
+  private readonly _setFormGroup = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, FormControl>,
   ) => {
     switch (inputInfo.inputType) {
       case 'text-color':
-        this.setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
+        this._setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
         break
       case 'password-confirm':
-        this.setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
+        this._setPairToFormControl(inputInfo.inputType, inputInfo, formGroup)
         break
       case 'date':
-        this.setDateToFormControl(inputInfo, formGroup)
+        this._setDateToFormControl(inputInfo, formGroup)
         break
       case 'date-range':
-        this.setDateRangeToFormControl(inputInfo, formGroup)
+        this._setDateRangeToFormControl(inputInfo, formGroup)
         break
       default:
-        if (this.isFormValidatorPair(inputInfo.formValidators)) return
+        if (this._isFormValidatorPair(inputInfo.formValidators)) return
 
         formGroup[inputInfo.key] = new FormControl(
           inputInfo.initValue,
@@ -131,7 +131,7 @@ export class FormService implements OnDestroy {
     }
   }
 
-  private readonly isFormValidatorPair = (
+  private readonly _isFormValidatorPair = (
     formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]],
   ): formValidators is [ValidatorFn[], ValidatorFn[]] => {
     return (
@@ -141,14 +141,14 @@ export class FormService implements OnDestroy {
     )
   }
 
-  private readonly setPairToFormControl = (
+  private readonly _setPairToFormControl = (
     type: 'text-color' | 'password-confirm',
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {
     if (!isStringArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
       return
-    if (this.isFormValidatorPair(inputInfo.formValidators)) return
+    if (this._isFormValidatorPair(inputInfo.formValidators)) return
 
     formGroup[inputInfo.key] = new FormControl(
       inputInfo.initValue[0] ?? '',
@@ -168,11 +168,11 @@ export class FormService implements OnDestroy {
     )
   }
 
-  private readonly setDateToFormControl = (
+  private readonly _setDateToFormControl = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {
-    if (this.isFormValidatorPair(inputInfo.formValidators)) return
+    if (this._isFormValidatorPair(inputInfo.formValidators)) return
 
     formGroup[inputInfo.key] = new FormControl(
       inputInfo.initValue ? moment(inputInfo.initValue) : undefined,
@@ -180,14 +180,14 @@ export class FormService implements OnDestroy {
     )
   }
 
-  private readonly setDateRangeToFormControl = (
+  private readonly _setDateRangeToFormControl = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {
     if (!isDateArray(inputInfo.initValue) || inputInfo.initValue.length < 2)
       return
 
-    if (this.isFormValidatorPair(inputInfo.formValidators)) {
+    if (this._isFormValidatorPair(inputInfo.formValidators)) {
       formGroup[`${inputInfo.key}Start`] = new FormControl(
         inputInfo.initValue[0] ? moment(inputInfo.initValue[0]) : undefined,
         inputInfo.formValidators[0],
@@ -207,7 +207,7 @@ export class FormService implements OnDestroy {
     )
   }
 
-  private readonly setInitPair = (
+  private readonly _setInitPair = (
     type: 'text-color' | 'password-confirm',
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
@@ -221,7 +221,7 @@ export class FormService implements OnDestroy {
     ] = inputInfo.initValue[1] ?? ''
   }
 
-  private readonly setInitDateRange = (
+  private readonly _setInitDateRange = (
     inputInfo: FormInputSpec<unknown>,
     formGroup: Record<string, unknown>,
   ) => {

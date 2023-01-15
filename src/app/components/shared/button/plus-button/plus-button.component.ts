@@ -36,7 +36,7 @@ export class PlusButtonComponent {
     const size = this._cssService.getSize(this.size ?? 'unit-11') ?? ''
     const iconSize = this.cssIconSize ?? ''
 
-    const style = { padding: this.getCalculatedPadding(size, iconSize) }
+    const style = { padding: this._getCalculatedPadding(size, iconSize) }
 
     return this.style ? { ...style, ...this.style } : style
   }
@@ -47,7 +47,7 @@ export class PlusButtonComponent {
     this.click.emit()
   }
 
-  private readonly getCalculatedPadding = (size: string, iconSize: string) => {
+  private readonly _getCalculatedPadding = (size: string, iconSize: string) => {
     const sizeNum = Number(size.replace(/ /g, '').replace(/rem/g, ''))
     if (!isNumber(sizeNum)) return ''
 

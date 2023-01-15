@@ -10,7 +10,7 @@ export class PreloadingStrategyService implements PreloadingStrategy {
     route: Route,
     fn: () => Observable<unknown>,
   ): Observable<unknown> => {
-    if (this.isNavigatorWithConnection(navigator)) {
+    if (this._isNavigatorWithConnection(navigator)) {
       const connection = navigator['connection']
       if (connection.saveData) {
         return of(null)
@@ -27,13 +27,13 @@ export class PreloadingStrategyService implements PreloadingStrategy {
       const delay = route.data['loadAfterSeconds']
         ? route.data['loadAfterSeconds']
         : 0
-      return this.loadRoute(delay, fn)
+      return this._loadRoute(delay, fn)
     }
 
     return of(null)
   }
 
-  private readonly isNavigatorWithConnection = (
+  private readonly _isNavigatorWithConnection = (
     nav: Navigator,
   ): nav is Navigator & {
     connection: { saveData: boolean; effectiveType: string }
@@ -43,7 +43,7 @@ export class PreloadingStrategyService implements PreloadingStrategy {
     return false
   }
 
-  private readonly loadRoute = (
+  private readonly _loadRoute = (
     delay: number,
     fn: () => Observable<unknown>,
   ) => {

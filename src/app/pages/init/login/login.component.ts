@@ -44,7 +44,7 @@ export default class LoginComponent {
   ) {}
 
   readonly onSubmit = async (formValue: Record<string, unknown>) => {
-    if (!this.isLoginInfo(formValue)) {
+    if (!this._isLoginInfo(formValue)) {
       this._globalService.topAlert = { show: true, type: 'alert' }
       return
     }
@@ -72,7 +72,7 @@ export default class LoginComponent {
       })
   }
 
-  private readonly isLoginInfo = (
+  private readonly _isLoginInfo = (
     formValue: Record<string, unknown>,
   ): formValue is LoginInfo => {
     return 'email' in formValue && 'password' in formValue

@@ -51,7 +51,7 @@ export class BaseSelectInputComponent extends SuperInputComponent<string> {
       return
     }
 
-    this.fetchOptions()
+    this._fetchOptions()
   }
 
   protected readonly selectOption = (option: FormInputOption) => {
@@ -72,7 +72,7 @@ export class BaseSelectInputComponent extends SuperInputComponent<string> {
       : optionValues.find((option) => option.value === selected) ?? initValue
   }
 
-  private readonly fetchOptions = () => {
+  private readonly _fetchOptions = () => {
     if (!this.optionsFetchUrl) return
 
     this.optionValues$ = this.requestService

@@ -23,7 +23,7 @@ export class InputAlertTextComponent {
   get errorMessage() {
     if (!this.control || !this.control.dirty) return ''
 
-    return this.getControlErrorMessage(this.control.errors)
+    return this._getControlErrorMessage(this.control.errors)
   }
 
   get errorMessageWithControls() {
@@ -39,14 +39,14 @@ export class InputAlertTextComponent {
     if (!firstControl?.dirty) {
       if (!secondControl?.dirty) return ''
 
-      return this.getControlErrorMessage(secondControl.errors ?? null)
+      return this._getControlErrorMessage(secondControl.errors ?? null)
     }
 
-    const firstError = this.getControlErrorMessage(firstControl.errors ?? null)
+    const firstError = this._getControlErrorMessage(firstControl.errors ?? null)
     if (!firstError) {
       if (!secondControl?.dirty) return ''
 
-      return this.getControlErrorMessage(secondControl.errors ?? null)
+      return this._getControlErrorMessage(secondControl.errors ?? null)
     }
 
     return firstError
@@ -68,7 +68,7 @@ export class InputAlertTextComponent {
 
   constructor(private readonly _cssService: CssService) {}
 
-  private readonly getControlErrorMessage = (
+  private readonly _getControlErrorMessage = (
     errors: CustomValidationErrors | null,
   ) => {
     if (errors === null) return ''

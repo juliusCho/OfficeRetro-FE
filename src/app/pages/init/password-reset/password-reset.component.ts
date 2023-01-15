@@ -30,7 +30,7 @@ export class PasswordResetComponent {
   ) {}
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
-    if (!this.isEmailInfo(formValue)) {
+    if (!this._isEmailInfo(formValue)) {
       this._globalService.topAlert = { show: true, type: 'alert' }
       return
     }
@@ -58,7 +58,7 @@ export class PasswordResetComponent {
     //   })
   }
 
-  private readonly isEmailInfo = (
+  private readonly _isEmailInfo = (
     formValue: Record<string, unknown>,
   ): formValue is { email: string } => {
     return 'email' in formValue

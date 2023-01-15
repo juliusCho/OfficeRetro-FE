@@ -44,7 +44,7 @@ export class SignupComponent {
   ) {}
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
-    if (!this.isSignupInfo(formValue)) {
+    if (!this._isSignupInfo(formValue)) {
       this._globalService.topAlert = { show: true, type: 'alert' }
       return
     }
@@ -72,7 +72,7 @@ export class SignupComponent {
       })
   }
 
-  private readonly isSignupInfo = (
+  private readonly _isSignupInfo = (
     formValue: Record<string, unknown>,
   ): formValue is SignupInfo => {
     return 'email' in formValue && 'password' in formValue

@@ -126,8 +126,8 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
 
     this._formService.reinitializeData()
 
-    this.setIsFormSubmitted(true)
-    this.setIsFormSubmitted(false)
+    this._setIsFormSubmitted(true)
+    this._setIsFormSubmitted(false)
   }
 
   ngAfterContentInit(): void {
@@ -142,7 +142,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
       this._formService.formValueChange$.pipe(
         debounceTime(1000),
         tap(() => {
-          this.submitProceed()
+          this._submitProceed()
         }),
       )
 
@@ -209,14 +209,14 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   readonly onSubmit = () => {
-    this.submitProceed()
+    this._submitProceed()
 
     if (!this.isConfirmed || this.form.invalid) return
 
     this._formService.reinitializeData()
 
-    this.setIsFormSubmitted(true)
-    this.setIsFormSubmitted(false)
+    this._setIsFormSubmitted(true)
+    this._setIsFormSubmitted(false)
   }
 
   readonly onCancel = () => {
@@ -229,7 +229,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
     this._formService.reinitializeData()
   }
 
-  private readonly submitProceed = () => {
+  private readonly _submitProceed = () => {
     Object.keys(this.form.controls).forEach((key) => {
       this.form.get(key)?.markAsDirty()
     })
@@ -239,7 +239,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterContentInit {
     this.submitAction.emit(this.form.value)
   }
 
-  private readonly setIsFormSubmitted = (value: boolean) => {
+  private readonly _setIsFormSubmitted = (value: boolean) => {
     this.isFormSubmitted = value
     this._changeDetectorRef.detectChanges()
   }

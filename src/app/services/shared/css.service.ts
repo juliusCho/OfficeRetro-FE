@@ -5,33 +5,33 @@ import { COLOR_LIST, SIZE_LIST } from 'src/app/models/constants/css-constants'
 
 @Injectable()
 export class CssService {
-  private readonly _sizeMap = new Map<string, string>()
-  private readonly _colorMap = new Map<string, string>()
+  private readonly _SIZE_MAP = new Map<string, string>()
+  private readonly _COLOR_MAP = new Map<string, string>()
 
   readonly getSize = (key?: CssSize) => {
     if (!key) return
-    return this._sizeMap.get(key)
+    return this._SIZE_MAP.get(key)
   }
 
   readonly getUntypedSize = (key?: string) => {
-    if (!key || !this.isCssSize(key)) return key
-    return this._sizeMap.get(key)
+    if (!key || !this._isCssSize(key)) return key
+    return this._SIZE_MAP.get(key)
   }
 
   readonly getColor = (key?: CssColor) => {
     if (!key) return
-    return this._colorMap.get(key)
+    return this._COLOR_MAP.get(key)
   }
 
   readonly loadSizes = () => {
-    this.loadCss(SIZE_LIST, this._sizeMap, 'css-size')
+    this._loadCss(SIZE_LIST, this._SIZE_MAP, 'css-size')
   }
 
   readonly loadColors = () => {
-    this.loadCss(COLOR_LIST, this._colorMap, 'css-color')
+    this._loadCss(COLOR_LIST, this._COLOR_MAP, 'css-color')
   }
 
-  private readonly loadCss = <T>(
+  private readonly _loadCss = <T>(
     list: T,
     mapper: Map<string, string>,
     className: string,
@@ -48,7 +48,7 @@ export class CssService {
     }
   }
 
-  private readonly isCssSize = (key: string): key is CssSize => {
+  private readonly _isCssSize = (key: string): key is CssSize => {
     return SIZE_LIST.some((size) => size === key)
   }
 }

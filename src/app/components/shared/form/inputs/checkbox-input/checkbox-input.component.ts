@@ -22,7 +22,7 @@ import { SuperInputComponent } from '../inheritances/super-input.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxInputComponent extends SuperInputComponent<string[]> {
-  private readonly _componentUniqueId = uuid()
+  private readonly _COMPONENT_UNIQUE_ID = uuid()
 
   protected optionValues$!: Observable<FormInputOption[]>
 
@@ -42,7 +42,7 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
   }
 
   get componentUniqueId() {
-    return this._componentUniqueId
+    return this._COMPONENT_UNIQUE_ID
   }
 
   constructor(
@@ -70,7 +70,7 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
       return
     }
 
-    this.fetchOptions()
+    this._fetchOptions()
   }
 
   readonly getItems = (optionValues: FormInputOption[]) => {
@@ -111,7 +111,7 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
     this.control?.markAsDirty()
   }
 
-  private readonly fetchOptions = () => {
+  private readonly _fetchOptions = () => {
     if (!this.optionsFetchUrl) return
 
     this.optionValues$ = this._requestService

@@ -62,7 +62,7 @@ export class DropdownInputComponent extends BaseSelectInputComponent {
   }
 
   @HostListener('document:mousedown', ['$event'])
-  private readonly onGlobalClick = (event: MouseEvent) => {
+  private readonly _onGlobalClick = (event: MouseEvent) => {
     if (this.isDisabled || !this.isDropdownOpened) return
     if (this.dropdownSection.nativeElement.contains(event.target)) {
       return

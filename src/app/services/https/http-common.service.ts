@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class HttpCommonService {
-  private readonly _httpOptions = {
+  private readonly _HTTP_OPTIONS = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
@@ -17,7 +17,7 @@ export class HttpCommonService {
 
   // Testing purpose
   get httpOptions() {
-    return this._httpOptions
+    return this._HTTP_OPTIONS
   }
 
   get HandleError() {
@@ -38,11 +38,11 @@ export class HttpCommonService {
     requestBody?: unknown,
   ): Observable<TResponse> => {
     return (method === 'get' || method === 'delete'
-      ? this._http[method](`${environment.apiUrl}/${url}`, this._httpOptions)
+      ? this._http[method](`${environment.apiUrl}/${url}`, this._HTTP_OPTIONS)
       : this._http[method](
           `${environment.apiUrl}/${url}`,
           requestBody,
-          this._httpOptions,
+          this._HTTP_OPTIONS,
         )
     ).pipe(
       shareReplay({ bufferSize: 1, refCount: true }),

@@ -4,12 +4,12 @@ import { HttpCommonService } from './http-common.service'
 
 @Injectable()
 export class HttpAuthService extends HttpCommonService {
-  private readonly _baseUrl = 'auth'
+  private readonly _URL_PREFIX = 'auth'
 
   readonly signUp = (signupInfo: { email: string; password: string }) => {
     return this.httpRequestStatic<HttpResponse<void>>(
       'post',
-      `${this._baseUrl}/register`,
+      `${this._URL_PREFIX}/register`,
       signupInfo,
     )
   }
@@ -17,7 +17,7 @@ export class HttpAuthService extends HttpCommonService {
   readonly login = (loginInfo: { email: string; password: string }) => {
     return this.httpRequestStatic<HttpResponse<void>>(
       'post',
-      `${this._baseUrl}/authenticate`,
+      `${this._URL_PREFIX}/authenticate`,
       loginInfo,
     )
   }
