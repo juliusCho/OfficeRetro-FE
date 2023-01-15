@@ -29,6 +29,10 @@ export class TopAlertComponent implements OnInit {
     return ICONS.CROSS
   }
 
+  get defaultAlertMessage() {
+    return 'An unexpected error has occurred. Please try again.'
+  }
+
   get messageStyle(): Record<string, string> {
     if (this._alertType !== 'alert') return {}
     return { color: this._cssService.getColor('error') ?? '' }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
-import { AbstractControl } from '@angular/forms'
+import { AbstractControl, ValidatorFn } from '@angular/forms'
 import { Observable, of, shareReplay, Subscription, tap } from 'rxjs'
 import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { CustomValidator } from 'src/app/helpers/custom-form-validator'
@@ -62,10 +62,13 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
     if (
       formValidators &&
       isArray(formValidators) &&
-      formValidators.length > 0 &&
-      isArray(formValidators[0])
+      formValidators.length > 0
     ) {
-      preset = [...formValidators[0], ...preset]
+      if (isArray(formValidators[0])) {
+        preset = [...formValidators[0], ...preset]
+      } else {
+        preset = [...(formValidators as ValidatorFn[]), ...preset]
+      }
     }
 
     return preset
@@ -125,22 +128,31 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
 
     if (targetValue === confirmControl.value) {
       let { errors } = confirmControl
-      if (confirmControl.hasError('equalTo') && errors && 'equalTo' in errors) {
-        delete errors['equalTo']
-        confirmControl.setErrors({ ...errors })
-        confirmControl.setValidators(this._passwordValidators)
 
-        confirmControl.updateValueAndValidity({ onlySelf: true })
-      } else {
-        confirmControl.setErrors(errors ?? null)
+      if (
+        !errors ||
+        !confirmControl.hasError('equalTo') ||
+        !('equalTo' in errors)
+      ) {
+        return
       }
-    } else if (!confirmControl.hasError('equalTo')) {
-      confirmControl.setValidators([
-        ...this._passwordValidators,
-        CustomValidator.equalTo(targetValue),
-      ])
+
+      delete errors['equalTo']
+
+      confirmControl.setErrors({ ...errors })
+      confirmControl.setValidators(this._passwordValidators)
 
       confirmControl.updateValueAndValidity({ onlySelf: true })
+      return
     }
+
+    if (confirmControl.hasError('equalTo')) return
+
+    confirmControl.setValidators([
+      ...this._passwordValidators,
+      CustomValidator.equalTo(targetValue),
+    ])
+
+    confirmControl.updateValueAndValidity({ onlySelf: true })
   }
 }

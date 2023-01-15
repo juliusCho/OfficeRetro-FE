@@ -10,7 +10,7 @@
     <app-text
       *ngIf="topAlert.message || topAlert.type === 'alert'"
       [style]="messageStyle">
-      {{ topAlert.message || 'Something is wrong with UI' }}
+      {{ topAlert.message || defaultAlertMessage }}
     </app-text>
   </div>
 </div>

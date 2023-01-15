@@ -20,7 +20,7 @@ export class TextInputComponent
 {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
-  @ViewChild('innerContent') _innerContentRef!: ElementRef
+  @ViewChild('innerContent') _innerContentRef?: ElementRef
 
   isInnerContentExist = false
 
@@ -42,7 +42,7 @@ export class TextInputComponent
 
   ngAfterViewInit(): void {
     this.isInnerContentExist =
-      (this._innerContentRef.nativeElement.children.length ?? 0) > 0
+      (this._innerContentRef?.nativeElement.children.length ?? 0) > 0
 
     this.changeDetectorRef.detectChanges()
   }
