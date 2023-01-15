@@ -65,7 +65,7 @@ export default class LoginComponent {
           message: 'Login succeeded',
         }
 
-        // this._router.navigateByUrl('')
+        this._router.navigateByUrl('error')
       })
       .add(() => {
         this._globalService.isLoading = true

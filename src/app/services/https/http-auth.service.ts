@@ -4,7 +4,7 @@ import { HttpCommonService } from './http-common.service'
 
 @Injectable()
 export class HttpAuthService extends HttpCommonService {
-  private readonly _baseUrl = 'user'
+  private readonly _baseUrl = 'auth'
 
   readonly signUp = (signupInfo: { email: string; password: string }) => {
     return this.httpRequestStatic<HttpResponse<void>>(
