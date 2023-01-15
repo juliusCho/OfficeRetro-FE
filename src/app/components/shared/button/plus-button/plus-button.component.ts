@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { isNumber } from 'src/app/helpers/type-checkers'
 import {
@@ -6,11 +7,14 @@ import {
 } from 'src/app/models/client-specs/shared/css-specs'
 import { ICONS } from 'src/app/models/constants/css-constants'
 import { CssService } from 'src/app/services/shared/css.service'
+import { ButtonComponent } from '../button.component'
 
 @Component({
+  standalone: true,
   selector: 'app-plus-button',
   templateUrl: './plus-button.component.html',
   styleUrls: ['./plus-button.component.scss'],
+  imports: [ButtonComponent, CommonModule],
 })
 export class PlusButtonComponent {
   @Input() isDisabled?: boolean = false

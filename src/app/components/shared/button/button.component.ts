@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import {
   ButtonColor,
@@ -6,9 +7,11 @@ import {
 import { CssService } from 'src/app/services/shared/css.service'
 
 @Component({
+  standalone: true,
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
+  imports: [CommonModule],
 })
 export class ButtonComponent {
   @Input() isDisabled?: boolean = false

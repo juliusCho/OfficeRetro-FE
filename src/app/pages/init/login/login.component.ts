@@ -49,26 +49,32 @@ export default class LoginComponent {
       return
     }
 
-    this._globalService.isLoading = false
+    this._globalService.isLoading = true
 
     this._authService
       .login(formValue)
-      .subscribe((response) => {
-        if (isHttpError(response)) {
-          this._globalService.topAlert = getTopAlertForHttpError(response)
-          return
-        }
+      .subscribe({
+        next: (response) => {
+          console.log(
+            '🚀 ~ file: login.component.ts:57 ~ LoginComponent ~ .subscribe ~ response',
+            response,
+          )
+          if (isHttpError(response)) {
+            this._globalService.topAlert = getTopAlertForHttpError(response)
+            return
+          }
 
-        this._globalService.topAlert = {
-          show: true,
-          type: 'info',
-          message: 'Login succeeded',
-        }
+          this._globalService.topAlert = {
+            show: true,
+            type: 'info',
+            message: 'Login succeeded',
+          }
 
-        this._router.navigateByUrl('error')
+          this._router.navigateByUrl('error')
+        },
       })
       .add(() => {
-        this._globalService.isLoading = true
+        this._globalService.isLoading = false
       })
   }
 

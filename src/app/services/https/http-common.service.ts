@@ -4,7 +4,15 @@ import {
   HttpHeaders,
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { catchError, Observable, of, retry, shareReplay, take } from 'rxjs'
+import {
+  catchError,
+  Observable,
+  of,
+  retry,
+  shareReplay,
+  take,
+  timer,
+} from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Injectable()
@@ -21,7 +29,7 @@ export class HttpCommonService {
   }
 
   get HandleError() {
-    return this.handleError
+    return this._handleError
   }
 
   constructor(protected readonly _http: HttpClient) {}
@@ -46,8 +54,8 @@ export class HttpCommonService {
         )
     ).pipe(
       shareReplay({ bufferSize: 1, refCount: true }),
-      retry(1),
-      catchError(this.handleError),
+      retry({ count: 1, delay: this._handleRetry }),
+      catchError(this._handleError),
     ) as unknown as Observable<TResponse>
   }
 
@@ -58,7 +66,14 @@ export class HttpCommonService {
   ): Observable<TResponse> =>
     this.httpRequest<TResponse>(method, url, requestBody).pipe(take(1))
 
-  protected readonly handleError = (error: HttpErrorResponse) => {
+  private readonly _handleRetry = (error: HttpErrorResponse) => {
+    if (error.status >= 500) {
+      return timer(1000)
+    }
+    throw error
+  }
+
+  protected readonly _handleError = (error: HttpErrorResponse) => {
     return of({ errorMessage: error.error.message })
   }
 }

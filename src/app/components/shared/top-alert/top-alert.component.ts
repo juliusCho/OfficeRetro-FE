@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,11 +10,14 @@ import { TopAlert } from 'src/app/models/client-specs/shared/ui-specs'
 import { ICONS } from 'src/app/models/constants/css-constants'
 import { CssService } from 'src/app/services/shared/css.service'
 import { GlobalService } from 'src/app/services/shared/global.service'
+import { TextComponent } from '../text/text.component'
 
 @Component({
+  standalone: true,
   selector: 'app-top-alert',
   templateUrl: './top-alert.component.html',
   styleUrls: ['./top-alert.component.scss'],
+  imports: [CommonModule, TextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopAlertComponent implements OnInit {

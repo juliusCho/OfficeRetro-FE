@@ -46,9 +46,6 @@ const declarations = [
   DropdownInputComponent,
   RadioInputComponent,
   CheckboxInputComponent,
-  TextLoadingComponent,
-  ButtonComponent,
-  TooltipComponent,
   PasswordResetButtonComponent,
   PasswordInputComponent,
   InputLabelComponent,
@@ -57,9 +54,7 @@ const declarations = [
   ColorInputComponent,
   ColorPickerComponent,
   ListInputComponent,
-  PlusButtonComponent,
   PasswordConfirmInputComponent,
-  TextComponent,
 ]
 
 @NgModule({
@@ -74,6 +69,11 @@ const declarations = [
     MatMomentDateModule,
     ColorPickerModule,
     DragDropModule,
+    TextComponent,
+    ButtonComponent,
+    TextLoadingComponent,
+    PlusButtonComponent,
+    TooltipComponent,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-NZ' },

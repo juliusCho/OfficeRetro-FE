@@ -49,7 +49,7 @@ export class SignupComponent {
       return
     }
 
-    this._globalService.isLoading = false
+    this._globalService.isLoading = true
 
     this._authService
       .signUp(formValue)
@@ -68,7 +68,7 @@ export class SignupComponent {
         this._router.navigateByUrl('login')
       })
       .add(() => {
-        this._globalService.isLoading = true
+        this._globalService.isLoading = false
       })
   }
 
