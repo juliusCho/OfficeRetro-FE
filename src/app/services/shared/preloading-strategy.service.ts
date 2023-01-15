@@ -6,8 +6,11 @@ import { map, Observable, of, timer } from 'rxjs'
   providedIn: 'root',
 })
 export class PreloadingStrategyService implements PreloadingStrategy {
-  preload(route: Route, fn: () => Observable<unknown>): Observable<unknown> {
-    if (isNavigatorWithConnection(navigator)) {
+  readonly preload = (
+    route: Route,
+    fn: () => Observable<unknown>,
+  ): Observable<unknown> => {
+    if (this.isNavigatorWithConnection(navigator)) {
       const connection = navigator['connection']
       if (connection.saveData) {
         return of(null)
@@ -20,26 +23,30 @@ export class PreloadingStrategyService implements PreloadingStrategy {
       }
     }
 
-    const loadRoute = (delay: number) =>
-      delay > 0 ? timer(delay * 1000).pipe(map(() => fn())) : fn()
-
     if (route.data && route.data['preload']) {
       const delay = route.data['loadAfterSeconds']
         ? route.data['loadAfterSeconds']
         : 0
-      return loadRoute(delay)
+      return this.loadRoute(delay, fn)
     }
 
     return of(null)
   }
-}
 
-const isNavigatorWithConnection = (
-  nav: Navigator,
-): nav is Navigator & {
-  connection: { saveData: boolean; effectiveType: string }
-} => {
-  if ('connection' in nav) return true
+  private readonly isNavigatorWithConnection = (
+    nav: Navigator,
+  ): nav is Navigator & {
+    connection: { saveData: boolean; effectiveType: string }
+  } => {
+    if ('connection' in nav) return true
 
-  return false
+    return false
+  }
+
+  private readonly loadRoute = (
+    delay: number,
+    fn: () => Observable<unknown>,
+  ) => {
+    return delay > 0 ? timer(delay * 1000).pipe(map(() => fn())) : fn()
+  }
 }

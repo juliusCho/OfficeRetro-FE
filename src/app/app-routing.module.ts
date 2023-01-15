@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'error',
-    data: { preload: true, loadAfterSeconds: 0.5 },
+    data: { preload: true, loadAfterSeconds: 1 },
     loadChildren: () =>
       import('./pages/shared/error/error.module').then((m) => m.ErrorModule),
   },
