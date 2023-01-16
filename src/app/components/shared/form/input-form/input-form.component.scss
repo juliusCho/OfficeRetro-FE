@@ -2,6 +2,7 @@
 
 .container {
   @extend %center-list;
+  margin-bottom: $unit-5;
 
   &.button-side {
     display: flex;
@@ -46,6 +47,7 @@
   }
 
   .button-section {
+    margin-left: $unit-4;
     display: flex;
     justify-content: center;
     align-items: center;

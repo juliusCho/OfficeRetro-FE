@@ -10,7 +10,7 @@
   </app-input-label>
   <div class="input-div" [ngClass]="inputAreaClass" [ngStyle]="inputAreaStyle">
     <div class="input-border-box">
-      <app-form
+      <app-input-form
         [formInputSpecs]="innerFormInputSpecs"
         [isValidationDisplaying]="false"
         (submitAction)="addOption($event)"
@@ -20,7 +20,7 @@
         [buttonArea]="{ position: 'right', width: 'unit-17' }"
         [isConfirmed]="innerFormSubmittable">
         <app-plus-button [isDisabled]="isDisabled"></app-plus-button>
-      </app-form>
+      </app-input-form>
       <div
         #listSection
         class="list-section"

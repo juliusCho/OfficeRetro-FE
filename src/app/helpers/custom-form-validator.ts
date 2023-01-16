@@ -132,6 +132,23 @@ export class CustomValidator {
       : { email: { message: 'format is not valid', priority: 2 } }
   }
 
+  static readonly password = (
+    control: AbstractControl,
+  ): CustomValidationErrors | null => {
+    if (!control.value || !isString(control.value)) return null
+
+    return control.value.match(
+      /^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{4,}$/,
+    )
+      ? null
+      : {
+          password: {
+            message: 'must combine alphanumeric & special characters',
+            priority: 8,
+          },
+        }
+  }
+
   static readonly excludeString = (str: string) => {
     return (control: AbstractControl): CustomValidationErrors | null => {
       if (!control.value || !isString(control.value)) return null

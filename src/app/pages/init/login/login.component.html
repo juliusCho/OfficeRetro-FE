@@ -1,13 +1,13 @@
 <app-center-title>Office Retro</app-center-title>
 <div class="form">
-  <app-form
+  <app-input-form
     [buttonArea]="{ submitButton: { label: 'Login', color: 'default' } }"
     [formInputSpecs]="formInputSpecs"
     [isValidationDisplaying]="true"
     (submitAction)="onSubmit($event)"
     infoTextType="alert"
     [labelArea]="{ width: 'unit-18' }">
-  </app-form>
+  </app-input-form>
 </div>
 <app-button routerLink="/signup" routerLinkActive="router-link-active">
   Sign Up

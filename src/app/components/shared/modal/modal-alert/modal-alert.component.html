@@ -1,0 +1,11 @@
+<ng-container *ngIf="modal$ | async as modal">
+  <app-modal
+    [show]="show"
+    type="alert"
+    [title]="title"
+    [width]="width"
+    (cancelAction)="onSubmit()"
+    (submitAction)="onSubmit()">
+    <app-text>{{ message }}</app-text>
+  </app-modal>
+</ng-container>

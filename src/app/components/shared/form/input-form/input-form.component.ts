@@ -25,7 +25,7 @@ import { FormService } from 'src/app/services/form/form.service'
 import { CssService } from 'src/app/services/shared/css.service'
 
 @Component({
-  selector: 'app-form',
+  selector: 'app-input-form',
   templateUrl: './input-form.component.html',
   styleUrls: ['./input-form.component.scss'],
   providers: [FormService],
@@ -40,9 +40,9 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() buttonArea?: {
     position?: 'bottom' | 'right'
     width?: CssSize
-    submitButton?: { label: string; color: ButtonColor }
-    cancelButton?: { label: string; color: ButtonColor }
-    clearButton?: { label: string; color: ButtonColor }
+    submitButton?: { label: string; color?: ButtonColor }
+    cancelButton?: { label: string; color?: ButtonColor }
+    clearButton?: { label: string; color?: ButtonColor }
   }
   @Input() width?: CssSize | string
   @Input() labelArea?: {
@@ -54,7 +54,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() lengthLabelPosition?: 'left' | 'right' = 'right' // if length text displays, it's position
 
   @Output() submitAction = new EventEmitter<Record<string, unknown>>()
-  @Output() cancel = new EventEmitter<void>()
+  @Output() cancelAction = new EventEmitter<void>()
 
   @ViewChild('submitInjectTag') _submitInjectTag!: ElementRef
 
@@ -94,6 +94,10 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
       width: this._cssService.getUntypedSize(this.width),
       'button-side': this.buttonArea?.position === 'right',
     }
+  }
+
+  get submitButtonStyle() {
+    return { 'margin-right': this._cssService.getSize('unit-9') ?? '' }
   }
 
   get _doesWidthLayoutAdjust() {
@@ -215,7 +219,7 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   readonly onCancel = () => {
     this._formService.reinitializeData()
 
-    this.cancel.emit()
+    this.cancelAction.emit()
   }
 
   readonly onClear = () => {

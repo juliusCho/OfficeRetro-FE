@@ -1,5 +1,6 @@
-import { Component } from '@angular/core'
+import { ChangeDetectorRef, Component } from '@angular/core'
 import { Router } from '@angular/router'
+import { CustomValidator } from 'src/app/helpers/custom-form-validator'
 import {
   getTopAlertForHttpError,
   isHttpError,
@@ -30,21 +31,41 @@ export class SignupComponent {
       key: 'password',
       label: 'Password',
       initValue: ['', ''],
+      formValidators: [CustomValidator.password],
       inputType: 'password-confirm',
+      placeholder: 'combine alphanumeric & special',
       min: '8',
       max: '50',
       required: true,
     },
   ]
+  formValue?: Record<string, unknown>
+  isFormConfirmed = false
 
   constructor(
     private readonly _authService: HttpAuthService,
     private readonly _globalService: GlobalService,
     private readonly _router: Router,
+    private readonly _changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
-    if (!this._isSignupInfo(formValue)) {
+    this.formValue = formValue
+
+    this._globalService.confirmModal = {
+      show: true,
+      message: 'Would you like to sign up with the given information?',
+      buttons: {
+        submit: 'Yes',
+        cancel: 'No',
+      },
+      onSubmit: this._onSubmitConfirmed,
+      width: 'unit-35',
+    }
+  }
+
+  private readonly _onSubmitConfirmed = () => {
+    if (!this._isSignupInfo(this.formValue)) {
       this._globalService.topAlert = { show: true, type: 'alert' }
       return
     }
@@ -52,7 +73,7 @@ export class SignupComponent {
     this._globalService.isLoading = true
 
     this._authService
-      .signUp(formValue)
+      .signUp(this.formValue)
       .subscribe((response) => {
         if (isHttpError(response)) {
           this._globalService.topAlert = getTopAlertForHttpError(response)
@@ -69,12 +90,20 @@ export class SignupComponent {
       })
       .add(() => {
         this._globalService.isLoading = false
+        this._switchIsFormConfirmed()
       })
   }
 
   private readonly _isSignupInfo = (
-    formValue: Record<string, unknown>,
+    formValue?: Record<string, unknown>,
   ): formValue is SignupInfo => {
-    return 'email' in formValue && 'password' in formValue
+    return !!formValue && 'email' in formValue && 'password' in formValue
+  }
+
+  private readonly _switchIsFormConfirmed = () => {
+    this.isFormConfirmed = true
+    this._changeDetectorRef.detectChanges()
+    this.isFormConfirmed = false
+    this._changeDetectorRef.detectChanges()
   }
 }

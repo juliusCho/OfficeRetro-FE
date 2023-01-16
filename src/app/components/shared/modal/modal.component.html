@@ -1,0 +1,25 @@
+<div *ngIf="show" class="container" (click)="onCancel()" [ngStyle]="outerStyle">
+  <div class="modal" [ngStyle]="modalStyle" (click)="onClickModal($event)">
+    <h2 class="title" *ngIf="title">{{ title }}</h2>
+    <div class="content">
+      <ng-content></ng-content>
+    </div>
+    <div class="button-area" *ngIf="isButtonAreaExist">
+      <app-button *ngIf="type === 'alert'; else confirm" (click)="onSubmit()">
+        Ok
+      </app-button>
+      <ng-template #confirm>
+        <app-button
+          (click)="onSubmit()"
+          *ngIf="submitLabel"
+          color="primary"
+          [style]="submitButtonStyle">
+          {{ submitLabel }}
+        </app-button>
+        <app-button (click)="onCancel()" *ngIf="cancelLabel">
+          {{ cancelLabel }}
+        </app-button>
+      </ng-template>
+    </div>
+  </div>
+</div>

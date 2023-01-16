@@ -31,7 +31,8 @@
     <app-button
       *ngIf="buttonArea?.submitButton && submitInjectTag.children.length === 0"
       (click)="onSubmit()"
-      [color]="buttonArea?.submitButton?.color ?? 'primary'">
+      [color]="buttonArea?.submitButton?.color ?? 'primary'"
+      [ngStyle]="submitButtonStyle">
       {{ buttonArea?.submitButton?.label }}
     </app-button>
     <app-button

@@ -1,0 +1,55 @@
+@import 'styles';
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: $loading-background-color;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  opacity: 1;
+  transition: opacity 0.2s;
+  padding: $unit-10;
+
+  .modal {
+    max-height: 100%;
+    background-color: $input-color;
+    padding: $unit-5 $unit-7 $unit-7 $unit-7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 15px;
+    transition: opacity 0.5s;
+    box-shadow: $float-box-shadow;
+    border: 1px solid $main;
+    opacity: 1;
+    transition: opacity 0.5s;
+
+    .title {
+      @extend %font-bold;
+      @extend %font-6;
+      text-shadow: $font-shadow;
+      margin-bottom: $unit-5;
+    }
+
+    .content {
+      @extend %scroll-area;
+    }
+
+    .button-area {
+      margin: $unit-9 0 $unit-5 0;
+      width: 100%;
+      min-width: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

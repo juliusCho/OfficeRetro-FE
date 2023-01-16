@@ -55,10 +55,6 @@ export default class LoginComponent {
       .login(formValue)
       .subscribe({
         next: (response) => {
-          console.log(
-            '🚀 ~ file: login.component.ts:57 ~ LoginComponent ~ .subscribe ~ response',
-            response,
-          )
           if (isHttpError(response)) {
             this._globalService.topAlert = getTopAlertForHttpError(response)
             return

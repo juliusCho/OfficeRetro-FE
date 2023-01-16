@@ -56,6 +56,13 @@ export class PasswordResetComponent {
     //   .add(() => {
     //     this._globalService.isLoading = true
     //   })
+
+    this._globalService.alertModal = {
+      show: true,
+      title: 'Instruction was Sent',
+      message:
+        'Password reset instruction was sent to your email. Please check your email.',
+    }
   }
 
   private readonly _isEmailInfo = (

@@ -65,9 +65,9 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
       formValidators.length > 0
     ) {
       if (isArray(formValidators[0])) {
-        preset = [...formValidators[0], ...preset]
+        preset = [...preset, ...formValidators[0]]
       } else {
-        preset = [...(formValidators as ValidatorFn[]), ...preset]
+        preset = [...preset, ...(formValidators as ValidatorFn[])]
       }
     }
 

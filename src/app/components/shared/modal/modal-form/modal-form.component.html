@@ -1,0 +1,32 @@
+<ng-container *ngIf="modal$ | async as modal">
+  <app-modal
+    [show]="show"
+    type="confirm"
+    title="Confirm"
+    [width]="width"
+    (cancel)="onCancel()">
+    <app-input-form
+      *ngIf="formInputSpecs"
+      [formInputSpecs]="formInputSpecs"
+      [isValidationDisplaying]="true"
+      infoTextType="all"
+      [isConfirmed]="isConfirmed"
+      [buttonArea]="buttonArea"
+      [width]="width"
+      (submitAction)="submit($event)"
+      (cancelAction)="onCancel()">
+    </app-input-form>
+  </app-modal>
+  <app-modal
+    [show]="confirmModal.show"
+    type="confirm"
+    title="Confirm"
+    [submitLabel]="confirmModal.buttons?.submit"
+    [cancelLabel]="confirmModal.buttons?.cancel"
+    [width]="confirmModal.width"
+    (cancelAction)="confirmCancel()"
+    (submitAction)="confirmSubmit()"
+    [isNested]="true">
+    {{ confirmModal.message }}
+  </app-modal>
+</ng-container>
