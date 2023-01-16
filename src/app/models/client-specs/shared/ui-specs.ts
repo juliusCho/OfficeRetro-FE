@@ -14,16 +14,17 @@ export type ModalConfirm = {
     submit: string
     cancel: string
   }
-  onSubmit?: (formValue?: Record<string, unknown>) => void
+  onSubmit?: () => void
   width?: CssSize
 }
 
-export interface Modal extends ModalConfirm {
+export interface Modal extends Omit<ModalConfirm, 'onSubmit'> {
   type?: 'alert' | 'confirm' | 'form'
   title?: string
   confirmModal?: Omit<ModalConfirm, 'show' | 'onSubmit'>
   formInputSpecs?: FormInputSpec<unknown>[]
   isClearButtonExist?: boolean
+  onSubmit?: (formValue?: Record<string, unknown>) => void
 }
 
 export interface ModalAlert

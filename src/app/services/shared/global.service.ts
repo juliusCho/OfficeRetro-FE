@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, shareReplay } from 'rxjs'
+import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
+import { CssSize } from 'src/app/models/client-specs/shared/css-specs'
 import {
   Modal,
   ModalAlert,
@@ -7,6 +9,23 @@ import {
   ModalForm,
   TopAlert,
 } from 'src/app/models/client-specs/shared/ui-specs'
+
+type ModalAlertInput = Omit<Required<ModalAlert>, 'width'> & {
+  width?: CssSize
+}
+type ModalConfirmInput = Omit<Required<ModalConfirm>, 'width'> & {
+  width?: CssSize
+}
+type ModalFormInput = Omit<
+  Required<ModalForm>,
+  'title' | 'width' | 'confirmModal' | 'isClearButtonExist'
+> & {
+  title?: string
+  width?: CssSize
+  confirmModal?: Omit<ModalConfirm, 'show' | 'onSubmit'>
+  formInputSpecs?: FormInputSpec<unknown>[]
+  isClearButtonExist?: boolean
+}
 
 @Injectable({
   providedIn: 'root',
@@ -48,15 +67,15 @@ export class GlobalService {
     return this._modal$.value
   }
 
-  set alertModal(value: ModalAlert) {
+  set alertModal(value: ModalAlertInput) {
     this._modal$.next({ ...value, type: 'alert' })
   }
 
-  set confirmModal(value: ModalConfirm) {
+  set confirmModal(value: ModalConfirmInput) {
     this._modal$.next({ ...value, type: 'confirm' })
   }
 
-  set formModal(value: ModalForm) {
+  set formModal(value: ModalFormInput) {
     this._modal$.next({ ...value, type: 'form' })
   }
 

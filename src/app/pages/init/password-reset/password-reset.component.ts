@@ -61,7 +61,7 @@ export class PasswordResetComponent {
       show: true,
       title: 'Instruction was Sent',
       message:
-        'Password reset instruction was sent to your email. Please check your email.',
+        'Password reset instruction was sent to your email.\nPlease check your email.',
     }
   }
 

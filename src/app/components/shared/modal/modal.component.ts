@@ -18,6 +18,7 @@ export class ModalComponent {
 
   @Output() submitAction = new EventEmitter<void>()
   @Output() cancelAction = new EventEmitter<void>()
+  @Output() clickOuter = new EventEmitter<void>()
 
   get outerStyle() {
     return { 'z-index': this.isNested ? 20 : 10 }
@@ -56,5 +57,9 @@ export class ModalComponent {
 
   readonly onSubmit = () => {
     this.submitAction.emit()
+  }
+
+  readonly onClickOuter = () => {
+    this.clickOuter.emit()
   }
 }

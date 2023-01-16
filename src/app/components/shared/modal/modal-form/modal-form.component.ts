@@ -25,7 +25,7 @@ export class ModalFormComponent implements OnInit {
   formInputSpecs?: FormInputSpec<unknown>[]
   isClearButtonExist?: boolean
   confirmModal: Omit<ModalConfirm, 'onSubmit'> = { show: false }
-  isConfirmed = true
+  isFormConfirmed = true
   formValue?: Record<string, unknown>
   width?: CssSize
   onSubmit?: (formValue?: Record<string, unknown>) => void
@@ -60,11 +60,12 @@ export class ModalFormComponent implements OnInit {
           this._buttons = v.buttons
           this.formInputSpecs = v.formInputSpecs
           this.isClearButtonExist = v.isClearButtonExist
+          this.onSubmit = v.onSubmit
           this.confirmModal = v.confirmModal
             ? { ...v.confirmModal, show: false }
             : { show: false }
           this.width = v.width
-          this.isConfirmed = !v.confirmModal
+          this.isFormConfirmed = !v.confirmModal
 
           this._changeDetectorRef.detectChanges()
         }
@@ -73,7 +74,7 @@ export class ModalFormComponent implements OnInit {
   }
 
   readonly submit = (formValue?: Record<string, unknown>) => {
-    if (!this.confirmModal) {
+    if (this.isFormConfirmed) {
       if (this.onSubmit) {
         this.onSubmit(formValue)
       }
@@ -82,26 +83,38 @@ export class ModalFormComponent implements OnInit {
       return
     }
 
-    this.isConfirmed = false
     this.formValue = formValue
     this.confirmModal = { ...this.confirmModal, show: true }
 
-    this._changeDetectorRef.markForCheck()
+    this._changeDetectorRef.detectChanges()
   }
 
   readonly onCancel = () => {
-    this.isConfirmed = true
-    this.confirmModal = { show: false }
-    this._changeDetectorRef.markForCheck()
+    this.isFormConfirmed = true
+    this._changeDetectorRef.detectChanges()
 
-    this._globalService.formModal = { show: false }
+    this._globalService.formModal = {
+      show: false,
+      title: '',
+      buttons: {
+        submit: '',
+        cancel: '',
+      },
+      onSubmit: () => {},
+      formInputSpecs: [],
+    }
   }
 
   readonly confirmSubmit = () => {
+    this.isFormConfirmed = true
+    this._changeDetectorRef.detectChanges()
+
     this.submit(this.formValue)
   }
 
   readonly confirmCancel = () => {
-    this.onCancel()
+    this.confirmModal = { ...this.confirmModal, show: false }
+
+    this._changeDetectorRef.markForCheck()
   }
 }

@@ -1,8 +1,8 @@
 <ng-container *ngIf="modal$ | async as modal">
   <app-modal
     [show]="show"
-    type="confirm"
-    title="Confirm"
+    type="form"
+    [title]="title"
     [width]="width"
     (cancel)="onCancel()">
     <app-input-form
@@ -10,7 +10,7 @@
       [formInputSpecs]="formInputSpecs"
       [isValidationDisplaying]="true"
       infoTextType="all"
-      [isConfirmed]="isConfirmed"
+      [isConfirmed]="isFormConfirmed"
       [buttonArea]="buttonArea"
       [width]="width"
       (submitAction)="submit($event)"

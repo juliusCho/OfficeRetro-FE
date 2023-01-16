@@ -39,7 +39,7 @@ export class SignupComponent {
       required: true,
     },
   ]
-  formValue?: Record<string, unknown>
+  formValue?: { email: string; password: string }
   isFormConfirmed = false
 
   constructor(
@@ -50,11 +50,13 @@ export class SignupComponent {
   ) {}
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
+    if (!this._isSignupInfo(formValue)) return
+
     this.formValue = formValue
 
     this._globalService.confirmModal = {
       show: true,
-      message: 'Would you like to sign up with the given information?',
+      message: `Would you like to sign up with the email,\n"${formValue.email}"?\n(The confirmation letter will be sent to this email)`,
       buttons: {
         submit: 'Yes',
         cancel: 'No',
@@ -65,7 +67,7 @@ export class SignupComponent {
   }
 
   private readonly _onSubmitConfirmed = () => {
-    if (!this._isSignupInfo(this.formValue)) {
+    if (!this.formValue) {
       this._globalService.topAlert = { show: true, type: 'alert' }
       return
     }

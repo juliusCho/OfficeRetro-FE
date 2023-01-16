@@ -1,4 +1,8 @@
-<div *ngIf="show" class="container" (click)="onCancel()" [ngStyle]="outerStyle">
+<div
+  *ngIf="show"
+  class="container"
+  (click)="onClickOuter()"
+  [ngStyle]="outerStyle">
   <div class="modal" [ngStyle]="modalStyle" (click)="onClickModal($event)">
     <h2 class="title" *ngIf="title">{{ title }}</h2>
     <div class="content">

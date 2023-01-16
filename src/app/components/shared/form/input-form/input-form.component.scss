@@ -2,7 +2,7 @@
 
 .container {
   @extend %center-list;
-  margin-bottom: $unit-5;
+  margin: $unit-5 0;
 
   &.button-side {
     display: flex;

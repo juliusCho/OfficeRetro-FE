@@ -48,7 +48,15 @@ export class ModalConfirmComponent implements OnInit {
   }
 
   readonly onCancel = () => {
-    this._globalService.confirmModal = { show: false }
+    this._globalService.confirmModal = {
+      show: false,
+      message: '',
+      buttons: {
+        submit: '',
+        cancel: '',
+      },
+      onSubmit: () => {},
+    }
   }
 
   readonly submit = () => {

@@ -43,6 +43,10 @@ export class ModalAlertComponent implements OnInit {
   }
 
   readonly onSubmit = () => {
-    this._globalService.alertModal = { show: false }
+    this._globalService.alertModal = {
+      show: false,
+      title: '',
+      message: '',
+    }
   }
 }
