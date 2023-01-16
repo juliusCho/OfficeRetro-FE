@@ -1,15 +1,11 @@
-import { CommonModule } from '@angular/common'
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { CssSize } from 'src/app/models/client-specs/shared/css-specs'
 import { CssService } from 'src/app/services/shared/css.service'
-import { ButtonComponent } from '../button/button.component'
 
 @Component({
-  standalone: true,
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
-  imports: [CommonModule, ButtonComponent],
 })
 export class ModalComponent {
   @Input() show!: boolean

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,15 +8,11 @@ import { Observable, tap } from 'rxjs'
 import { CssSize } from 'src/app/models/client-specs/shared/css-specs'
 import { ModalAlert } from 'src/app/models/client-specs/shared/ui-specs'
 import { GlobalService } from 'src/app/services/shared/global.service'
-import { TextComponent } from '../../text/text.component'
-import { ModalComponent } from '../modal.component'
 
 @Component({
-  standalone: true,
   selector: 'app-modal-alert',
   templateUrl: './modal-alert.component.html',
   styleUrls: ['./modal-alert.component.scss'],
-  imports: [CommonModule, ModalComponent, TextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalAlertComponent implements OnInit {

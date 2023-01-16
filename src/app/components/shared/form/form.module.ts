@@ -35,7 +35,7 @@ import { InputAlertTextComponent } from './shared/input-alert-text/input-alert-t
 import { InputLabelComponent } from './shared/input-label/input-label.component'
 import { LengthTextComponent } from './shared/length-text/length-text.component'
 
-const declarations = [
+export const declarations = [
   InputFormComponent,
   BaseSelectInputComponent,
   SuperInputComponent,

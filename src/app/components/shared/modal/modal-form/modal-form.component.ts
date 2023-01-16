@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,15 +12,11 @@ import {
   ModalForm,
 } from 'src/app/models/client-specs/shared/ui-specs'
 import { GlobalService } from 'src/app/services/shared/global.service'
-import { FormModule } from '../../form/form.module'
-import { ModalComponent } from '../modal.component'
 
 @Component({
-  standalone: true,
   selector: 'app-modal-form',
   templateUrl: './modal-form.component.html',
   styleUrls: ['./modal-form.component.scss'],
-  imports: [CommonModule, ModalComponent, FormModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalFormComponent implements OnInit {
