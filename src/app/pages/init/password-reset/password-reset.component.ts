@@ -60,8 +60,7 @@ export class PasswordResetComponent {
     this._globalService.alertModal = {
       show: true,
       title: 'Instruction was Sent',
-      message:
-        'Password reset instruction was sent to your email.\nPlease check your email.',
+      message: `Password reset instruction was sent to the following email.\n${formValue.email}`,
     }
   }
 

@@ -12,7 +12,6 @@ import { GlobalService } from 'src/app/services/shared/global.service'
 @Component({
   selector: 'app-modal-confirm',
   templateUrl: './modal-confirm.component.html',
-  styleUrls: ['./modal-confirm.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalConfirmComponent implements OnInit {

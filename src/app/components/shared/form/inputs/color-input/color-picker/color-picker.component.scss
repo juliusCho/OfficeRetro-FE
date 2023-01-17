@@ -27,4 +27,93 @@
       color: transparent;
     }
   }
+
+  ::ng-deep color-picker {
+    .color-picker {
+      border-radius: 15px;
+      border-top: $unit-5 solid $main-background-color;
+      border-left: $unit-5 solid $main-background-color;
+      border-right: $unit-5 solid $main-background-color;
+      box-shadow: $float-box-both-side-shadow;
+      width: calc(230px + $unit-9) !important;
+      background-color: $main-background-color;
+      @extend %font-bold;
+
+      .arrow {
+        visibility: hidden;
+      }
+
+      .saturation-lightness {
+        border-radius: 15px;
+        border: $button-border;
+        box-shadow: $button-box-shadow;
+
+        .cursor {
+          border: 2px solid rgba(0, 0, 0, 0.5);
+          width: $unit-3;
+          height: $unit-3;
+        }
+      }
+
+      .hue-alpha {
+        margin-top: $unit-3;
+        border-radius: 15px;
+        border: $input-border;
+        box-shadow: $input-box-shadow;
+
+        .left {
+          .selected-color {
+            border: $button-border;
+            box-shadow: $button-box-shadow;
+          }
+        }
+
+        .right {
+          .hue,
+          .alpha {
+            border-radius: 15px;
+            border: $input-border;
+            box-shadow: $input-box-shadow;
+
+            .cursor {
+              border: 2px solid rgba(0, 0, 0, 0.5);
+              width: $unit-3;
+              height: $unit-3;
+              top: $unit-2;
+            }
+          }
+        }
+      }
+
+      .hex-text,
+      .hsla-text,
+      .rgba-text {
+        padding: 4px 0;
+
+        .box {
+          input {
+            border-radius: 15px;
+            border: $input-border;
+            box-shadow: $input-box-shadow;
+            @extend %font-medium;
+            background: $input-color;
+
+            &:hover {
+              background-color: $main-background-color;
+            }
+          }
+
+          div {
+            @extend %font-5;
+            color: $main;
+          }
+        }
+      }
+
+      .type-policy {
+        top: 226px;
+        right: $unit-2;
+      }
+    }
+  }
 }

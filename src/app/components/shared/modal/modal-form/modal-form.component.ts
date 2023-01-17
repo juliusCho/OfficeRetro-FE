@@ -16,7 +16,6 @@ import { GlobalService } from 'src/app/services/shared/global.service'
 @Component({
   selector: 'app-modal-form',
   templateUrl: './modal-form.component.html',
-  styleUrls: ['./modal-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalFormComponent implements OnInit {
@@ -86,10 +85,11 @@ export class ModalFormComponent implements OnInit {
     this.formValue = formValue
     this.confirmModal = { ...this.confirmModal, show: true }
 
-    this._changeDetectorRef.detectChanges()
+    this._changeDetectorRef.markForCheck()
   }
 
   readonly onCancel = () => {
+    this.formValue = undefined
     this.isFormConfirmed = true
     this._changeDetectorRef.detectChanges()
 

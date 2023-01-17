@@ -93,4 +93,82 @@ body {
     @extend %font-5;
     @extend %font-medium;
   }
+
+  .cdk-overlay-container {
+    .cdk-overlay-connected-position-bounding-box {
+      div[class^='cdk-overlay-'] {
+        .mat-datepicker-content {
+          background-color: $main-background-color;
+          border-radius: 15px;
+          border: 1px solid $tooltip-border-color;
+
+          .mat-datepicker-content-container {
+            .mat-calendar {
+              height: 370px;
+
+              mat-calendar-header {
+                .mat-calendar-header {
+                  margin-bottom: $unit-7;
+
+                  .mat-calendar-controls {
+                    .mat-calendar-period-button {
+                      @extend %font-bold;
+                      @extend %font-5;
+                      color: $main;
+                      border-radius: 15px;
+                      border: $button-border;
+                      box-shadow: $button-box-shadow;
+
+                      &:disabled {
+                        @extend %button-disabled;
+                      }
+                    }
+
+                    .mat-calendar-previous-button,
+                    .mat-calendar-next-button {
+                      color: $main;
+                      border-radius: 35px;
+                      border: $button-border;
+                      box-shadow: $button-box-shadow;
+                      margin-right: $unit-5;
+
+                      &:disabled {
+                        @extend %button-disabled;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .mat-calendar-content {
+                mat-month-view,
+                mat-multi-year-view,
+                mat-year-view {
+                  .mat-calendar-table {
+                    .mat-calendar-table-header {
+                      @extend %font-bold;
+                      @extend %font-4;
+
+                      tr {
+                        .mat-calendar-table-header-divider {
+                          visibility: hidden;
+                        }
+                      }
+                    }
+
+                    .mat-calendar-body {
+                      border: $input-border;
+                      box-shadow: $input-box-shadow;
+                      @extend %font-medium;
+                      border-radius: 15px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

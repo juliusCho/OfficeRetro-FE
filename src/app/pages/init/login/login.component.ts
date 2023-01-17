@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import {
   getTopAlertForHttpError,
@@ -14,7 +14,7 @@ import { GlobalService } from 'src/app/services/shared/global.service'
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export default class LoginComponent implements OnInit {
+export default class LoginComponent {
   formInputSpecs: FormInputSpec<unknown>[] = [
     {
       key: 'email',
@@ -42,58 +42,6 @@ export default class LoginComponent implements OnInit {
     private readonly _globalService: GlobalService,
     private readonly _router: Router,
   ) {}
-
-  ngOnInit(): void {
-    // this._globalService.formModal = {
-    //   show: true,
-    //   buttons: {
-    //     submit: 'YEAH',
-    //     cancel: 'NOPE',
-    //   },
-    //   onSubmit: console.log,
-    //   title: 'FORM',
-    //   isClearButtonExist: true,
-    //   formInputSpecs: [
-    //     {
-    //       key: 'color',
-    //       label: 'Color',
-    //       initValue: ['', ''],
-    //       inputType: 'text-color',
-    //       placeholder: 'aaa',
-    //       required: true,
-    //       min: '5',
-    //       max: '50',
-    //       labelPosition: 'top',
-    //     },
-    //     {
-    //       key: 'range',
-    //       label: 'Date Range',
-    //       initValue: [undefined, undefined],
-    //       inputType: 'date-range',
-    //       min: moment().add(-7, 'd').format(),
-    //       max: moment().add(7, 'd').format(),
-    //       required: true,
-    //     },
-    //     {
-    //       key: 'date',
-    //       label: 'Date',
-    //       initValue: undefined,
-    //       inputType: 'date',
-    //       min: moment().add(-7, 'd').format(),
-    //       max: moment().add(7, 'd').format(),
-    //       required: true,
-    //       labelPosition: 'top',
-    //     },
-    //   ],
-    //   confirmModal: {
-    //     message: 'CONFIRM PLEASE',
-    //     buttons: {
-    //       submit: 'YES',
-    //       cancel: 'NO',
-    //     },
-    //   },
-    // }
-  }
 
   readonly onSubmit = async (formValue: Record<string, unknown>) => {
     if (!this._isLoginInfo(formValue)) {
