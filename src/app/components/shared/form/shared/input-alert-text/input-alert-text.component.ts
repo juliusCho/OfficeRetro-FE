@@ -17,7 +17,7 @@ export class InputAlertTextComponent {
   @Input() labelWidth?: CssSize
 
   get errorMessage() {
-    if (!this.control || !this.control.dirty) return ''
+    if (!this.control || !this.control.dirty || !this.control.touched) return ''
 
     return this._getControlErrorMessage(this.control.errors)
   }
@@ -32,15 +32,15 @@ export class InputAlertTextComponent {
 
     const [firstControl, secondControl] = this.controls
 
-    if (!firstControl?.dirty) {
-      if (!secondControl?.dirty) return ''
+    if (!firstControl?.dirty || !firstControl?.touched) {
+      if (!secondControl?.dirty || !secondControl?.touched) return ''
 
       return this._getControlErrorMessage(secondControl.errors ?? null)
     }
 
     const firstError = this._getControlErrorMessage(firstControl.errors ?? null)
     if (!firstError) {
-      if (!secondControl?.dirty) return ''
+      if (!secondControl?.dirty || !secondControl?.touched) return ''
 
       return this._getControlErrorMessage(secondControl.errors ?? null)
     }

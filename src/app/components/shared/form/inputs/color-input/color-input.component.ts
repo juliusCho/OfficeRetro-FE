@@ -27,5 +27,6 @@ export class ColorInputComponent extends SuperInputComponent<[string, string]> {
   readonly onSelectColor = (value: string) => {
     this.getControlByName(`${this.name}Color`)?.setValue(value)
     this.getControlByName(`${this.name}Color`)?.markAsDirty()
+    this.getControlByName(`${this.name}Color`)?.markAsTouched()
   }
 }

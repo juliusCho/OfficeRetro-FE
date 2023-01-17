@@ -40,15 +40,19 @@ export class DateRangeInputComponent extends SuperInputComponent<
     if (type === 'start') {
       this.getControlByName(`${this.name}Start`)?.setValue(undefined)
       this.getControlByName(`${this.name}Start`)?.markAsDirty()
+      this.getControlByName(`${this.name}Start`)?.markAsTouched()
       return
     }
 
     this.getControlByName(`${this.name}End`)?.setValue(undefined)
     this.getControlByName(`${this.name}End`)?.markAsDirty()
+    this.getControlByName(`${this.name}End`)?.markAsTouched()
   }
 
   readonly onPickerClose = () => {
     this.getControlByName(`${this.name}Start`)?.markAsDirty()
     this.getControlByName(`${this.name}End`)?.markAsDirty()
+    this.getControlByName(`${this.name}Start`)?.markAsTouched()
+    this.getControlByName(`${this.name}End`)?.markAsTouched()
   }
 }

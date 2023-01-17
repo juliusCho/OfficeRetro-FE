@@ -107,6 +107,7 @@ export class ListInputComponent
 
     this.control.setValue(newOptionList)
     this.control.markAsDirty()
+    this.control.markAsTouched()
 
     this._setInnerFormSubmittable(false)
 
@@ -122,6 +123,7 @@ export class ListInputComponent
 
     this.control.setValue(existingList)
     this.control.markAsDirty()
+    this.control.markAsTouched()
   }
 
   readonly changeOrder = (event: CdkDragDrop<FormListInputOption[]>) => {
@@ -160,6 +162,7 @@ export class ListInputComponent
 
     this.control.setValue(newOptionList)
     this.control.markAsDirty()
+    this.control.markAsTouched()
   }
 
   private readonly _setFormInputOption = () => {

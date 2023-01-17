@@ -110,6 +110,7 @@ export class CheckboxInputComponent extends SuperInputComponent<string[]> {
 
     this.control?.setValue(formValues)
     this.control?.markAsDirty()
+    this.control?.markAsTouched()
   }
 
   private readonly _fetchOptions = () => {

@@ -59,6 +59,7 @@ export class BaseSelectInputComponent extends SuperInputComponent<string> {
 
     this.control?.setValue(option.value)
     this.control?.markAsDirty()
+    this.control?.markAsTouched()
   }
 
   protected readonly getSelectedOption = (optionValues: FormInputOption[]) => {

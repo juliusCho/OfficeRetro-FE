@@ -11,6 +11,7 @@ export const declarations = [
   InfoTextComponent,
   LinkTextComponent,
 ]
+
 @NgModule({
   declarations,
   imports: [CommonModule],

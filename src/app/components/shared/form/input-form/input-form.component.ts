@@ -231,6 +231,8 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
       this.form.get(key)?.markAsDirty()
     })
 
+    this.form.markAllAsTouched()
+
     if (this.form.invalid) return
 
     this.submitAction.emit(this.form.value)

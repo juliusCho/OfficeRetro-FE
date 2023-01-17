@@ -24,7 +24,6 @@
       (keyup.enter)="onEnter()"
       [ngClass]="{ 'icon-exists': isInnerContentExist }"
       [formControlName]="name"
-      [email]="type === 'email'"
       [placeholder]="isDisabled ? '' : placeholder"
       autocomplete="off" />
     <div #innerContent *ngIf="type === 'password' || type === 'text'">

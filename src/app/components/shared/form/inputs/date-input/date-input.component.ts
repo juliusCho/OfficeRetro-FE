@@ -28,9 +28,11 @@ export class DateInputComponent extends SuperInputComponent<
 
     this.control?.setValue(undefined)
     this.control?.markAsDirty()
+    this.control?.markAsTouched()
   }
 
   readonly onPickerClose = () => {
     this.control?.markAsDirty()
+    this.control?.markAsTouched()
   }
 }
