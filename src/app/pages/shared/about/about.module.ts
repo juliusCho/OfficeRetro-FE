@@ -1,18 +1,13 @@
 import { NgModule } from '@angular/core'
-import { BackButtonComponent } from 'src/app/components/shared/button/back-button/back-button.component'
+import { ButtonModule } from 'src/app/components/shared/button/button.module'
 import { CenterTitleComponent } from 'src/app/components/shared/center-title/center-title.component'
-import { TextComponent } from 'src/app/components/shared/text/text.component'
+import { TextModule } from 'src/app/components/shared/text/text.module'
 import { AboutRouterModule } from './about-routing.module'
 import { AboutComponent } from './about.component'
 
 @NgModule({
   declarations: [AboutComponent],
-  imports: [
-    AboutRouterModule,
-    CenterTitleComponent,
-    TextComponent,
-    BackButtonComponent,
-  ],
+  imports: [AboutRouterModule, CenterTitleComponent, TextModule, ButtonModule],
   exports: [AboutComponent],
 })
 export class AboutModule {}

@@ -10,7 +10,6 @@ import { HttpAuthService } from 'src/app/services/https/http-auth.service'
 import { GlobalService } from 'src/app/services/shared/global.service'
 
 @Component({
-  selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })

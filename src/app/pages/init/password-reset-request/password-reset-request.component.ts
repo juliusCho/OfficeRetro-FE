@@ -5,11 +5,10 @@ import { HttpAuthService } from 'src/app/services/https/http-auth.service'
 import { GlobalService } from 'src/app/services/shared/global.service'
 
 @Component({
-  selector: 'app-password-reset',
-  templateUrl: './password-reset.component.html',
-  styleUrls: ['./password-reset.component.scss'],
+  templateUrl: './password-reset-request.component.html',
+  styleUrls: ['./password-reset-request.component.scss'],
 })
-export class PasswordResetComponent {
+export class PasswordResetRequestComponent {
   formInputSpecs: FormInputSpec<unknown>[] = [
     {
       key: 'email',
@@ -60,7 +59,7 @@ export class PasswordResetComponent {
     this._globalService.alertModal = {
       show: true,
       title: 'Instruction was Sent',
-      message: `Password reset instruction was sent to the following email.\n${formValue.email}`,
+      message: `Password reset instruction was sent to the following email:\n"${formValue.email}"`,
     }
   }
 

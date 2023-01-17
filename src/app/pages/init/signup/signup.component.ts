@@ -11,7 +11,6 @@ import { HttpAuthService } from 'src/app/services/https/http-auth.service'
 import { GlobalService } from 'src/app/services/shared/global.service'
 
 @Component({
-  selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })

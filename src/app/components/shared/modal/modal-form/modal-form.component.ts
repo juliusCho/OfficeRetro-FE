@@ -91,6 +91,7 @@ export class ModalFormComponent implements OnInit {
   readonly onCancel = () => {
     this.formValue = undefined
     this.isFormConfirmed = true
+
     this._changeDetectorRef.detectChanges()
 
     this._globalService.formModal = {

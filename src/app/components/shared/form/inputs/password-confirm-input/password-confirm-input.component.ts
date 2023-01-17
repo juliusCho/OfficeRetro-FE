@@ -87,14 +87,16 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
     this._passwordChange$ = controlObservable$
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true }),
-        tap(this._setDynamicEqualToValidator),
+        tap(this._setOrRemoveEqualToValidator),
       )
       .subscribe()
 
     this._passwordConfirmChange$ = confirmControlObservable$
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true }),
-        tap((_) => this._setDynamicEqualToValidator(this.control?.value ?? '')),
+        tap((_) =>
+          this._setOrRemoveEqualToValidator(this.control?.value ?? ''),
+        ),
       )
       .subscribe()
 
@@ -120,7 +122,7 @@ export class PasswordConfirmInputComponent extends SuperInputComponent<
     }
   }
 
-  private readonly _setDynamicEqualToValidator = (targetValue: string) => {
+  private readonly _setOrRemoveEqualToValidator = (targetValue: string) => {
     const confirmControl = this.getControlByName(`${this.name}Confirm`)
 
     if (!this.control || this.control.invalid || !confirmControl) return

@@ -10,10 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { ColorPickerModule } from 'ngx-color-picker'
 import { DATE_DISPLAY_FORMAT } from 'src/app/models/constants/form-constants'
-import { ButtonComponent } from '../button/button.component'
-import { PlusButtonComponent } from '../button/plus-button/plus-button.component'
-import { TextLoadingComponent } from '../loading/text-loading/text-loading.component'
-import { TextComponent } from '../text/text.component'
+import { ButtonModule } from '../button/button.module'
+import { LoadingModule } from '../loading/loading.module'
+import { TextModule } from '../text/text.module'
 import { TooltipComponent } from '../tooltip/tooltip.component'
 import { InputFormComponent } from './input-form/input-form.component'
 import { AreaInputComponent } from './inputs/area-input/area-input.component'
@@ -69,10 +68,9 @@ export const declarations = [
     MatMomentDateModule,
     ColorPickerModule,
     DragDropModule,
-    TextComponent,
-    ButtonComponent,
-    TextLoadingComponent,
-    PlusButtonComponent,
+    TextModule,
+    ButtonModule,
+    LoadingModule,
     TooltipComponent,
   ],
   providers: [

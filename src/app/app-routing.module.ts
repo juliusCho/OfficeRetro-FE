@@ -24,9 +24,9 @@ const routes: Routes = [
   {
     path: 'pw-reset',
     loadChildren: () =>
-      import('./pages/init/password-reset/password-reset.module').then(
-        (m) => m.PasswordResetModule,
-      ),
+      import(
+        './pages/init/password-reset-request/password-reset-request.module'
+      ).then((m) => m.PasswordResetRequestModule),
   },
   {
     path: 'signup',

@@ -9,7 +9,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core'
-import { AutoUnsubscribe } from 'src/app/decorators/auto-unsubscribe/auto-unsubscribe.decorator'
 import { isArray } from 'src/app/helpers/type-checkers'
 import { FormListInputOption } from 'src/app/models/client-specs/form/form-input-types'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
@@ -22,7 +21,6 @@ import { HttpCommonService } from 'src/app/services/https/http-common.service'
 import { v4 as uuid } from 'uuid'
 import { SuperInputComponent } from '../inheritances/super-input.component'
 
-@AutoUnsubscribe()
 @Component({
   selector: 'app-list-input',
   templateUrl: './list-input.component.html',

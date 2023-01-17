@@ -3,7 +3,6 @@ import { FontWeight } from 'src/app/models/client-specs/shared/css-specs'
 import { CssService } from 'src/app/services/shared/css.service'
 
 @Component({
-  selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
 })

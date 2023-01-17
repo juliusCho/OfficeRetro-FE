@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { ButtonComponent } from '../button/button.component'
+import { ButtonModule } from '../button/button.module'
 import { FormModule } from '../form/form.module'
-import { TextComponent } from '../text/text.component'
+import { TextModule } from '../text/text.module'
 import { ModalAlertComponent } from './modal-alert/modal-alert.component'
 import { ModalConfirmComponent } from './modal-confirm/modal-confirm.component'
 import { ModalFormComponent } from './modal-form/modal-form.component'
@@ -17,7 +17,7 @@ export const declarations = [
 
 @NgModule({
   declarations,
-  imports: [CommonModule, FormModule, TextComponent, ButtonComponent],
+  imports: [CommonModule, FormModule, TextModule, ButtonModule],
   exports: declarations,
 })
 export class ModalModule {}

@@ -1,13 +1,9 @@
-import { CommonModule } from '@angular/common'
 import { Component, Input } from '@angular/core'
-import { TextComponent } from '../text.component'
 
 @Component({
-  standalone: true,
   selector: 'app-link-text',
   templateUrl: './link-text.component.html',
   styleUrls: ['./link-text.component.scss'],
-  imports: [TextComponent, CommonModule],
 })
 export class LinkTextComponent {
   @Input() link!: string

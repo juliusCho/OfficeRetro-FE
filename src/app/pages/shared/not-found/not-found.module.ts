@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
-import { ButtonComponent } from 'src/app/components/shared/button/button.component'
+import { ButtonModule } from 'src/app/components/shared/button/button.module'
 import { CenterTitleComponent } from 'src/app/components/shared/center-title/center-title.component'
-import { TextComponent } from 'src/app/components/shared/text/text.component'
+import { TextModule } from 'src/app/components/shared/text/text.module'
 import { NotFoundRouterModule } from './not-found-routing.module'
 import { NotFoundComponent } from './not-found.component'
 
@@ -10,8 +10,8 @@ import { NotFoundComponent } from './not-found.component'
   imports: [
     NotFoundRouterModule,
     CenterTitleComponent,
-    TextComponent,
-    ButtonComponent,
+    TextModule,
+    ButtonModule,
   ],
   exports: [NotFoundComponent],
 })
