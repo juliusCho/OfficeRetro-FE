@@ -3,7 +3,7 @@ export type LoginInfo = {
   password: string
 }
 
-export type SignupInfo = {
-  email: string
-  password: string
+export type SignupInfo = LoginInfo & {
+  firstName: string
+  lastName: string
 }

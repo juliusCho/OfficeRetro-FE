@@ -27,6 +27,24 @@ export class SignupComponent {
       required: true,
     },
     {
+      key: 'firstName',
+      label: 'First Name',
+      initValue: '',
+      inputType: 'text',
+      placeholder: 'First(Sir) Name',
+      max: '50',
+      required: true,
+    },
+    {
+      key: 'lastName',
+      label: 'Last Name',
+      initValue: '',
+      inputType: 'text',
+      placeholder: '(+ Middle) Last Name',
+      max: '50',
+      required: true,
+    },
+    {
       key: 'password',
       label: 'Password',
       initValue: ['', ''],
@@ -38,7 +56,7 @@ export class SignupComponent {
       required: true,
     },
   ]
-  formValue?: { email: string; password: string }
+  formValue?: SignupInfo
   isFormConfirmed = false
 
   constructor(
@@ -98,7 +116,13 @@ export class SignupComponent {
   private readonly _isSignupInfo = (
     formValue?: Record<string, unknown>,
   ): formValue is SignupInfo => {
-    return !!formValue && 'email' in formValue && 'password' in formValue
+    return (
+      !!formValue &&
+      'email' in formValue &&
+      'password' in formValue &&
+      'firstName' in formValue &&
+      'lastName' in formValue
+    )
   }
 
   private readonly _switchIsFormConfirmed = () => {

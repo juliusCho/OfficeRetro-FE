@@ -142,7 +142,7 @@ export class CustomValidator {
     if (!control.value || !isString(control.value)) return null
 
     return control.value.match(
-      /^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){1,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{4,}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\\\/\(\)\-__+\.\[\]\'\"\{\}\;\:\?\<\>\,\=\`\~\|])/,
     )
       ? null
       : {
