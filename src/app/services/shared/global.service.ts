@@ -7,7 +7,7 @@ import {
   ModalAlert,
   ModalConfirm,
   ModalForm,
-  TopAlert,
+  Toast,
 } from 'src/app/models/client-specs/shared/ui-specs'
 
 type ModalAlertInput = Omit<Required<ModalAlert>, 'width'> & {
@@ -32,7 +32,7 @@ type ModalFormInput = Omit<
 })
 export class GlobalService {
   private _isLoading$ = new BehaviorSubject(false)
-  private _topAlert$ = new BehaviorSubject<TopAlert>({ show: false })
+  private _topAlert$ = new BehaviorSubject<Toast>({ show: false })
   private _modal$ = new BehaviorSubject<Modal>({ show: false })
 
   get isLoading$() {
@@ -47,15 +47,15 @@ export class GlobalService {
     this._isLoading$.next(value)
   }
 
-  get topAlert$() {
+  get toast$() {
     return this._getObservable(this._topAlert$)
   }
 
-  get topAlert() {
+  get toast() {
     return this._topAlert$.value
   }
 
-  set topAlert(value: TopAlert) {
+  set toast(value: Toast) {
     this._topAlert$.next(value)
   }
 

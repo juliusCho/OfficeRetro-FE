@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core'
 import { Observable, tap } from 'rxjs'
-import { TopAlert } from 'src/app/models/client-specs/shared/ui-specs'
+import { Toast } from 'src/app/models/client-specs/shared/ui-specs'
 import { ICONS } from 'src/app/models/constants/css-constants'
 import { CssService } from 'src/app/services/shared/css.service'
 import { GlobalService } from 'src/app/services/shared/global.service'
@@ -14,19 +14,19 @@ import { TextModule } from '../text/text.module'
 
 @Component({
   standalone: true,
-  selector: 'app-top-alert',
-  templateUrl: './top-alert.component.html',
-  styleUrls: ['./top-alert.component.scss'],
+  selector: 'app-toast',
+  templateUrl: './toast.component.html',
+  styleUrls: ['./toast.component.scss'],
   imports: [CommonModule, TextModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopAlertComponent implements OnInit {
+export class ToastComponent implements OnInit {
   show = true
-  topAlert$!: Observable<TopAlert>
+  toast$!: Observable<Toast>
 
   private readonly _SHOW_TIME = 2500
 
-  private _alertType?: 'alert' | 'info'
+  private _toastType?: 'alert' | 'info'
   private _timeoutKey?: NodeJS.Timeout
 
   get closeIcon() {
@@ -38,7 +38,7 @@ export class TopAlertComponent implements OnInit {
   }
 
   get messageStyle(): Record<string, string> {
-    if (this._alertType !== 'alert') return {}
+    if (this._toastType !== 'alert') return {}
     return { color: this._cssService.getColor('error') ?? '' }
   }
 
@@ -49,9 +49,9 @@ export class TopAlertComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.topAlert$ = this._globalService.topAlert$.pipe(
+    this.toast$ = this._globalService.toast$.pipe(
       tap((v) => {
-        this._alertType = v.type
+        this._toastType = v.type
 
         if (v.show) {
           this.show = true
@@ -77,6 +77,6 @@ export class TopAlertComponent implements OnInit {
   }
 
   readonly onClose = () => {
-    this._globalService.topAlert = { show: false }
+    this._globalService.toast = { show: false }
   }
 }

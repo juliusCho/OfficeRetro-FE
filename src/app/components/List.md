@@ -11,7 +11,7 @@
   - AlertText
 - Loading
   - TextLoading
-- TopAlert
+- Toast
 - Modal
 
   - ConfirmModal

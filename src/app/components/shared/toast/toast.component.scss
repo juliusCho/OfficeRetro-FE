@@ -10,14 +10,16 @@
   width: calc(100% - $unit-5 - $unit-5);
 
   .container {
-    .top-alert {
+    .toast {
+      position: sticky;
+      min-width: $unit-35;
       background-color: $input-color;
-      padding: $unit-5 $unit-7 $unit-7 $unit-7;
+      padding: $unit-14 $unit-7 $unit-7 $unit-7;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-end;
-      border-radius: 15px;
+      align-items: flex-start;
+      border-radius: 35px;
       transition: opacity 0.5s;
       box-shadow: $float-box-shadow;
       opacity: 0;
@@ -31,10 +33,24 @@
 
       &.alert {
         background-color: $highlight-pale;
+
+        .inner-content {
+          @extend %swollen-highlight;
+        }
+      }
+
+      .inner-content {
+        width: 100%;
+        padding: $unit-5;
+        @extend %swollen;
       }
 
       .close {
         @extend %button;
+        position: absolute;
+        top: $unit-5;
+        right: $unit-7;
+        z-index: 1;
         display: flex;
         justify-content: flex-end;
         align-items: center;

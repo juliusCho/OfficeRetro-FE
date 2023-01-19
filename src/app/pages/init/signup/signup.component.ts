@@ -1,10 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { CustomValidator } from 'src/app/helpers/custom-form-validator'
-import {
-  getTopAlertForHttpError,
-  isHttpError,
-} from 'src/app/helpers/http-helpers'
 import { SignupInfo } from 'src/app/models/client-specs/auth/auth-specs'
 import { FormInputSpec } from 'src/app/models/client-specs/form/form-spec'
 import { HttpAuthService } from 'src/app/services/https/http-auth.service'
@@ -60,7 +56,7 @@ export class SignupComponent {
   isFormConfirmed = false
 
   constructor(
-    private readonly _authService: HttpAuthService,
+    private readonly _httpService: HttpAuthService,
     private readonly _globalService: GlobalService,
     private readonly _router: Router,
     private readonly _changeDetectorRef: ChangeDetectorRef,
@@ -85,21 +81,16 @@ export class SignupComponent {
 
   private readonly _onSubmitConfirmed = () => {
     if (!this.formValue) {
-      this._globalService.topAlert = { show: true, type: 'alert' }
+      this._globalService.toast = { show: true, type: 'alert' }
       return
     }
 
     this._globalService.isLoading = true
 
-    this._authService
+    this._httpService
       .signUp(this.formValue)
-      .subscribe((response) => {
-        if (isHttpError(response)) {
-          this._globalService.topAlert = getTopAlertForHttpError(response)
-          return
-        }
-
-        this._globalService.topAlert = {
+      .subscribe(() => {
+        this._globalService.toast = {
           show: true,
           type: 'info',
           message: 'Sign Up succeeded',

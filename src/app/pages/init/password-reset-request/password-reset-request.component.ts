@@ -23,28 +23,28 @@ export class PasswordResetRequestComponent {
   ]
 
   constructor(
-    private readonly _authService: HttpAuthService,
+    private readonly _httpService: HttpAuthService,
     private readonly _globalService: GlobalService,
     private readonly _router: Router,
   ) {}
 
   readonly onSubmit = (formValue: Record<string, unknown>) => {
     if (!this._isEmailInfo(formValue)) {
-      this._globalService.topAlert = { show: true, type: 'alert' }
+      this._globalService.toast = { show: true, type: 'alert' }
       return
     }
 
     // this._globalService.isLoading = false
 
-    // this._authService
+    // this._httpService
     //   .signUp(formValue)
     //   .subscribe((response) => {
     //     if (isHttpError(response)) {
-    //       this._globalService.topAlert = getTopAlertForHttpError(response)
+    //       this._globalService.toast = getTopAlertForHttpError(response)
     //       return
     //     }
 
-    //     this._globalService.topAlert = {
+    //     this._globalService.toast = {
     //       show: true,
     //       type: 'info',
     //       message: 'Sign Up succeeded',

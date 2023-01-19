@@ -1,7 +1,7 @@
 import { FormInputSpec } from '../form/form-spec'
 import { CssSize } from './css-specs'
 
-export type TopAlert = {
+export type Toast = {
   show: boolean
   type?: 'info' | 'alert'
   message?: string

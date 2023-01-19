@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
+import { AuthGuard } from './guards/auth.guard'
 import { PreloadingStrategyService } from './services/shared/preloading-strategy.service'
 
 const routes: Routes = [
@@ -37,6 +38,13 @@ const routes: Routes = [
     path: 'inquiries',
     loadChildren: () =>
       import('./pages/inquiry/inquiry.module').then((m) => m.InquiryModule),
+  },
+  {
+    path: 'profiles',
+    data: { preload: true, loadAfterSeconds: 2 },
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/profile/profile.module').then((m) => m.ProfileModule),
   },
   {
     path: '**',
