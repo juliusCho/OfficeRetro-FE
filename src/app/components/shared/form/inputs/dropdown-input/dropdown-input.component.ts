@@ -42,8 +42,8 @@ export class DropdownInputComponent extends BaseSelectInputComponent {
     return ICONS.CARET_DOWN
   }
 
-  override readonly selectOption = (option: FormInputOption) => {
-    super.selectOption(option)
+  readonly selectDropdownOption = (option: FormInputOption) => {
+    this.selectOption(option)
 
     if (this.isDisabled) return
 

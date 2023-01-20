@@ -41,6 +41,7 @@
       padding: $unit-4;
       border-radius: 15px;
       @extend %swollen-slight;
+      padding-top: 0;
 
       &.disabled {
         .input-border-box {
@@ -74,6 +75,7 @@
 
         ::ng-deep app-input-form {
           height: $unit-14;
+          margin-bottom: $unit-5;
           width: 100%;
 
           .container {

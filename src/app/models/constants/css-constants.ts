@@ -53,4 +53,5 @@ export const ICONS = {
   CROSS: 'fa-solid fa-xmark',
   UP_DOWN: 'fa-solid fa-arrows-up-down',
   ARROW_LEFT: 'fa-solid fa-arrow-left',
+  MAGNIFYING: 'fa-solid fa-magnifying-glass',
 } as const

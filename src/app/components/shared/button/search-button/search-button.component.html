@@ -1,0 +1,9 @@
+<app-button
+  [isDisabled]="isDisabled"
+  [height]="height"
+  [style]="style"
+  [color]="color"
+  (click)="onClick()">
+  <i [class]="glassIcon" [ngStyle]="{ 'font-size': cssIconSize }"></i>
+  <span class="search" [ngStyle]="{ 'font-size': cssIconSize }"> Search </span>
+</app-button>

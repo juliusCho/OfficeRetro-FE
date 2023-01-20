@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core'
 import { BackButtonComponent } from './back-button/back-button.component'
 import { ButtonComponent } from './button.component'
 import { PlusButtonComponent } from './plus-button/plus-button.component'
+import { SearchButtonComponent } from './search-button/search-button.component'
 
 export const declarations = [
   ButtonComponent,
   PlusButtonComponent,
   BackButtonComponent,
+  SearchButtonComponent,
 ]
 
 @NgModule({
