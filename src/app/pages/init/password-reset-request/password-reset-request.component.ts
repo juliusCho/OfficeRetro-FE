@@ -61,6 +61,8 @@ export class PasswordResetRequestComponent {
       title: 'Instruction was Sent',
       message: `Password reset instruction was sent to the following email:\n"${formValue.email}"`,
     }
+
+    this._router.navigateByUrl('login')
   }
 
   private readonly _isEmailInfo = (

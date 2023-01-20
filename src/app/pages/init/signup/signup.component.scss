@@ -3,6 +3,10 @@
 :host {
   @extend %host-form;
 
+  .form {
+    width: calc($intro-form-width + $unit-11 + $unit-9);
+  }
+
   ::ng-deep app-button {
     margin: $unit-4;
   }
