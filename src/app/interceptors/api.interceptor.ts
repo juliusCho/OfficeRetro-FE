@@ -7,7 +7,8 @@ import {
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { catchError, Observable, of, retry, shareReplay, timer } from 'rxjs'
+import { catchError, Observable, of, shareReplay, switchMap } from 'rxjs'
+import { HttpAuthService } from '../services/https/http-auth.service'
 import { AuthService } from '../services/shared/auth.service'
 import { GlobalService } from '../services/shared/global.service'
 
@@ -17,6 +18,7 @@ export class ApiInterceptor implements HttpInterceptor {
     private readonly _authService: AuthService,
     private readonly _globalService: GlobalService,
     private readonly _router: Router,
+    private readonly _httpService: HttpAuthService,
   ) {}
 
   intercept(
@@ -25,49 +27,76 @@ export class ApiInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     const token = this._authService.token
 
-    request = request.clone({
+    request = this._getRequest(request, token)
+
+    return next.handle(request).pipe(
+      shareReplay({ bufferSize: 1, refCount: true }),
+      catchError((error) => this._handleError(error, request, next)),
+    )
+  }
+
+  private readonly _getRequest = (
+    request: HttpRequest<unknown>,
+    token?: string,
+  ) => {
+    return request.clone({
       setHeaders: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     })
-
-    return next
-      .handle(request)
-      .pipe(
-        shareReplay({ bufferSize: 1, refCount: true }),
-        retry({ count: 1, delay: this._handleRetry }),
-        catchError(this._handleError),
-      )
   }
 
-  private readonly _handleRetry = (error: HttpErrorResponse) => {
-    if (error.status >= 500) {
-      return timer(1000)
-    }
-
+  private readonly _handleError = (
+    error: HttpErrorResponse,
+    request: HttpRequest<unknown>,
+    next: HttpHandler,
+  ) => {
     if (error.status === 401) {
-      this._globalService.toast = {
-        show: true,
-        type: 'alert',
-        message: 'Session was expired',
-      }
-
-      this._router.navigateByUrl('login')
-
-      return of()
+      return this._handleUnauthorizedRequest(request, next)
     }
 
-    throw error
+    return this._handleErrorAction(error.error.message)
   }
 
-  private readonly _handleError = (error: HttpErrorResponse) => {
+  private readonly _handleErrorAction = (errorMessage: string) => {
     this._globalService.toast = {
       show: true,
       type: 'alert',
-      message: error.error.message,
+      message: errorMessage,
     }
 
     return of()
+  }
+
+  private readonly _handleUnauthorizedRequest = (
+    request: HttpRequest<unknown>,
+    next: HttpHandler,
+  ) => {
+    const tokenApi = {
+      accessToken: this._authService.token,
+      refreshToken: this._authService.refreshToken,
+    }
+
+    return this._httpService.refreshToken(tokenApi).pipe(
+      switchMap((response) => {
+        this._authService.token = response.accessToken
+        this._authService.refreshToken = response.refreshToken
+
+        request = request.clone({
+          setHeaders: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${response.accessToken}`,
+          },
+        })
+
+        return next.handle(request)
+      }),
+      catchError((error) => {
+        this._router.navigateByUrl('login')
+
+        return this._handleErrorAction(error.error.message)
+      }),
+    )
   }
 }

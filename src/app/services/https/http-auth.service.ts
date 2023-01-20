@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import {
   LoginInfo,
   SignupInfo,
+  TokenInfo,
 } from 'src/app/models/client-specs/auth/auth-specs'
 import { HttpCommonService } from './http-common.service'
 
@@ -18,10 +19,18 @@ export class HttpAuthService extends HttpCommonService {
   }
 
   readonly login = (loginInfo: LoginInfo) => {
-    return this.httpRequestStatic<{ token: string }>(
+    return this.httpRequestStatic<TokenInfo>(
       'post',
       `${this._URL_PREFIX}/authenticate`,
       loginInfo,
+    )
+  }
+
+  readonly refreshToken = (tokenInfo: TokenInfo) => {
+    return this.httpRequestStatic<TokenInfo>(
+      'post',
+      `${this._URL_PREFIX}/refresh`,
+      tokenInfo,
     )
   }
 }

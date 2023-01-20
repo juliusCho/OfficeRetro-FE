@@ -12,6 +12,14 @@ export class AuthService {
     localStorage.setItem('token', tokenValue)
   }
 
+  get refreshToken() {
+    return localStorage.getItem('refreshToken') ?? ''
+  }
+
+  set refreshToken(tokenValue: string) {
+    localStorage.setItem('refreshToken', tokenValue)
+  }
+
   get isAuthenticated() {
     return !!this.token
   }

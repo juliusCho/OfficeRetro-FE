@@ -55,7 +55,8 @@ export default class LoginComponent implements OnInit {
     this._httpService
       .login(formValue)
       .subscribe((response) => {
-        this._authService.token = response.token
+        this._authService.token = response.accessToken
+        this._authService.refreshToken = response.refreshToken
 
         this._globalService.toast = {
           show: true,
