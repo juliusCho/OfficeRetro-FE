@@ -83,12 +83,7 @@ export class ApiInterceptor implements HttpInterceptor {
         this._authService.token = response.accessToken
         this._authService.refreshToken = response.refreshToken
 
-        request = request.clone({
-          setHeaders: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${response.accessToken}`,
-          },
-        })
+        request = this._getRequest(request, response.accessToken)
 
         return next.handle(request)
       }),

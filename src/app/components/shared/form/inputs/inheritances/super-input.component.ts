@@ -31,9 +31,11 @@ export class SuperInputComponent<T> implements OnInit {
       labelSize?: CssSize
       labelWeight?: FontWeight
     }
-    isValidationDisplaying?: boolean // each input's underneath will have blank space for validation message display if true
+    /**each input's underneath will have blank space for validation message display if true */
+    isValidationDisplaying?: boolean
     formInputSpec: FormInputSpec<T>
-    infoTextType?: InputUnderneathDisplay // text display underneath the input
+    /**text display underneath the input */
+    infoTextType?: InputUnderneathDisplay
   }
 
   @Output() enter = new EventEmitter<void>()
@@ -56,15 +58,15 @@ export class SuperInputComponent<T> implements OnInit {
     return this.formInputSpec.label
   }
   get min() {
-    // for string value's length
+    /**for string value's length */
     return this.formInputSpec.min ?? '0'
   }
   get max() {
-    // for string value's length
+    /**for string value's length */
     return this.formInputSpec.max ?? '0'
   }
   get maxLength() {
-    // for string value's length
+    /**for string value's length */
     return isNumber(this.max) ? Number(this.max) : -1
   }
   get minDate() {

@@ -12,7 +12,8 @@ import { CssService } from 'src/app/services/shared/css.service'
 })
 export class ButtonComponent {
   @Input() isDisabled?: boolean = false
-  @Input() isPale?: boolean = false // button label color to be pale
+  /** button label color to be pale **/
+  @Input() isPale?: boolean = false
   @Input() isLargeFont?: boolean = false
   @Input() width?: CssSize
   @Input() height?: CssSize

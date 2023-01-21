@@ -4,14 +4,16 @@ import { FormInputOption, InputType } from './form-input-types'
 export interface FormInputSpec<T> {
   key: string
   label?: string
-  listInputLabel?: string // for ListInputComponent
+  /**for ListInputComponent */
+  listInputLabel?: string
   labelPosition?: 'side' | 'top'
   initValue: T
   formValidators?: ValidatorFn[] | [ValidatorFn[], ValidatorFn[]]
   inputType: InputType
   placeholder?: string
   min?: string
-  max?: string // -1: infinite length
+  /**-1: infinite length */
+  max?: string
   required?: boolean
   disabled?: boolean
   options?: FormInputOption[]

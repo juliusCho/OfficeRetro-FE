@@ -35,8 +35,10 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() formInputSpecs!: Array<
     FormInputSpec<unknown> | [FormInputSpec<unknown>, FormInputSpec<unknown>]
   >
-  @Input() isValidationDisplaying?: boolean = false // no input validation checks
-  @Input() isConfirmed?: boolean = true // to check if parent component's submit action needs to be listened to
+  /** no input validation checks */
+  @Input() isValidationDisplaying?: boolean = false
+  /** to check if parent component's submit action needs to be listened to */
+  @Input() isConfirmed?: boolean = true
   @Input() buttonArea?: {
     position?: 'bottom' | 'right'
     width?: CssSize
@@ -46,19 +48,23 @@ export class InputFormComponent implements OnInit, OnChanges, AfterViewInit {
   }
   @Input() width?: CssSize | string
   @Input() labelArea?: {
-    width?: CssSize // label width per each input
+    /** label width per each input */
+    width?: CssSize
     labelSize?: CssSize
     labelWeight?: FontWeight
   }
-  @Input() infoTextType?: InputUnderneathDisplay = 'none' // text display underneath the input
-  @Input() lengthLabelPosition?: 'left' | 'right' = 'right' // if length text displays, it's position
+  /** text display underneath the input */
+  @Input() infoTextType?: InputUnderneathDisplay = 'none'
+  /** if length text displays, it's position */
+  @Input() lengthLabelPosition?: 'left' | 'right' = 'right'
 
   @Output() submitAction = new EventEmitter<Record<string, unknown>>()
   @Output() cancelAction = new EventEmitter<void>()
 
   @ViewChild('submitInjectTag') _submitInjectTag!: ElementRef
 
-  isFormSubmitted = false // for list-input component's form to be re-initialized
+  /**for list-input component's form to be re-initialized */
+  isFormSubmitted = false
 
   get form() {
     return this._formService.form

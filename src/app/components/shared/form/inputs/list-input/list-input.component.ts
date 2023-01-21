@@ -33,7 +33,8 @@ export class ListInputComponent
   implements OnChanges, AfterViewInit
 {
   @Input() listInputLabel?: string = ''
-  @Input() isFormSubmitted?: boolean = false // To check if the parent form has submitted
+  /**To check if the parent form has submitted */
+  @Input() isFormSubmitted?: boolean = false
 
   @ViewChild('listSection') _listSection!: ElementRef
 
